@@ -1,46 +1,62 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { ApolloProvider } from "react-apollo";
-import { ApolloClient } from "apollo-client";
-import { createHttpLink } from "apollo-link-http";
+import { StyleSheet, Text, View, AsyncStorage, Button } from "react-native";
+import { ApolloProvider, Mutation } from "react-apollo";
+import { HttpLink, InMemoryCache, ApolloClient, gql } from "apollo-boost";
 import { setContext } from "apollo-link-context";
 
-import { AUTH_TOKEN } from "./constants";
-import { InMemoryCache } from "apollo-boost";
+import { getToken } from "./loginUtils";
+
+import Login from "./components/Login";
+
+
+const authLink = setContext(async (trash, { headers }) => {
+	const token = await getToken();
+
+	return {
+		headers: {
+			...headers,
+			authorization: token ? `Bearer ${token}` : ""
+		}
+	}
+});
+
+const httpLink = new HttpLink({
+	uri: "http://localhost:4000"
+});
+
+const link = authLink.concat(httpLink);
+
+const client = new ApolloClient({
+	link: httpLink,
+	cache: new InMemoryCache()
+});
+
+const signup = gql`
+	mutation addUser($name: String, $email: String!, $password: String!){
+		signup(data: {name: $name, email: $email, password: $password}) {
+			token
+		}
+	}
+`;
 
 const App = () => {
-
-	const httpLink = createHttpLink({
-		uri: "http://localhost:4000"
-	});
-
-	const authLink = setContext((trash, { headers }) => {
-		const token = localStorage.getItem(AUTH_TOKEN);
-
-		return {
-			headers: {
-				...headers,
-				authorization: token ? `Bearer ${token}` : ""
-			}
-		}
-	});
-
-	const link = authLink.concat(httpLink);
-
-	const client = new ApolloClient({
-		link,
-		cache: new InMemoryCache()
-	});
-
-
 	return (
 		<ApolloProvider client={client}>
 			<View style={styles.container}>
-				<Text>Hello</Text>
+				<Mutation mutation={signup}>
+					{(addUser, { data }) => (
+						<Button
+							onPress={() => {
+								addUser({variables: {name: "hej", email: "hej", password: "hej"}}).then(res => console.log(res)).catch(err => console.log(err))
+							}}
+							title="Signup"
+						/>
+					)}
+				</Mutation>
 			</View>
 		</ApolloProvider>
 	);
-};
+}
 
 const styles = StyleSheet.create({
 	container: {
