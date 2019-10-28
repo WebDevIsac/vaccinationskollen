@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TextInput, Button, AsyncStorage } from "react-native";
+import { View, StyleSheet, TextInput, Button, AsyncStorage } from "react-native";
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 
 import { AUTH_TOKEN } from "../constants";
+import { signIn } from "../loginUtils";
 
 const Login = () => {
 	const [login, setLogin] = useState(true);
@@ -29,7 +30,7 @@ const Login = () => {
 
 	const confirm = async (data) => {
 		const { token } = login ? data.login : data.signup;
-		saveUserData(token);
+		signIn(token);
 		console.log("Confirmed, redirect");
 	};
 
@@ -41,6 +42,8 @@ const Login = () => {
 		<View style={styles.container}>
 			<Mutation 
 				mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION} 
+				variables={{ name, email, password }}
+				onCompleted={(data) => confirm(data)}
 			>
 				{( mutation, { data }) => (
 					<View>
@@ -68,18 +71,8 @@ const Login = () => {
 							value={password}
 						/>
 						<Button
-						onPress={() => {
-							mutation({
-								variables: {
-									name,
-									email,
-									password
-								}
-							})
-							.then(res => res)
-							.catch(err => console.log(err))
-						}}
-						title={login ? "Login" : "Signup"}
+							onPress={mutation}
+							title={login ? "Logga In" : "Skapa Konto"}
 						/>
 					</View>
 				)}
@@ -87,8 +80,8 @@ const Login = () => {
 			<Button
 				title={
 					login
-						? "Need to create an account?"
-						: "Already have an account?"
+						? "Vill du skapa ett konto?"
+						: "Har du redan ett konto?"
 				}
 				onPress={() => setLogin(!login)}
 			/>
@@ -99,7 +92,7 @@ const Login = () => {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		// backgroundColor: "#fff",
+		backgroundColor: "#fff",
 		alignItems: "center",
 		justifyContent: "center"
 	},
