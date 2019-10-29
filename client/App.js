@@ -6,7 +6,7 @@ import { setContext } from "apollo-link-context";
 
 import { getToken } from "./loginUtils";
 
-import Login from "./components/Login";
+import Navigator from "./Navigator";
 
 
 const authLink = setContext(async (trash, { headers }) => {
@@ -34,9 +34,7 @@ const client = new ApolloClient({
 const App = () => {
 	return (
 		<ApolloProvider client={client}>
-			<View style={styles.container}>
-				<Login/>
-			</View>
+				<Navigator />
 		</ApolloProvider>
 	);
 }
@@ -44,7 +42,7 @@ const App = () => {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#fff",
+		backgroundColor: "#000",
 		alignItems: "center",
 		justifyContent: "center"
 	}

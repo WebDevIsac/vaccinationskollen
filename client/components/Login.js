@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { View, StyleSheet, TextInput, Button, AsyncStorage } from "react-native";
+import { View, StyleSheet, TextInput, Button, AsyncStorage, Alert } from "react-native";
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 
 import { AUTH_TOKEN } from "../constants";
-import { signIn } from "../loginUtils";
+import { signIn, getToken } from "../loginUtils";
 
-const Login = () => {
+const Login = ({newToken}) => {
 	const [login, setLogin] = useState(true);
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
@@ -30,12 +30,8 @@ const Login = () => {
 
 	const confirm = async (data) => {
 		const { token } = login ? data.login : data.signup;
-		signIn(token);
-		console.log("Confirmed, redirect");
-	};
-
-	const saveUserData = async (token) => {
-		await AsyncStorage.setItem(AUTH_TOKEN, token);
+		await signIn(token);
+		newToken();
 	};
 
 	return (
@@ -43,6 +39,14 @@ const Login = () => {
 			<Mutation 
 				mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION} 
 				variables={{ name, email, password }}
+				onError={({ graphQLErrors }) => {
+					Alert.alert(
+						'Failed to login',
+						graphQLErrors[0].message,
+						{text: 'OK'},
+						{cancelable: false},
+					  );
+				}}
 				onCompleted={(data) => confirm(data)}
 			>
 				{( mutation, { data }) => (

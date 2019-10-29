@@ -4,18 +4,15 @@ import { AUTH_TOKEN } from "./constants";
 let token;
 
 export const getToken = async () => {
-	if (token) {
-		return Promise.resolve(token);
-	}
 	token = await AsyncStorage.getItem(AUTH_TOKEN);
 	return token;
 };
 
-export const signIn = newToken => {
-	return AsyncStorage.setItem(AUTH_TOKEN, newToken);
+export const signIn = async (newToken) => {
+	return await AsyncStorage.setItem(AUTH_TOKEN, newToken);
 };
 
-export const signOut = () => {
+export const signOut = async () => {
 	token = undefined;
-	return AsyncStorage.removeItem(AUTH_TOKEN);
+	await AsyncStorage.removeItem(AUTH_TOKEN);
 };
