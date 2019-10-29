@@ -4,13 +4,13 @@ import { ApolloProvider } from "react-apollo";
 import { HttpLink, InMemoryCache, ApolloClient, gql } from "apollo-boost";
 import { setContext } from "apollo-link-context";
 
-import { getToken } from "./loginUtils";
+import { AUTH_TOKEN } from "./constants";
 
 import Navigator from "./Navigator";
 
 
 const authLink = setContext(async (trash, { headers }) => {
-	const token = getToken();
+	let token = await AsyncStorage.getItem(AUTH_TOKEN);
 
 	return {
 		headers: {
@@ -34,7 +34,7 @@ const client = new ApolloClient({
 const App = () => {
 	return (
 		<ApolloProvider client={client}>
-				<Navigator />
+			<Navigator />
 		</ApolloProvider>
 	);
 }

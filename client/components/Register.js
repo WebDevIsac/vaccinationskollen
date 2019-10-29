@@ -6,7 +6,7 @@ import gql from "graphql-tag";
 import { AUTH_TOKEN } from "../constants";
 import { signIn, getToken } from "../loginUtils";
 
-const Login = ({screenProps}) => {
+const Register = ({screenProps}) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [login, setLogin] = useState(true);
 	const [name, setName] = useState("");
@@ -103,7 +103,7 @@ const Login = ({screenProps}) => {
 							: "Har du redan ett konto?"
 					}
 					onPress={() => {
-						screenProps.setLogin(false);
+						screenProps.setLogin(true);
 						changeState(login);
 						setLogin(!login)
 					}}
@@ -113,8 +113,8 @@ const Login = ({screenProps}) => {
 	);
 };
 
-Login.navigationOptions = {
-	title: "Login",
+Register.navigationOptions = {
+	title: "Register",
 	headerStyle: {
 		backgroundColor: "#373142"
 	},
@@ -152,4 +152,4 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default Login;
+export default Register;
