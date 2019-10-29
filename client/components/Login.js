@@ -3,23 +3,12 @@ import { View, StyleSheet, TextInput, Button, AsyncStorage, Alert, ActivityIndic
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 
-import { AUTH_TOKEN } from "../constants";
-import { signIn, getToken } from "../loginUtils";
+import { signIn } from "../loginUtils";
 
 const Login = ({screenProps}) => {
 	const [isLoading, setIsLoading] = useState(false);
-	const [login, setLogin] = useState(true);
-	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-
-	const SIGNUP_MUTATION = gql`
-		mutation SignupMutation($name: String!, $email: String!, $password: String!) {
-			signup(name: $name, email: $email, password: $password) {
-				token
-			}
-		}
-	`;
 
 	const LOGIN_MUTATION = gql`
 		mutation LoginMutation($email: String!, $password: String!) {
@@ -30,20 +19,16 @@ const Login = ({screenProps}) => {
 	`;
 
 	const confirm = async (data) => {
-		const { token } = login ? data.login : data.signup;
+		const { token } = data.login;
 		await signIn(token);
 		screenProps.updateToken();
 	};
 
-	useEffect(() => {
-		changeState(login);
-	}, [login])
-
 	return (
 		<View style={styles.container}>
 			<Mutation 
-				mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION} 
-				variables={{ name, email, password }}
+				mutation={LOGIN_MUTATION} 
+				variables={{ email, password }}
 				onError={({ graphQLErrors }) => {
 					Alert.alert(
 						'Failed to login',
@@ -60,15 +45,6 @@ const Login = ({screenProps}) => {
 						setIsLoading(loading);
 						return (
 							<View>
-								{!login && (
-									<TextInput
-										style={styles.input}
-										textContentType="name"
-										placeholder="Your name"
-										onChangeText={text => setName(text)}
-										value={name}
-									/>
-								)}
 								<TextInput
 									style={styles.input}
 									textContentType="emailAddress"
@@ -87,7 +63,7 @@ const Login = ({screenProps}) => {
 									onPress={() => {
 										mutation();
 									}}
-									title={login ? "Logga In" : "Skapa Konto"}
+									title="Logga In"
 								/>
 							</View>
 						)
@@ -97,15 +73,9 @@ const Login = ({screenProps}) => {
 			</Mutation>
 			{!isLoading && (
 				<Button
-					title={
-						login
-							? "Vill du skapa ett konto?"
-							: "Har du redan ett konto?"
-					}
+					title="Vill du skapa ett konto?"
 					onPress={() => {
 						screenProps.setLogin(false);
-						changeState(login);
-						setLogin(!login)
 					}}
 				/>
 			)}
@@ -116,7 +86,8 @@ const Login = ({screenProps}) => {
 Login.navigationOptions = {
 	title: "Login",
 	headerStyle: {
-		backgroundColor: "#373142"
+		backgroundColor: "#373142",
+		borderBottomWidth: 0,
 	},
 	headerTitleStyle: {
 		color: "#FFF"
@@ -127,15 +98,10 @@ Login.navigationOptions = {
 	headerTintColor: "#82D8D8"
 }
 
-const changeState = (login) => {
-	loginState = !login;
-}
-
-
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#fff",
+		backgroundColor: "#FFF",
 		alignItems: "center",
 		justifyContent: "center"
 	},

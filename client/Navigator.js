@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, ActivityIndicator, Button } from "react-native";
+import { ActivityIndicator, View, StyleSheet, Text } from "react-native";
 import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
-import { signOut, getToken } from "./loginUtils";
+import { getToken } from "./loginUtils";
 
 import LoginScreen from "./components/Login";
 import RegisterScreen from "./components/Register";
 import HomeScreen from "./components/Home";
 
-const AppStack = createStackNavigator({
+const HomeStack = createStackNavigator({
 	Home: HomeScreen
 });
 
@@ -20,7 +20,7 @@ const RegisterStack = createStackNavigator({
 	Register: RegisterScreen
 });
 
-const AppContainer = createAppContainer(AppStack);
+const HomeContainer = createAppContainer(HomeStack);
 const LoginContainer = createAppContainer(LoginStack);
 const RegisterContainer = createAppContainer(RegisterStack);
 
@@ -39,12 +39,19 @@ const NavWrapper = () => {
 		setToken(thisToken);
 		setLoading(false);
 	}
-	
 	if (loading) return <ActivityIndicator size="large" />
 	if (!token && login) return <LoginContainer screenProps={{updateToken, setLogin}} />
 	if (!token && !login) return <RegisterContainer screenProps={{updateToken, setLogin}} />
-
-	return <AppContainer screenProps={{updateToken}}/>
+	return <HomeContainer screenProps={{updateToken}}/>
 }
+const styles = StyleSheet.create({
+	container: {
+		top: 0,
+		flex: 1,
+		backgroundColor: "#000",
+		alignItems: "center",
+		justifyContent: "center"
+	}
+});
 
 export default NavWrapper;

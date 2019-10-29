@@ -21,33 +21,23 @@ const Register = ({screenProps}) => {
 		}
 	`;
 
-	const LOGIN_MUTATION = gql`
-		mutation LoginMutation($email: String!, $password: String!) {
-			login(email: $email, password: $password) {
-				token
-			}
-		}
-	`;
-
 	const confirm = async (data) => {
-		const { token } = login ? data.login : data.signup;
+		const { token } = data.signup;
 		await signIn(token);
 		screenProps.updateToken();
 	};
 
-	useEffect(() => {
-		changeState(login);
-	}, [login])
-
 	return (
 		<View style={styles.container}>
 			<Mutation 
-				mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION} 
+				mutation={SIGNUP_MUTATION} 
 				variables={{ name, email, password }}
 				onError={({ graphQLErrors }) => {
+					let message = graphQLErrors[0].message;
+					message = graphQLErrors[0].message.includes("Field name = email") && "This email address is already in use"
 					Alert.alert(
 						'Failed to login',
-						graphQLErrors[0].message,
+						message,
 						{text: 'OK'},
 						{cancelable: false},
 					  );
@@ -60,15 +50,13 @@ const Register = ({screenProps}) => {
 						setIsLoading(loading);
 						return (
 							<View>
-								{!login && (
-									<TextInput
-										style={styles.input}
-										textContentType="name"
-										placeholder="Your name"
-										onChangeText={text => setName(text)}
-										value={name}
-									/>
-								)}
+								<TextInput
+									style={styles.input}
+									textContentType="name"
+									placeholder="Your name"
+									onChangeText={text => setName(text)}
+									value={name}
+								/>
 								<TextInput
 									style={styles.input}
 									textContentType="emailAddress"
@@ -87,7 +75,7 @@ const Register = ({screenProps}) => {
 									onPress={() => {
 										mutation();
 									}}
-									title={login ? "Logga In" : "Skapa Konto"}
+									title="Skapa Konto"
 								/>
 							</View>
 						)
@@ -97,15 +85,9 @@ const Register = ({screenProps}) => {
 			</Mutation>
 			{!isLoading && (
 				<Button
-					title={
-						login
-							? "Vill du skapa ett konto?"
-							: "Har du redan ett konto?"
-					}
+					title="Har du redan ett konto?"
 					onPress={() => {
 						screenProps.setLogin(true);
-						changeState(login);
-						setLogin(!login)
 					}}
 				/>
 			)}
@@ -116,7 +98,8 @@ const Register = ({screenProps}) => {
 Register.navigationOptions = {
 	title: "Register",
 	headerStyle: {
-		backgroundColor: "#373142"
+		backgroundColor: "#373142",
+		borderBottomWidth: 0,
 	},
 	headerTitleStyle: {
 		color: "#FFF"
@@ -127,15 +110,10 @@ Register.navigationOptions = {
 	headerTintColor: "#82D8D8"
 }
 
-const changeState = (login) => {
-	loginState = !login;
-}
-
-
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#fff",
+		backgroundColor: "#FFF",
 		alignItems: "center",
 		justifyContent: "center"
 	},

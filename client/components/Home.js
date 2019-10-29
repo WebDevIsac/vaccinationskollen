@@ -2,14 +2,14 @@ import React from "react";
 import { StyleSheet, View, Button } from "react-native";
 import { signOut } from "../loginUtils";
 
-const Home = (props) => {
+const Home = ({screenProps}) => {
 	return (
 		<View style={styles.container}>
 			<Button
 				title="Logout"
 				onPress={() => {
 					signOut();
-					props.screenProps.updateToken();
+					screenProps.updateToken();
 				}}
 			/>
 		</View>
@@ -19,7 +19,8 @@ const Home = (props) => {
 Home.navigationOptions = {
 	title: "Home",
 	headerStyle: {
-		backgroundColor: "#373142"
+		backgroundColor: "#373142",
+		borderBottomWidth: 0,
 	},
 	headerTitleStyle: {
 		color: "#FFF"
@@ -32,6 +33,7 @@ Home.navigationOptions = {
 
 const styles = StyleSheet.create({
 	container: {
+		top: 0,
 		flex: 1,
 		backgroundColor: "#000",
 		alignItems: "center",
