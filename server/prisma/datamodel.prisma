@@ -3,4 +3,24 @@ type User {
     name: String!
     email: String! @unique
     password: String!
+	vaccinations: [UserVaccination]
+}
+
+type Vaccination {
+	id: ID! @id
+	name: String!
+	dose: Int
+	url: String!
+	untilNext: String
+	protectDuration: String
+}
+
+type UserVaccination {
+	id: ID! @id
+	user: User!
+	type: Vaccination!
+	createdAt: DateTime! @createdAt
+	takenAt: DateTime
+	untilNext: String
+	protectDuration: String
 }

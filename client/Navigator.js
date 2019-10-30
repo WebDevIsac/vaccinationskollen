@@ -2,14 +2,20 @@ import React, { useState, useEffect } from "react";
 import { ActivityIndicator, View, StyleSheet, Text } from "react-native";
 import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
+import { withApollo } from "react-apollo";
 import { getToken } from "./loginUtils";
 
 import LoginScreen from "./components/Login";
 import RegisterScreen from "./components/Register";
 import HomeScreen from "./components/Home";
+import ProfileScreen from "./components/Profile";
+import NewVaccinationScreen from "./components/NewVaccination";
+
 
 const HomeStack = createStackNavigator({
-	Home: HomeScreen
+	Home: withApollo(HomeScreen),
+	Profile: ProfileScreen,
+	NewVaccination: NewVaccinationScreen
 });
 
 const LoginStack = createStackNavigator({

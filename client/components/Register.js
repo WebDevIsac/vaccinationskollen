@@ -8,7 +8,6 @@ import { signIn, getToken } from "../loginUtils";
 
 const Register = ({screenProps}) => {
 	const [isLoading, setIsLoading] = useState(false);
-	const [login, setLogin] = useState(true);
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");

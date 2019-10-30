@@ -33,7 +33,17 @@ const login = async (parent, args, context, info) => {
 	};
 };
 
+const addUserVaccination = (parent, args, context, info) => {
+	const userId = getUserId(context);
+
+	return context.prisma.createUserVaccination({
+		user: { connect: { id: userId } },
+		type: { connect: { id: args.vaccinationId } },
+	})
+}
+
 module.exports = {
 	signup,
-	login
+	login,
+	addUserVaccination
 };

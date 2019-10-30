@@ -7,9 +7,19 @@ module.exports = {
   count: Int!
 }
 
+type AggregateUserVaccination {
+  count: Int!
+}
+
+type AggregateVaccination {
+  count: Int!
+}
+
 type BatchPayload {
   count: Long!
 }
+
+scalar DateTime
 
 scalar Long
 
@@ -20,6 +30,18 @@ type Mutation {
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   deleteUser(where: UserWhereUniqueInput!): User
   deleteManyUsers(where: UserWhereInput): BatchPayload!
+  createUserVaccination(data: UserVaccinationCreateInput!): UserVaccination!
+  updateUserVaccination(data: UserVaccinationUpdateInput!, where: UserVaccinationWhereUniqueInput!): UserVaccination
+  updateManyUserVaccinations(data: UserVaccinationUpdateManyMutationInput!, where: UserVaccinationWhereInput): BatchPayload!
+  upsertUserVaccination(where: UserVaccinationWhereUniqueInput!, create: UserVaccinationCreateInput!, update: UserVaccinationUpdateInput!): UserVaccination!
+  deleteUserVaccination(where: UserVaccinationWhereUniqueInput!): UserVaccination
+  deleteManyUserVaccinations(where: UserVaccinationWhereInput): BatchPayload!
+  createVaccination(data: VaccinationCreateInput!): Vaccination!
+  updateVaccination(data: VaccinationUpdateInput!, where: VaccinationWhereUniqueInput!): Vaccination
+  updateManyVaccinations(data: VaccinationUpdateManyMutationInput!, where: VaccinationWhereInput): BatchPayload!
+  upsertVaccination(where: VaccinationWhereUniqueInput!, create: VaccinationCreateInput!, update: VaccinationUpdateInput!): Vaccination!
+  deleteVaccination(where: VaccinationWhereUniqueInput!): Vaccination
+  deleteManyVaccinations(where: VaccinationWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -43,11 +65,19 @@ type Query {
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  userVaccination(where: UserVaccinationWhereUniqueInput!): UserVaccination
+  userVaccinations(where: UserVaccinationWhereInput, orderBy: UserVaccinationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserVaccination]!
+  userVaccinationsConnection(where: UserVaccinationWhereInput, orderBy: UserVaccinationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserVaccinationConnection!
+  vaccination(where: VaccinationWhereUniqueInput!): Vaccination
+  vaccinations(where: VaccinationWhereInput, orderBy: VaccinationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Vaccination]!
+  vaccinationsConnection(where: VaccinationWhereInput, orderBy: VaccinationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): VaccinationConnection!
   node(id: ID!): Node
 }
 
 type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+  userVaccination(where: UserVaccinationSubscriptionWhereInput): UserVaccinationSubscriptionPayload
+  vaccination(where: VaccinationSubscriptionWhereInput): VaccinationSubscriptionPayload
 }
 
 type User {
@@ -55,6 +85,7 @@ type User {
   name: String!
   email: String!
   password: String!
+  vaccinations(where: UserVaccinationWhereInput, orderBy: UserVaccinationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserVaccination!]
 }
 
 type UserConnection {
@@ -64,6 +95,19 @@ type UserConnection {
 }
 
 input UserCreateInput {
+  id: ID
+  name: String!
+  email: String!
+  password: String!
+  vaccinations: UserVaccinationCreateManyWithoutUserInput
+}
+
+input UserCreateOneWithoutVaccinationsInput {
+  create: UserCreateWithoutVaccinationsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutVaccinationsInput {
   id: ID
   name: String!
   email: String!
@@ -115,12 +159,302 @@ input UserUpdateInput {
   name: String
   email: String
   password: String
+  vaccinations: UserVaccinationUpdateManyWithoutUserInput
 }
 
 input UserUpdateManyMutationInput {
   name: String
   email: String
   password: String
+}
+
+input UserUpdateOneRequiredWithoutVaccinationsInput {
+  create: UserCreateWithoutVaccinationsInput
+  update: UserUpdateWithoutVaccinationsDataInput
+  upsert: UserUpsertWithoutVaccinationsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserUpdateWithoutVaccinationsDataInput {
+  name: String
+  email: String
+  password: String
+}
+
+input UserUpsertWithoutVaccinationsInput {
+  update: UserUpdateWithoutVaccinationsDataInput!
+  create: UserCreateWithoutVaccinationsInput!
+}
+
+type UserVaccination {
+  id: ID!
+  user: User!
+  type: Vaccination!
+  createdAt: DateTime!
+  takenAt: DateTime
+  untilNext: String
+  protectDuration: String
+}
+
+type UserVaccinationConnection {
+  pageInfo: PageInfo!
+  edges: [UserVaccinationEdge]!
+  aggregate: AggregateUserVaccination!
+}
+
+input UserVaccinationCreateInput {
+  id: ID
+  user: UserCreateOneWithoutVaccinationsInput!
+  type: VaccinationCreateOneInput!
+  takenAt: DateTime
+  untilNext: String
+  protectDuration: String
+}
+
+input UserVaccinationCreateManyWithoutUserInput {
+  create: [UserVaccinationCreateWithoutUserInput!]
+  connect: [UserVaccinationWhereUniqueInput!]
+}
+
+input UserVaccinationCreateWithoutUserInput {
+  id: ID
+  type: VaccinationCreateOneInput!
+  takenAt: DateTime
+  untilNext: String
+  protectDuration: String
+}
+
+type UserVaccinationEdge {
+  node: UserVaccination!
+  cursor: String!
+}
+
+enum UserVaccinationOrderByInput {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  takenAt_ASC
+  takenAt_DESC
+  untilNext_ASC
+  untilNext_DESC
+  protectDuration_ASC
+  protectDuration_DESC
+}
+
+type UserVaccinationPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+  takenAt: DateTime
+  untilNext: String
+  protectDuration: String
+}
+
+input UserVaccinationScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  takenAt: DateTime
+  takenAt_not: DateTime
+  takenAt_in: [DateTime!]
+  takenAt_not_in: [DateTime!]
+  takenAt_lt: DateTime
+  takenAt_lte: DateTime
+  takenAt_gt: DateTime
+  takenAt_gte: DateTime
+  untilNext: String
+  untilNext_not: String
+  untilNext_in: [String!]
+  untilNext_not_in: [String!]
+  untilNext_lt: String
+  untilNext_lte: String
+  untilNext_gt: String
+  untilNext_gte: String
+  untilNext_contains: String
+  untilNext_not_contains: String
+  untilNext_starts_with: String
+  untilNext_not_starts_with: String
+  untilNext_ends_with: String
+  untilNext_not_ends_with: String
+  protectDuration: String
+  protectDuration_not: String
+  protectDuration_in: [String!]
+  protectDuration_not_in: [String!]
+  protectDuration_lt: String
+  protectDuration_lte: String
+  protectDuration_gt: String
+  protectDuration_gte: String
+  protectDuration_contains: String
+  protectDuration_not_contains: String
+  protectDuration_starts_with: String
+  protectDuration_not_starts_with: String
+  protectDuration_ends_with: String
+  protectDuration_not_ends_with: String
+  AND: [UserVaccinationScalarWhereInput!]
+  OR: [UserVaccinationScalarWhereInput!]
+  NOT: [UserVaccinationScalarWhereInput!]
+}
+
+type UserVaccinationSubscriptionPayload {
+  mutation: MutationType!
+  node: UserVaccination
+  updatedFields: [String!]
+  previousValues: UserVaccinationPreviousValues
+}
+
+input UserVaccinationSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: UserVaccinationWhereInput
+  AND: [UserVaccinationSubscriptionWhereInput!]
+  OR: [UserVaccinationSubscriptionWhereInput!]
+  NOT: [UserVaccinationSubscriptionWhereInput!]
+}
+
+input UserVaccinationUpdateInput {
+  user: UserUpdateOneRequiredWithoutVaccinationsInput
+  type: VaccinationUpdateOneRequiredInput
+  takenAt: DateTime
+  untilNext: String
+  protectDuration: String
+}
+
+input UserVaccinationUpdateManyDataInput {
+  takenAt: DateTime
+  untilNext: String
+  protectDuration: String
+}
+
+input UserVaccinationUpdateManyMutationInput {
+  takenAt: DateTime
+  untilNext: String
+  protectDuration: String
+}
+
+input UserVaccinationUpdateManyWithoutUserInput {
+  create: [UserVaccinationCreateWithoutUserInput!]
+  delete: [UserVaccinationWhereUniqueInput!]
+  connect: [UserVaccinationWhereUniqueInput!]
+  set: [UserVaccinationWhereUniqueInput!]
+  disconnect: [UserVaccinationWhereUniqueInput!]
+  update: [UserVaccinationUpdateWithWhereUniqueWithoutUserInput!]
+  upsert: [UserVaccinationUpsertWithWhereUniqueWithoutUserInput!]
+  deleteMany: [UserVaccinationScalarWhereInput!]
+  updateMany: [UserVaccinationUpdateManyWithWhereNestedInput!]
+}
+
+input UserVaccinationUpdateManyWithWhereNestedInput {
+  where: UserVaccinationScalarWhereInput!
+  data: UserVaccinationUpdateManyDataInput!
+}
+
+input UserVaccinationUpdateWithoutUserDataInput {
+  type: VaccinationUpdateOneRequiredInput
+  takenAt: DateTime
+  untilNext: String
+  protectDuration: String
+}
+
+input UserVaccinationUpdateWithWhereUniqueWithoutUserInput {
+  where: UserVaccinationWhereUniqueInput!
+  data: UserVaccinationUpdateWithoutUserDataInput!
+}
+
+input UserVaccinationUpsertWithWhereUniqueWithoutUserInput {
+  where: UserVaccinationWhereUniqueInput!
+  update: UserVaccinationUpdateWithoutUserDataInput!
+  create: UserVaccinationCreateWithoutUserInput!
+}
+
+input UserVaccinationWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  user: UserWhereInput
+  type: VaccinationWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  takenAt: DateTime
+  takenAt_not: DateTime
+  takenAt_in: [DateTime!]
+  takenAt_not_in: [DateTime!]
+  takenAt_lt: DateTime
+  takenAt_lte: DateTime
+  takenAt_gt: DateTime
+  takenAt_gte: DateTime
+  untilNext: String
+  untilNext_not: String
+  untilNext_in: [String!]
+  untilNext_not_in: [String!]
+  untilNext_lt: String
+  untilNext_lte: String
+  untilNext_gt: String
+  untilNext_gte: String
+  untilNext_contains: String
+  untilNext_not_contains: String
+  untilNext_starts_with: String
+  untilNext_not_starts_with: String
+  untilNext_ends_with: String
+  untilNext_not_ends_with: String
+  protectDuration: String
+  protectDuration_not: String
+  protectDuration_in: [String!]
+  protectDuration_not_in: [String!]
+  protectDuration_lt: String
+  protectDuration_lte: String
+  protectDuration_gt: String
+  protectDuration_gte: String
+  protectDuration_contains: String
+  protectDuration_not_contains: String
+  protectDuration_starts_with: String
+  protectDuration_not_starts_with: String
+  protectDuration_ends_with: String
+  protectDuration_not_ends_with: String
+  AND: [UserVaccinationWhereInput!]
+  OR: [UserVaccinationWhereInput!]
+  NOT: [UserVaccinationWhereInput!]
+}
+
+input UserVaccinationWhereUniqueInput {
+  id: ID
 }
 
 input UserWhereInput {
@@ -180,6 +514,9 @@ input UserWhereInput {
   password_not_starts_with: String
   password_ends_with: String
   password_not_ends_with: String
+  vaccinations_every: UserVaccinationWhereInput
+  vaccinations_some: UserVaccinationWhereInput
+  vaccinations_none: UserVaccinationWhereInput
   AND: [UserWhereInput!]
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]
@@ -188,6 +525,206 @@ input UserWhereInput {
 input UserWhereUniqueInput {
   id: ID
   email: String
+}
+
+type Vaccination {
+  id: ID!
+  name: String!
+  dose: Int
+  url: String!
+  untilNext: String
+  protectDuration: String
+}
+
+type VaccinationConnection {
+  pageInfo: PageInfo!
+  edges: [VaccinationEdge]!
+  aggregate: AggregateVaccination!
+}
+
+input VaccinationCreateInput {
+  id: ID
+  name: String!
+  dose: Int
+  url: String!
+  untilNext: String
+  protectDuration: String
+}
+
+input VaccinationCreateOneInput {
+  create: VaccinationCreateInput
+  connect: VaccinationWhereUniqueInput
+}
+
+type VaccinationEdge {
+  node: Vaccination!
+  cursor: String!
+}
+
+enum VaccinationOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  dose_ASC
+  dose_DESC
+  url_ASC
+  url_DESC
+  untilNext_ASC
+  untilNext_DESC
+  protectDuration_ASC
+  protectDuration_DESC
+}
+
+type VaccinationPreviousValues {
+  id: ID!
+  name: String!
+  dose: Int
+  url: String!
+  untilNext: String
+  protectDuration: String
+}
+
+type VaccinationSubscriptionPayload {
+  mutation: MutationType!
+  node: Vaccination
+  updatedFields: [String!]
+  previousValues: VaccinationPreviousValues
+}
+
+input VaccinationSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: VaccinationWhereInput
+  AND: [VaccinationSubscriptionWhereInput!]
+  OR: [VaccinationSubscriptionWhereInput!]
+  NOT: [VaccinationSubscriptionWhereInput!]
+}
+
+input VaccinationUpdateDataInput {
+  name: String
+  dose: Int
+  url: String
+  untilNext: String
+  protectDuration: String
+}
+
+input VaccinationUpdateInput {
+  name: String
+  dose: Int
+  url: String
+  untilNext: String
+  protectDuration: String
+}
+
+input VaccinationUpdateManyMutationInput {
+  name: String
+  dose: Int
+  url: String
+  untilNext: String
+  protectDuration: String
+}
+
+input VaccinationUpdateOneRequiredInput {
+  create: VaccinationCreateInput
+  update: VaccinationUpdateDataInput
+  upsert: VaccinationUpsertNestedInput
+  connect: VaccinationWhereUniqueInput
+}
+
+input VaccinationUpsertNestedInput {
+  update: VaccinationUpdateDataInput!
+  create: VaccinationCreateInput!
+}
+
+input VaccinationWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  dose: Int
+  dose_not: Int
+  dose_in: [Int!]
+  dose_not_in: [Int!]
+  dose_lt: Int
+  dose_lte: Int
+  dose_gt: Int
+  dose_gte: Int
+  url: String
+  url_not: String
+  url_in: [String!]
+  url_not_in: [String!]
+  url_lt: String
+  url_lte: String
+  url_gt: String
+  url_gte: String
+  url_contains: String
+  url_not_contains: String
+  url_starts_with: String
+  url_not_starts_with: String
+  url_ends_with: String
+  url_not_ends_with: String
+  untilNext: String
+  untilNext_not: String
+  untilNext_in: [String!]
+  untilNext_not_in: [String!]
+  untilNext_lt: String
+  untilNext_lte: String
+  untilNext_gt: String
+  untilNext_gte: String
+  untilNext_contains: String
+  untilNext_not_contains: String
+  untilNext_starts_with: String
+  untilNext_not_starts_with: String
+  untilNext_ends_with: String
+  untilNext_not_ends_with: String
+  protectDuration: String
+  protectDuration_not: String
+  protectDuration_in: [String!]
+  protectDuration_not_in: [String!]
+  protectDuration_lt: String
+  protectDuration_lte: String
+  protectDuration_gt: String
+  protectDuration_gte: String
+  protectDuration_contains: String
+  protectDuration_not_contains: String
+  protectDuration_starts_with: String
+  protectDuration_not_starts_with: String
+  protectDuration_ends_with: String
+  protectDuration_not_ends_with: String
+  AND: [VaccinationWhereInput!]
+  OR: [VaccinationWhereInput!]
+  NOT: [VaccinationWhereInput!]
+}
+
+input VaccinationWhereUniqueInput {
+  id: ID
 }
 `
       }
