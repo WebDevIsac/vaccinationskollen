@@ -2,6 +2,13 @@ scalar DateTime
 
 type Query {
 	getUser: User
+	getVaccinations: [Vaccination]
+	getUserVaccinations: [UserVaccination]
+}
+
+type Vacc {
+	vaccination: Vaccination
+	userVaccination: UserVaccination
 }
 
 type Mutation {
@@ -36,7 +43,7 @@ type UserVaccination {
 	user: User!
 	type: Vaccination!
 	createdAt: DateTime!
-	takenAt: DateTime
+	takenAt: String
 	untilNext: String
 	protectDuration: String
 }
