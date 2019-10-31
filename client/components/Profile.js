@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, Button } from 'react-native';
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 

@@ -1,26 +1,57 @@
 import React, { useState } from "react";
-import { View, Text } from "react-native";
-import { Picker } from "native-base";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import RNPickerSelect from "react-native-picker-select";
+import { Query } from "react-apollo";
+import gql from "graphql-tag";
+
+const GET_VACCINATIONS_QUERY = gql`
+	query getVaccinationsQuery {
+		getVaccinations {
+			id
+			name
+			dose
+		}
+	}
+`; 
 
 const NewVaccination = () => {
+
+	const [value, setValue] = useState();
+
 	return (
 		<View style={styles.container}>
-			<Picker
-				headerComponent={
-					<Header>
-						<Button transparent>Custom Back</Button>
-						<Title>Custom Header</Title>
-					</Header>
-				}
-				mode="dropdown"
-				selectedValue={this.state.selected1}
-				onValueChange={this.onValueChange.bind(this)}
-			>
-				<Item label="Cats" value="key0" />
-				<Item label="Dogs" value="key1" />
-				<Item label="Birds" value="key2" />
-				<Item label="Elephants" value="key3" />
-			</Picker>
+		<Query query={GET_VACCINATIONS_QUERY}>
+			{({ loading, err, data }) => {
+				if (err) return console.log(err);
+				if (loading) return <ActivityIndicator/>
+
+				console.log(data.getVaccinations);
+				let vaccinations = data.getVaccinations.map(vaccination => {
+					let id = vaccination.id;
+					let name = `${vaccination.name} ${vaccination.dose ? "Dos: " + vaccination.dose : ""}`;
+
+					return {
+						key: id,
+						value: id,
+						label: name
+					}
+				})
+
+				return (
+					<View style={styles.container}>
+						<RNPickerSelect
+							placeholder={{
+								label: "Välj en vaccination...",
+								value: null
+							}}
+							onValueChange={value => setValue(value)}
+							value={value ? value : null}
+							items={vaccinations}
+						/>
+					</View>
+				)
+			}} 
+		</Query>
 		</View>
 	);
 };
