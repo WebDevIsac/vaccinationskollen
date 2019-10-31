@@ -60,10 +60,10 @@ const Login = ({screenProps}) => {
 									value={password}
 								/>
 								<Button
+									title="Logga In"
 									onPress={() => {
 										mutation();
 									}}
-									title="Logga In"
 								/>
 							</View>
 						)

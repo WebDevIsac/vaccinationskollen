@@ -14,7 +14,7 @@ type Vacc {
 type Mutation {
     signup(name: String!, email: String!, password: String!): AuthPayload
     login(email: String!, password: String!): AuthPayload
-	addUserVaccination(vaccinationId: ID!): UserVaccination
+	addUserVaccination(vaccinationId: ID!, takenAt: String): UserVaccination
 }
 
 type User {

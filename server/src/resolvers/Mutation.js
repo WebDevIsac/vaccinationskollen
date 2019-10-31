@@ -39,6 +39,7 @@ const addUserVaccination = (parent, args, context, info) => {
 	return context.prisma.createUserVaccination({
 		user: { connect: { id: userId } },
 		type: { connect: { id: args.vaccinationId } },
+		takenAt: args.takenAt
 	})
 }
 
