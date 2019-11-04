@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, TextInput, Button, AsyncStorage, Alert, ActivityIndicator } from "react-native";
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
+import navStyles from "../styles/navStyles";
 
 import { signIn } from "../loginUtils";
 
@@ -85,17 +86,7 @@ const Login = ({screenProps}) => {
 
 Login.navigationOptions = {
 	title: "Login",
-	headerStyle: {
-		backgroundColor: "#373142",
-		borderBottomWidth: 0,
-	},
-	headerTitleStyle: {
-		color: "#FFF"
-	},
-	headerBackTitle: {
-		color: "#82D8D8"
-	},
-	headerTintColor: "#82D8D8"
+	...navStyles
 }
 
 const styles = StyleSheet.create({

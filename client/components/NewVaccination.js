@@ -9,9 +9,11 @@ import {
 	ScrollView
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
+// import { DatePicker } from "react-native-woodpicker";
 import { Query, Mutation } from "react-apollo";
 import gql from "graphql-tag";
 import { Chevron } from "react-native-shapes";
+import navStyles from "../styles/navStyles";
 
 const GET_VACCINATIONS_QUERY = gql`
 	query getVaccinationsQuery {
@@ -31,9 +33,9 @@ const ADD_USER_VACCINATION = gql`
 	}
 `;
 
-const NewVaccination = () => {
+const NewVaccination = (props) => {
 	const [id, setId] = useState();
-	const [date, setDate] = useState("2019-10-29");
+	const [date, setDate] = useState("2019-10-15");
 	const [doses, setDoses] = useState([{value: "1", label: "Dos 1"}]);
 	const [name, setName] = useState();
 	const [allVaccinations, setAllVaccinations] = useState();
@@ -83,6 +85,10 @@ const NewVaccination = () => {
 
 	return (
 		<View style={styles.container}>
+			<Button
+				title="Gå till din profil"
+				onPress={() => props.navigation.navigate("Profile")}
+			/>
 			<Text>View</Text>
 			<Query query={GET_VACCINATIONS_QUERY}>
 				{({ loading, err, data }) => {
@@ -216,20 +222,21 @@ const NewVaccination = () => {
 					);
 				}}
 			</Mutation>
+			{/* <DatePicker 
+				style={styles.pickerStyle}
+				title="Date Picker"
+				onDateChange={setDate}
+				date={date}
+				placholder={date ? date.toDateString() : 'No value Selected'}
+				isNullable
+			/>  */}
 		</View>
 	);
 };
 
 NewVaccination.navigationOptions = {
 	title: "Ny vaccination",
-	headerStyle: {
-		backgroundColor: "#373142",
-		borderBottomWidth: 0
-	},
-	headerTitleStyle: {
-		color: "#FFF"
-	},
-	headerTintColor: "#82D8D8"
+	...navStyles
 };
 
 const styles = StyleSheet.create({
@@ -238,7 +245,20 @@ const styles = StyleSheet.create({
 		backgroundColor: "#FFF",
 		alignItems: "center",
 		justifyContent: "space-around",
-	}
+	},
+	// pickerStyle: {
+	// 	backgroundColor: 'white',
+	// 	borderWidth: 1,
+	// 	borderColor: 'blue',
+	// 	borderRadius: 5,
+	// 	alignItems: 'center',
+	// 	paddingHorizontal: 8,
+	// 	paddingVertical: 8,
+	// 	marginHorizontal: 8,
+	// 	marginVertical: 8,
+	// 	height: 40,
+	// 	width: 200,
+	// }
 });
 
 const pickerSelectStyles = StyleSheet.create({

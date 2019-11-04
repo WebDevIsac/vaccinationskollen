@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, View, Button } from "react-native";
 import { signOut } from "../loginUtils";
+import navStyles from "../styles/navStyles";
 
 const Home = (props) => {
 	return (
@@ -12,6 +13,10 @@ const Home = (props) => {
 			<Button
 				title="Ny vaccination"
 				onPress={() => props.navigation.navigate("NewVaccination")}
+			/>
+			<Button
+				title="Dina Vaccinationer"
+				onPress={() => props.navigation.navigate("VaccinationList")}
 			/>
 			<Button
 				title="Logout"
@@ -27,14 +32,7 @@ const Home = (props) => {
 
 Home.navigationOptions = {
 	title: "Home",
-	headerStyle: {
-		backgroundColor: "#373142",
-		borderBottomWidth: 0,
-	},
-	headerTitleStyle: {
-		color: "#FFF"
-	},
-	headerTintColor: "#82D8D8"
+	...navStyles
 }
 
 const styles = StyleSheet.create({

@@ -5,6 +5,7 @@ import gql from "graphql-tag";
 
 import { AUTH_TOKEN } from "../constants";
 import { signIn, getToken } from "../loginUtils";
+import navStyles from "../styles/navStyles";
 
 const Register = ({screenProps}) => {
 	const [isLoading, setIsLoading] = useState(false);
@@ -96,17 +97,7 @@ const Register = ({screenProps}) => {
 
 Register.navigationOptions = {
 	title: "Register",
-	headerStyle: {
-		backgroundColor: "#373142",
-		borderBottomWidth: 0,
-	},
-	headerTitleStyle: {
-		color: "#FFF"
-	},
-	headerBackTitle: {
-		color: "#82D8D8"
-	},
-	headerTintColor: "#82D8D8"
+	...navStyles
 }
 
 const styles = StyleSheet.create({

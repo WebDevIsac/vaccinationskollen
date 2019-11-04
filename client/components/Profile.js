@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, ActivityIndicator, StyleSheet, Button } from 'react-native';
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
+import navStyles from "../styles/navStyles";
 
 const GET_USER_QUERY = gql`
 	query getUserQuery {
@@ -12,7 +13,7 @@ const GET_USER_QUERY = gql`
 	}
 `;
 
-const Profile = () => {
+const Profile = (props) => {
 	return (
 		<Query query={GET_USER_QUERY}>
 			{({ loading, err, data }) => {
@@ -25,9 +26,18 @@ const Profile = () => {
 						<Text>Email: {data.getUser.email}</Text>
 						<Button
 							title="Uppdatera profil"
-							onPress={() => console.log("Ändra")}
+							onPress={() => props.navigation.navigate("UpdateProfile", { user: data.getUser })}
 						/>
-						<Text>Dina vaccinationer</Text>
+						<Button
+							title="Dina vaccinationer"
+							onPress={() => props.navigation.navigate("VaccinationList")}
+						/>
+						{/* <Button 
+							title="Karls Vaccinationer"
+						/> 
+						<Button 
+							title="Lisas vaccinationer"
+						/>  */}
 					</View>
 				)
 			}}
@@ -37,17 +47,7 @@ const Profile = () => {
 
 Profile.navigationOptions = {
 	title: "Din Profil",
-	headerStyle: {
-		backgroundColor: "#373142",
-		borderBottomWidth: 0,
-	},
-	headerTitleStyle: {
-		color: "#000"
-	},
-	headerBackTitle: {
-		color: "#82D8D8"
-	},
-	headerTintColor: "#82D8D8"
+	...navStyles
 }
 
 const styles = StyleSheet.create({

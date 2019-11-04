@@ -3,6 +3,7 @@ import { View, Text, ActivityIndicator, StyleSheet, Button } from 'react-native'
 import { Mutation } from "react-apollo";
 import { Form, Item, Input, Label } from "native-base"
 import gql from "graphql-tag";
+import navStyles from "../styles/navStyles";
 
 const UPDATE_USER = gql`
 	mutation getUserQuery {
@@ -14,7 +15,6 @@ const UPDATE_USER = gql`
 `;
 
 const UpdateProfile = () => {
-	const [name, setName] =
 
 
 	return (
@@ -24,7 +24,6 @@ const UpdateProfile = () => {
 					<Label>Namn</Label>
 					<Input
 						placeholder="Isac"
-						value={}
 					/>
 				</Item>
 			</Form>
@@ -34,17 +33,7 @@ const UpdateProfile = () => {
 
 UpdateProfile.navigationOptions = {
 	title: "Uppdatera Profil",
-	headerStyle: {
-		backgroundColor: "#373142",
-		borderBottomWidth: 0,
-	},
-	headerTitleStyle: {
-		color: "#000"
-	},
-	headerBackTitle: {
-		color: "#82D8D8"
-	},
-	headerTintColor: "#82D8D8"
+	...navStyles
 }
 
 const styles = StyleSheet.create({
