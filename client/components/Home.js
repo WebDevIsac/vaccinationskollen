@@ -31,7 +31,7 @@ const Home = (props) => {
 }
 
 Home.navigationOptions = {
-	title: "Home",
+	title: "Hem",
 	...navStyles
 }
 

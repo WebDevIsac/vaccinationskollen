@@ -16,18 +16,17 @@ const UPDATE_USER = gql`
 
 const UpdateProfile = () => {
 
-
 	return (
-		<Mutation mutation={UPDATE_USER}>
+		// <Mutation mutation={UPDATE_USER}>
 			<Form>
 				<Item>
 					<Label>Namn</Label>
-					<Input
+					{/* <Input
 						placeholder="Isac"
-					/>
+					/> */}
 				</Item>
 			</Form>
-		</Mutation>
+		// </Mutation>
 	)
 }
 

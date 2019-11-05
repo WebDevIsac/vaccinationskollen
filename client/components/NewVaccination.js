@@ -75,14 +75,6 @@ const NewVaccination = (props) => {
 		}
 	}, [name]);
 
-	useEffect(() => {
-		if (isLoading) {
-			return <ActivityIndicator size="large" />
-		}
-
-		console.log(isLoading);
-	}, [isLoading])
-
 	return (
 		<View style={styles.container}>
 			<Button
@@ -209,15 +201,17 @@ const NewVaccination = (props) => {
 				}}
 			>
 				{(mutation, { loading, err, data }) => {
-
 					if (loading) setIsLoading(loading);
 
-					setIsLoading(loading)
+					setIsLoading(loading);
 
 					return (
 						<Button
 							title="Lägg till vaccination"
-							onPress={() => mutation()}
+							onPress={() => {
+								mutation();
+								props.navigation.goBack();
+							}}
 						/>
 					);
 				}}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, TextInput, Button, AsyncStorage, Alert, ActivityIndicator } from "react-native";
+import { Text, View, StyleSheet, TextInput, Button, AsyncStorage, Alert, ActivityIndicator } from "react-native";
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 
@@ -12,6 +12,7 @@ const Register = ({screenProps}) => {
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [emailError, setEmailError] = useState();
 
 	const SIGNUP_MUTATION = gql`
 		mutation SignupMutation($name: String!, $email: String!, $password: String!) {
@@ -33,14 +34,10 @@ const Register = ({screenProps}) => {
 				mutation={SIGNUP_MUTATION} 
 				variables={{ name, email, password }}
 				onError={({ graphQLErrors }) => {
-					let message = graphQLErrors[0].message;
-					message = graphQLErrors[0].message.includes("Field name = email") && "This email address is already in use"
-					Alert.alert(
-						'Failed to login',
-						message,
-						{text: 'OK'},
-						{cancelable: false},
-					  );
+					if (graphQLErrors[0].message.includes("Field name = email")) {
+						setEmailError("Den här emailaddressen används redan.")
+					}
+					setIsLoading(false);
 				}}
 				onCompleted={(data) => confirm(data)}
 			>
@@ -64,6 +61,7 @@ const Register = ({screenProps}) => {
 									onChangeText={text => setEmail(text)}
 									value={email}
 								/>
+								<Text style={emailError ? styles.errorMessage : styles.hideMessage}>{emailError}</Text>
 								<TextInput
 									style={styles.input}
 									textContentType="password"
@@ -108,15 +106,24 @@ const styles = StyleSheet.create({
 		justifyContent: "center"
 	},
 	input: {
-		margin: 10,
+		marginVertical: 10,
 		paddingLeft: 20,
 		paddingRight: 20,
 		paddingTop: 10,
 		paddingBottom: 10,
 		borderWidth: 2,
-		width: 200,
+		width: 240,
 		height: 40,
 		borderColor: "#000"
+	},
+	errorMessage: {
+		fontSize: 12,
+		color: "#FEB4AE",
+		backgroundColor: "#FEE0E0",
+		width: 240
+	},
+	hideMessage: {
+		display: "none"
 	}
 });
 
