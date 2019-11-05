@@ -58,6 +58,13 @@ const RegisterStack = createStackNavigator({
 
 const BottomNavigator = createBottomTabNavigator(
 	{
+		Home: {
+			screen: HomeStack,
+			navigationOptions: ({ screenProps }) => ({
+				title: "Hem",
+				props: screenProps
+			})
+		},
 		Profile: {
 			screen: ProfileStack,
 			navigationOptions: {
@@ -68,12 +75,6 @@ const BottomNavigator = createBottomTabNavigator(
 			screen: NewVaccinationStack,
 			navigationOptions: {
 				title: "Ny Vaccination"
-			}
-		},
-		Home: {
-			screen: HomeStack,
-			navigationOptions: {
-				title: "Hem"
 			}
 		},
 		SignOut: {
@@ -118,6 +119,7 @@ const NavWrapper = ({ client }) => {
 	const [token, setToken] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [login, setLogin] = useState(true);
+	const [firstTime, setFirstTime] = useState(false);
 
 	useEffect(() => {
 		updateToken();
@@ -131,10 +133,10 @@ const NavWrapper = ({ client }) => {
 
 	if (loading) return <ActivityIndicator size="large" />;
 	if (!token && login)
-		return <LoginContainer screenProps={{ updateToken, setLogin }} />;
+		return <LoginContainer screenProps={{ updateToken, setLogin, setFirstTime }} />;
 	if (!token && !login)
-		return <RegisterContainer screenProps={{ updateToken, setLogin }} />;
-	return <AppContainer screenProps={{ updateToken, client }} />;
+		return <RegisterContainer screenProps={{ updateToken, setLogin, setFirstTime }} />;
+	return <AppContainer screenProps={{ updateToken, client, firstTime }} />;
 };
 
 export default withApollo(NavWrapper);

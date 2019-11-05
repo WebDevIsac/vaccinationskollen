@@ -18,6 +18,7 @@ import { Chevron } from "react-native-shapes";
 import navStyles from "../styles/navStyles";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { Appearance } from "react-native-appearance";
+import { translateDate, setCorrectHours } from "../dateUtils";
 
 const GET_VACCINATIONS_QUERY = gql`
 	query getVaccinationsQuery {
@@ -42,7 +43,7 @@ const isDarkModeEnabled = colorScheme === 'dark';
 
 const NewVaccination = (props) => {
 	const [id, setId] = useState();
-	const [date, setDate] = useState(new Date());
+	const [date, setDate] = useState(translateDate(new Date()));
 	const [doses, setDoses] = useState([{value: "1", label: "Dos 1"}]);
 	const [name, setName] = useState();
 	const [allVaccinations, setAllVaccinations] = useState();
@@ -83,14 +84,8 @@ const NewVaccination = (props) => {
 		}
 	}, [name]);
 
-	console.log(date);
-
 	return (
 		<View style={styles.container}>
-			<Button
-				title="Gå till din profil"
-				onPress={() => props.navigation.navigate("Profile")}
-			/>
 			<Query query={GET_VACCINATIONS_QUERY}>
 				{({ loading, err, data }) => {
 					setIsLoading(loading);
@@ -198,15 +193,21 @@ const NewVaccination = (props) => {
 								style={{ position: "relative" }}
 							>
 								<TextInput
-									placeholder="Datum..."
+									value={date.toString()}
 									pointerEvents="none"
 									style={pickerSelectStyles.inputIOS}
 								/>
 								<Chevron size={1.5} color="gray" style={styles.icon} />
 							</TouchableOpacity>
-							<DateTimePicker 
+							<DateTimePicker
+								titleIOS="Välj datum"
+								date={new Date(date)}
 								isVisible={isDateTimePickerVisible}
-								onConfirm={(data) => setDate(data)}
+								onConfirm={(data) => {
+									let translatedDate = translateDate(data);
+									setDate(translatedDate);
+									setIsDateTimePickerVisible(false);
+								}}
 								onCancel={() => setIsDateTimePickerVisible(false)}
 								isDarkModeEnabled={isDarkModeEnabled}
 							/>
@@ -216,7 +217,7 @@ const NewVaccination = (props) => {
 			</Query>
 			<Mutation
 				mutation={ADD_USER_VACCINATION}
-				variables={{ vaccinationId: id, takenAt: date }}
+				variables={{ vaccinationId: id, takenAt: setCorrectHours(new Date(date)) }}
 				onError={({ graphQLErrors }) => {
 					Alert.alert(
 						"Failed to add vaccination",

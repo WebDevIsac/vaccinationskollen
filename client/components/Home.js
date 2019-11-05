@@ -1,32 +1,39 @@
 import React from "react";
-import { StyleSheet, View, Button } from "react-native";
-import { signOut } from "../loginUtils";
+import { Text, StyleSheet, View, Button, ActivityIndicator } from "react-native";
 import navStyles from "../styles/navStyles";
+import { Query } from "react-apollo";
+import gql from "graphql-tag";
+
+const GET_USER_QUERY = gql`
+	query getUserQuery {
+		getUser {
+			email
+			name
+		}
+	}
+`;
 
 const Home = (props) => {
+	const { firstTime } = props.screenProps;
 	return (
-		<View style={styles.container}>
-			<Button
-				title="Gå till din profil"
-				onPress={() => props.navigation.navigate("Profile")}
-			/>
-			<Button
-				title="Ny vaccination"
-				onPress={() => props.navigation.navigate("NewVaccination")}
-			/>
-			<Button
-				title="Dina Vaccinationer"
-				onPress={() => props.navigation.navigate("VaccinationList")}
-			/>
-			<Button
-				title="Logout"
-				onPress={() => {
-					signOut();
-					props.screenProps.updateToken();
-					props.client.resetStore();
-				}}
-			/>
-		</View>
+		<Query query={GET_USER_QUERY}>
+			{({ loading, err, data }) => {
+				if (err) return console.log(err);
+				if (loading) return <ActivityIndicator size="large" />
+
+				let welcomeMessage = `Välkommen${firstTime ? "" : " tillbaka"} ${data.getUser.name}`;
+
+				return (
+					<View style={styles.container}>
+						<Text>{welcomeMessage}</Text>
+						<Button
+							title="Gå till din profil"
+							onPress={() => props.navigation.navigate("Profile")}
+						/>
+					</View>
+				)
+			}}
+		</Query>
 	)
 }
 

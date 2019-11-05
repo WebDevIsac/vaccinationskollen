@@ -26,6 +26,7 @@ const Register = ({screenProps}) => {
 		const { token } = data.signup;
 		await signIn(token);
 		screenProps.updateToken();
+		screenProps.setFirstTime(true);
 	};
 
 	return (

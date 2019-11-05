@@ -26,6 +26,7 @@ const Login = (props) => {
 		const { token } = data.login;
 		await signIn(token);
 		screenProps.updateToken();
+		screenProps.setFirstTime(false);
 	};
 
 	return (
