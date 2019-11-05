@@ -56,7 +56,7 @@ const Register = ({screenProps}) => {
 									value={name}
 								/>
 								<TextInput
-									style={styles.input}
+									style={[styles.input, emailError && {borderColor: "#FF3355"}]}
 									textContentType="emailAddress"
 									placeholder="Your email"
 									onChangeText={text => setEmail(text)}
@@ -95,7 +95,7 @@ const Register = ({screenProps}) => {
 };
 
 Register.navigationOptions = {
-	title: "Register",
+	title: "Registrera dig",
 	...navStyles
 }
 
@@ -119,9 +119,9 @@ const styles = StyleSheet.create({
 	},
 	errorMessage: {
 		fontSize: 12,
-		color: "#FEB4AE",
+		color: "#FF3355",
 		backgroundColor: "#FEE0E0",
-		width: 240
+		width: 240,
 	},
 	hideMessage: {
 		display: "none"

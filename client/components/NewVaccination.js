@@ -114,7 +114,7 @@ const NewVaccination = (props) => {
 					});
 
 					return (
-						<View>
+						<View style={{width:"80%"}}>
 							<RNPickerSelect
 								placeholder={{
 									label: "Välj en vaccination...",
@@ -258,6 +258,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "#FFF",
 		alignItems: "center",
 		justifyContent: "space-around",
+		width: "100%"
 	},
 	icon: {
 		position: "absolute",
@@ -277,7 +278,7 @@ const pickerSelectStyles = StyleSheet.create({
 		borderRadius: 4,
 		color: "black",
 		paddingRight: 30, // to ensure the text is never behind the icon
-		width: 200,
+		width: "100%",
 		height: 40
 	},
 	inputAndroid: {
@@ -289,7 +290,7 @@ const pickerSelectStyles = StyleSheet.create({
 		borderRadius: 8,
 		color: "black",
 		paddingRight: 30, // to ensure the text is never behind the icon
-		width: 200,
+		width: "100%",
 		height: 40
 	},
 	iconContainer: {

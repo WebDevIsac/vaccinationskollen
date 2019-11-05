@@ -19,17 +19,15 @@ const Home = (props) => {
 		<Query query={GET_USER_QUERY}>
 			{({ loading, err, data }) => {
 				if (err) return console.log(err);
-				if (loading) return <ActivityIndicator size="large" />
+				if (loading) return <View style={styles.loading}><ActivityIndicator size="large" /></View>
 
 				let welcomeMessage = `Välkommen${firstTime ? "" : " tillbaka"} ${data.getUser.name}`;
 
 				return (
 					<View style={styles.container}>
 						<Text>{welcomeMessage}</Text>
-						<Button
-							title="Gå till din profil"
-							onPress={() => props.navigation.navigate("Profile")}
-						/>
+						<Text>Dina senast tagna vaccinationer</Text>
+						<Text>Vaccinationer som vi rekommenderar dig att fylla på snart igen</Text>
 					</View>
 				)
 			}}
@@ -48,6 +46,15 @@ const styles = StyleSheet.create({
 		backgroundColor: "#FFF",
 		alignItems: "center",
 		justifyContent: "center"
+	},
+	loading: {
+		position: 'absolute',
+		left: 0,
+		right: 0,
+		top: 0,
+		bottom: 0,
+		alignItems: 'center',
+		justifyContent: 'center'
 	}
 });
 

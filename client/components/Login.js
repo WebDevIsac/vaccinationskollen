@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, TextInput, Button, AsyncStorage, Alert, ActivityIndicator } from "react-native";
+import { Text, View, StyleSheet, TextInput, Button, AsyncStorage, Alert, ActivityIndicator, TouchableOpacity } from "react-native";
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 import navStyles from "../styles/navStyles";
 
 import { signIn } from "../loginUtils";
+import { Ionicons } from "@expo/vector-icons";
 
 const Login = (props) => {
 	const { screenProps } = props;
@@ -36,10 +37,11 @@ const Login = (props) => {
 				variables={{ email, password }}
 				onError={({ graphQLErrors }) => {
 					if (graphQLErrors[0].message.includes("No such user found")) {
-						setEmailError("Denna användaren kunde inte hittas.")
-					}
-					if (graphQLErrors[0].message.includes("Invalid password")) {
-						setPasswordError("Felaktigt lösenord angivet")
+						setEmailError("Denna användaren kunde inte hittas.");
+						setPasswordError(null);
+					} else if (graphQLErrors[0].message.includes("Invalid password")) {
+						setPasswordError("Felaktigt lösenord angivet");
+						setEmailError(null);
 					}
 					setIsLoading(false);
 				}}
@@ -50,29 +52,34 @@ const Login = (props) => {
 					else {
 						setIsLoading(loading);
 						return (
-							<View>
-								<TextInput
-									style={styles.input}
-									textContentType="emailAddress"
-									placeholder="Your email"
-									onChangeText={text => setEmail(text)}
-									value={email}
-								/>
+							<View style={{width: "90%"}}>
+								<View style={styles.inputView}>
+									<Ionicons name="ios-mail" size={25} color="gray" style={styles.inputIcon} />
+									<TextInput
+										style={[styles.input, emailError && {borderColor: "#FF3355"}]}
+										textContentType="emailAddress"
+										placeholder="Your email"
+										onChangeText={text => setEmail(text)}
+										value={email}
+									/>
+								</View>
 								<Text style={emailError ? styles.errorMessage : styles.hideMessage}>{emailError}</Text>
-								<TextInput
-								style={styles.input}
-								textContentType="password"
-								placeholder="Your password"
-								onChangeText={text => setPassword(text)}
-								value={password}
-								/>
+								<View style={styles.inputView}>
+									<Ionicons name="ios-lock" size={25} color="gray" style={styles.inputIcon} />
+									<TextInput
+										style={[styles.input, passwordError && {borderColor: "#FF3355"}]}
+										textContentType="password"
+										placeholder="Your password"
+										onChangeText={text => setPassword(text)}
+										value={password}
+									/>
+								</View>
 								<Text style={passwordError ? styles.errorMessage : styles.hideMessage}>{passwordError}</Text>
-								<Button
-									title="Logga In"
-									onPress={() => {
-										mutation();
-									}}
-								/>
+								<TouchableOpacity style={styles.button} onPress={() => {
+									mutation();
+								}}>
+									<Text style={{ fontSize: 18, color: "#FFF" }}>Logga in</Text>
+								</TouchableOpacity>
 							</View>
 						)
 					}
@@ -92,7 +99,7 @@ const Login = (props) => {
 };
 
 Login.navigationOptions = {
-	title: "Login",
+	title: "Logga in",
 	...navStyles
 }
 
@@ -101,28 +108,52 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: "#FFF",
 		alignItems: "center",
-		justifyContent: "center"
+		justifyContent: "center",
+		width: "100%"
+	},
+	inputView: {
+		width: "100%",
+		position: "relative",
 	},
 	input: {
 		marginVertical: 10,
-		paddingLeft: 20,
-		paddingRight: 20,
-		paddingTop: 10,
-		paddingBottom: 10,
+		paddingHorizontal: 20,
+		paddingRight: 10,
+		paddingLeft: 60,
 		borderWidth: 2,
-		width: 240,
-		height: 40,
-		borderColor: "#000"
+		width: "100%",
+		height: 60,
+		borderColor: "#000",
+		borderRadius: 50,
+		fontSize: 16
+	},
+	inputIcon: {
+		position: "absolute", 
+		left: 25, 
+		top: 27.5
+	},
+	button: {
+		flexGrow: 1,
+		alignItems: "center",
+		justifyContent: "center",
+		marginVertical: 10,
+		textAlign: "center",
+		width: "100%",
+		height: 60,
+		borderRadius: 50,
+		borderWidth: 0,
+		borderColor: "#6FB556",
+		backgroundColor: "#6FB556"
 	},
 	errorMessage: {
 		fontSize: 12,
-		color: "#FEB4AE",
+		color: "#FF3355",
 		backgroundColor: "#FEE0E0",
-		width: 240
+		width: "100%",
 	},
 	hideMessage: {
 		display: "none"
-	}
+	},
 });
 
 export default Login;
