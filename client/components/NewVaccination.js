@@ -6,7 +6,9 @@ import {
 	ActivityIndicator,
 	Button,
 	Alert,
-	ScrollView
+	ScrollView,
+	TextInput,
+	TouchableOpacity
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 // import { DatePicker } from "react-native-woodpicker";
@@ -14,6 +16,8 @@ import { Query, Mutation } from "react-apollo";
 import gql from "graphql-tag";
 import { Chevron } from "react-native-shapes";
 import navStyles from "../styles/navStyles";
+import DateTimePicker from "react-native-modal-datetime-picker";
+import { Appearance } from "react-native-appearance";
 
 const GET_VACCINATIONS_QUERY = gql`
 	query getVaccinationsQuery {
@@ -33,9 +37,12 @@ const ADD_USER_VACCINATION = gql`
 	}
 `;
 
+const colorScheme = Appearance.getColorScheme();
+const isDarkModeEnabled = colorScheme === 'dark';
+
 const NewVaccination = (props) => {
 	const [id, setId] = useState();
-	const [date, setDate] = useState("2019-10-15");
+	const [date, setDate] = useState(new Date());
 	const [doses, setDoses] = useState([{value: "1", label: "Dos 1"}]);
 	const [name, setName] = useState();
 	const [allVaccinations, setAllVaccinations] = useState();
@@ -43,6 +50,7 @@ const NewVaccination = (props) => {
 	const [month, setMonth] = useState();
 	const [year, setYear] = useState();
 	const [isLoading, setIsLoading] = useState();
+	const [isDateTimePickerVisible, setIsDateTimePickerVisible] = useState(false);
 
 	let weeks = [];
 	for (let i = 0; i < 4; i++) {
@@ -75,13 +83,14 @@ const NewVaccination = (props) => {
 		}
 	}, [name]);
 
+	console.log(date);
+
 	return (
 		<View style={styles.container}>
 			<Button
 				title="Gå till din profil"
 				onPress={() => props.navigation.navigate("Profile")}
 			/>
-			<Text>View</Text>
 			<Query query={GET_VACCINATIONS_QUERY}>
 				{({ loading, err, data }) => {
 					setIsLoading(loading);
@@ -184,6 +193,23 @@ const NewVaccination = (props) => {
 									return <Chevron size={1.5} color="gray" />;
 								}}
 							/>
+							<TouchableOpacity
+								onPress={() => setIsDateTimePickerVisible(true)}
+								style={{ position: "relative" }}
+							>
+								<TextInput
+									placeholder="Datum..."
+									pointerEvents="none"
+									style={pickerSelectStyles.inputIOS}
+								/>
+								<Chevron size={1.5} color="gray" style={styles.icon} />
+							</TouchableOpacity>
+							<DateTimePicker 
+								isVisible={isDateTimePickerVisible}
+								onConfirm={(data) => setDate(data)}
+								onCancel={() => setIsDateTimePickerVisible(false)}
+								isDarkModeEnabled={isDarkModeEnabled}
+							/>
 						</View>
 					);
 				}}
@@ -216,14 +242,6 @@ const NewVaccination = (props) => {
 					);
 				}}
 			</Mutation>
-			{/* <DatePicker 
-				style={styles.pickerStyle}
-				title="Date Picker"
-				onDateChange={setDate}
-				date={date}
-				placholder={date ? date.toDateString() : 'No value Selected'}
-				isNullable
-			/>  */}
 		</View>
 	);
 };
@@ -240,19 +258,11 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "space-around",
 	},
-	// pickerStyle: {
-	// 	backgroundColor: 'white',
-	// 	borderWidth: 1,
-	// 	borderColor: 'blue',
-	// 	borderRadius: 5,
-	// 	alignItems: 'center',
-	// 	paddingHorizontal: 8,
-	// 	paddingVertical: 8,
-	// 	marginHorizontal: 8,
-	// 	marginVertical: 8,
-	// 	height: 40,
-	// 	width: 200,
-	// }
+	icon: {
+		position: "absolute",
+		top: 24,
+		right: 12,
+	}
 });
 
 const pickerSelectStyles = StyleSheet.create({

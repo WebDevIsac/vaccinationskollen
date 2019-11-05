@@ -32,8 +32,7 @@ const SignOutFunction = props => {
 };
 
 const HomeStack = createStackNavigator({
-	Home: withApollo(HomeScreen),
-	NewVaccination: NewVaccinationScreen
+	Home: withApollo(HomeScreen)
 });
 
 const ProfileStack = createStackNavigator({
@@ -41,6 +40,12 @@ const ProfileStack = createStackNavigator({
 	UpdateProfile: UpdateProfileScreen,
 	VaccinationList: VaccinationListScreen
 });
+
+const NewVaccinationStack = createStackNavigator({
+	NewVaccination: NewVaccinationScreen
+});
+
+const SignOutScreen = () => {};
 
 const LoginStack = createStackNavigator({
 	Login: LoginScreen
@@ -50,7 +55,6 @@ const RegisterStack = createStackNavigator({
 	Register: RegisterScreen
 });
 
-const SignOutScreen = () => {};
 
 const BottomNavigator = createBottomTabNavigator(
 	{
@@ -58,6 +62,12 @@ const BottomNavigator = createBottomTabNavigator(
 			screen: ProfileStack,
 			navigationOptions: {
 				title: "Profil"
+			}
+		},
+		NewVaccination: {
+			screen: NewVaccinationStack,
+			navigationOptions: {
+				title: "Ny Vaccination"
 			}
 		},
 		Home: {
@@ -85,16 +95,16 @@ const BottomNavigator = createBottomTabNavigator(
 					iconName = "ios-person";
 				} else if (routeName === "SignOut") {
 					iconName = "ios-log-out"
+				} else if (routeName === "NewVaccination") {
+					iconName = "ios-add-circle"
 				}
 
-				// You can return any component that you like here! We usually use an
-				// icon component from react-native-vector-icons
 				return <Ionicons name={iconName} size={25} color={tintColor} />;
 			}
 		}),
 		tabBarOptions: {
 			activeTintColor: "#E13205",
-			inactiveTintColor: "gray"
+			inactiveTintColor: "#D3D3D3"
 		}
 	}
 );
