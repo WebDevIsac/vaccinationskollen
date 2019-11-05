@@ -87,12 +87,10 @@ const Login = (props) => {
 				}}
 			</Mutation>
 			{!isLoading && (
-				<Button
-					title="Vill du skapa ett konto?"
-					onPress={() => {
-						screenProps.setLogin(false);
-					}}
-				/>
+				<TouchableOpacity style={styles.changeButton} onPress={() => { screenProps.setLogin(false) }}>
+					<Text style={styles.changeButtonText}>Har du inget konto? Skapa ett</Text>
+					<Ionicons name="ios-arrow-round-forward" size={30} color="#2196F3"/>
+				</TouchableOpacity>
 			)}
 		</View>
 	);
@@ -154,6 +152,20 @@ const styles = StyleSheet.create({
 	hideMessage: {
 		display: "none"
 	},
+	changeButton: {
+		flexGrow: 1,
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-around",
+		position: "absolute",
+		bottom: 20
+	},
+	changeButtonText: {
+		fontSize: 18,
+		marginRight: 12,
+		marginBottom: 4,
+		color: "#2196F3"
+	}
 });
 
 export default Login;
