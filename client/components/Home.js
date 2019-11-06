@@ -27,7 +27,7 @@ const Home = (props) => {
 					<View style={styles.container}>
 						<Text>{welcomeMessage}</Text>
 						<Text>Dina senast tagna vaccinationer</Text>
-						<Text>Vaccinationer som vi rekommenderar dig att fylla på snart igen</Text>
+						<Text>Dessa vaccinationer rekommenderas fyllas på snart igen</Text>
 					</View>
 				)
 			}}
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: "#FFF",
 		alignItems: "center",
-		justifyContent: "center"
+		justifyContent: "center",
 	},
 	loading: {
 		position: 'absolute',

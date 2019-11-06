@@ -83,7 +83,6 @@ const Login = (props) => {
 							</View>
 						)
 					}
-					
 				}}
 			</Mutation>
 			{!isLoading && (
