@@ -16,6 +16,8 @@ export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> &
 export type Maybe<T> = T | undefined | null;
 
 export interface Exists {
+  child: (where?: ChildWhereInput) => Promise<boolean>;
+  childVaccination: (where?: ChildVaccinationWhereInput) => Promise<boolean>;
   user: (where?: UserWhereInput) => Promise<boolean>;
   userVaccination: (where?: UserVaccinationWhereInput) => Promise<boolean>;
   vaccination: (where?: VaccinationWhereInput) => Promise<boolean>;
@@ -40,6 +42,46 @@ export interface Prisma {
    * Queries
    */
 
+  child: (where: ChildWhereUniqueInput) => ChildNullablePromise;
+  children: (args?: {
+    where?: ChildWhereInput;
+    orderBy?: ChildOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FragmentableArray<Child>;
+  childrenConnection: (args?: {
+    where?: ChildWhereInput;
+    orderBy?: ChildOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => ChildConnectionPromise;
+  childVaccination: (
+    where: ChildVaccinationWhereUniqueInput
+  ) => ChildVaccinationNullablePromise;
+  childVaccinations: (args?: {
+    where?: ChildVaccinationWhereInput;
+    orderBy?: ChildVaccinationOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FragmentableArray<ChildVaccination>;
+  childVaccinationsConnection: (args?: {
+    where?: ChildVaccinationWhereInput;
+    orderBy?: ChildVaccinationOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => ChildVaccinationConnectionPromise;
   user: (where: UserWhereUniqueInput) => UserNullablePromise;
   users: (args?: {
     where?: UserWhereInput;
@@ -107,6 +149,44 @@ export interface Prisma {
    * Mutations
    */
 
+  createChild: (data: ChildCreateInput) => ChildPromise;
+  updateChild: (args: {
+    data: ChildUpdateInput;
+    where: ChildWhereUniqueInput;
+  }) => ChildPromise;
+  updateManyChildren: (args: {
+    data: ChildUpdateManyMutationInput;
+    where?: ChildWhereInput;
+  }) => BatchPayloadPromise;
+  upsertChild: (args: {
+    where: ChildWhereUniqueInput;
+    create: ChildCreateInput;
+    update: ChildUpdateInput;
+  }) => ChildPromise;
+  deleteChild: (where: ChildWhereUniqueInput) => ChildPromise;
+  deleteManyChildren: (where?: ChildWhereInput) => BatchPayloadPromise;
+  createChildVaccination: (
+    data: ChildVaccinationCreateInput
+  ) => ChildVaccinationPromise;
+  updateChildVaccination: (args: {
+    data: ChildVaccinationUpdateInput;
+    where: ChildVaccinationWhereUniqueInput;
+  }) => ChildVaccinationPromise;
+  updateManyChildVaccinations: (args: {
+    data: ChildVaccinationUpdateManyMutationInput;
+    where?: ChildVaccinationWhereInput;
+  }) => BatchPayloadPromise;
+  upsertChildVaccination: (args: {
+    where: ChildVaccinationWhereUniqueInput;
+    create: ChildVaccinationCreateInput;
+    update: ChildVaccinationUpdateInput;
+  }) => ChildVaccinationPromise;
+  deleteChildVaccination: (
+    where: ChildVaccinationWhereUniqueInput
+  ) => ChildVaccinationPromise;
+  deleteManyChildVaccinations: (
+    where?: ChildVaccinationWhereInput
+  ) => BatchPayloadPromise;
   createUser: (data: UserCreateInput) => UserPromise;
   updateUser: (args: {
     data: UserUpdateInput;
@@ -172,6 +252,12 @@ export interface Prisma {
 }
 
 export interface Subscription {
+  child: (
+    where?: ChildSubscriptionWhereInput
+  ) => ChildSubscriptionPayloadSubscription;
+  childVaccination: (
+    where?: ChildVaccinationSubscriptionWhereInput
+  ) => ChildVaccinationSubscriptionPayloadSubscription;
   user: (
     where?: UserSubscriptionWhereInput
   ) => UserSubscriptionPayloadSubscription;
@@ -192,6 +278,26 @@ export interface ClientConstructor<T> {
  */
 
 export type UserVaccinationOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "takenAt_ASC"
+  | "takenAt_DESC"
+  | "untilNext_ASC"
+  | "untilNext_DESC"
+  | "protectDuration_ASC"
+  | "protectDuration_DESC";
+
+export type ChildOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "name_ASC"
+  | "name_DESC"
+  | "born_ASC"
+  | "born_DESC";
+
+export type ChildVaccinationOrderByInput =
   | "id_ASC"
   | "id_DESC"
   | "createdAt_ASC"
@@ -229,9 +335,8 @@ export type VaccinationOrderByInput =
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
-export type UserWhereUniqueInput = AtLeastOne<{
+export type ChildWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
-  email?: Maybe<String>;
 }>;
 
 export interface UserVaccinationWhereInput {
@@ -360,9 +465,56 @@ export interface UserWhereInput {
   vaccinations_every?: Maybe<UserVaccinationWhereInput>;
   vaccinations_some?: Maybe<UserVaccinationWhereInput>;
   vaccinations_none?: Maybe<UserVaccinationWhereInput>;
+  children_every?: Maybe<ChildWhereInput>;
+  children_some?: Maybe<ChildWhereInput>;
+  children_none?: Maybe<ChildWhereInput>;
   AND?: Maybe<UserWhereInput[] | UserWhereInput>;
   OR?: Maybe<UserWhereInput[] | UserWhereInput>;
   NOT?: Maybe<UserWhereInput[] | UserWhereInput>;
+}
+
+export interface ChildWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  parent?: Maybe<UserWhereInput>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  born?: Maybe<DateTimeInput>;
+  born_not?: Maybe<DateTimeInput>;
+  born_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  born_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  born_lt?: Maybe<DateTimeInput>;
+  born_lte?: Maybe<DateTimeInput>;
+  born_gt?: Maybe<DateTimeInput>;
+  born_gte?: Maybe<DateTimeInput>;
+  vaccinations?: Maybe<UserVaccinationWhereInput>;
+  AND?: Maybe<ChildWhereInput[] | ChildWhereInput>;
+  OR?: Maybe<ChildWhereInput[] | ChildWhereInput>;
+  NOT?: Maybe<ChildWhereInput[] | ChildWhereInput>;
 }
 
 export interface VaccinationWhereInput {
@@ -449,6 +601,81 @@ export interface VaccinationWhereInput {
   NOT?: Maybe<VaccinationWhereInput[] | VaccinationWhereInput>;
 }
 
+export type ChildVaccinationWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface ChildVaccinationWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  child?: Maybe<ChildWhereInput>;
+  type?: Maybe<VaccinationWhereInput>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  takenAt?: Maybe<DateTimeInput>;
+  takenAt_not?: Maybe<DateTimeInput>;
+  takenAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  takenAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  takenAt_lt?: Maybe<DateTimeInput>;
+  takenAt_lte?: Maybe<DateTimeInput>;
+  takenAt_gt?: Maybe<DateTimeInput>;
+  takenAt_gte?: Maybe<DateTimeInput>;
+  untilNext?: Maybe<String>;
+  untilNext_not?: Maybe<String>;
+  untilNext_in?: Maybe<String[] | String>;
+  untilNext_not_in?: Maybe<String[] | String>;
+  untilNext_lt?: Maybe<String>;
+  untilNext_lte?: Maybe<String>;
+  untilNext_gt?: Maybe<String>;
+  untilNext_gte?: Maybe<String>;
+  untilNext_contains?: Maybe<String>;
+  untilNext_not_contains?: Maybe<String>;
+  untilNext_starts_with?: Maybe<String>;
+  untilNext_not_starts_with?: Maybe<String>;
+  untilNext_ends_with?: Maybe<String>;
+  untilNext_not_ends_with?: Maybe<String>;
+  protectDuration?: Maybe<String>;
+  protectDuration_not?: Maybe<String>;
+  protectDuration_in?: Maybe<String[] | String>;
+  protectDuration_not_in?: Maybe<String[] | String>;
+  protectDuration_lt?: Maybe<String>;
+  protectDuration_lte?: Maybe<String>;
+  protectDuration_gt?: Maybe<String>;
+  protectDuration_gte?: Maybe<String>;
+  protectDuration_contains?: Maybe<String>;
+  protectDuration_not_contains?: Maybe<String>;
+  protectDuration_starts_with?: Maybe<String>;
+  protectDuration_not_starts_with?: Maybe<String>;
+  protectDuration_ends_with?: Maybe<String>;
+  protectDuration_not_ends_with?: Maybe<String>;
+  AND?: Maybe<ChildVaccinationWhereInput[] | ChildVaccinationWhereInput>;
+  OR?: Maybe<ChildVaccinationWhereInput[] | ChildVaccinationWhereInput>;
+  NOT?: Maybe<ChildVaccinationWhereInput[] | ChildVaccinationWhereInput>;
+}
+
+export type UserWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  email?: Maybe<String>;
+}>;
+
 export type UserVaccinationWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
@@ -457,7 +684,20 @@ export type VaccinationWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
 
-export interface UserCreateInput {
+export interface ChildCreateInput {
+  id?: Maybe<ID_Input>;
+  parent: UserCreateOneWithoutChildrenInput;
+  name: String;
+  born: DateTimeInput;
+  vaccinations?: Maybe<UserVaccinationCreateOneInput>;
+}
+
+export interface UserCreateOneWithoutChildrenInput {
+  create?: Maybe<UserCreateWithoutChildrenInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface UserCreateWithoutChildrenInput {
   id?: Maybe<ID_Input>;
   name: String;
   email: String;
@@ -497,7 +737,62 @@ export interface VaccinationCreateInput {
   protectDuration?: Maybe<String>;
 }
 
-export interface UserUpdateInput {
+export interface UserVaccinationCreateOneInput {
+  create?: Maybe<UserVaccinationCreateInput>;
+  connect?: Maybe<UserVaccinationWhereUniqueInput>;
+}
+
+export interface UserVaccinationCreateInput {
+  id?: Maybe<ID_Input>;
+  user: UserCreateOneWithoutVaccinationsInput;
+  type: VaccinationCreateOneInput;
+  takenAt?: Maybe<DateTimeInput>;
+  untilNext?: Maybe<String>;
+  protectDuration?: Maybe<String>;
+}
+
+export interface UserCreateOneWithoutVaccinationsInput {
+  create?: Maybe<UserCreateWithoutVaccinationsInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface UserCreateWithoutVaccinationsInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  email: String;
+  password: String;
+  children?: Maybe<ChildCreateManyWithoutParentInput>;
+}
+
+export interface ChildCreateManyWithoutParentInput {
+  create?: Maybe<
+    ChildCreateWithoutParentInput[] | ChildCreateWithoutParentInput
+  >;
+  connect?: Maybe<ChildWhereUniqueInput[] | ChildWhereUniqueInput>;
+}
+
+export interface ChildCreateWithoutParentInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  born: DateTimeInput;
+  vaccinations?: Maybe<UserVaccinationCreateOneInput>;
+}
+
+export interface ChildUpdateInput {
+  parent?: Maybe<UserUpdateOneRequiredWithoutChildrenInput>;
+  name?: Maybe<String>;
+  born?: Maybe<DateTimeInput>;
+  vaccinations?: Maybe<UserVaccinationUpdateOneInput>;
+}
+
+export interface UserUpdateOneRequiredWithoutChildrenInput {
+  create?: Maybe<UserCreateWithoutChildrenInput>;
+  update?: Maybe<UserUpdateWithoutChildrenDataInput>;
+  upsert?: Maybe<UserUpsertWithoutChildrenInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface UserUpdateWithoutChildrenDataInput {
   name?: Maybe<String>;
   email?: Maybe<String>;
   password?: Maybe<String>;
@@ -657,34 +952,21 @@ export interface UserVaccinationUpdateManyDataInput {
   protectDuration?: Maybe<String>;
 }
 
-export interface UserUpdateManyMutationInput {
-  name?: Maybe<String>;
-  email?: Maybe<String>;
-  password?: Maybe<String>;
+export interface UserUpsertWithoutChildrenInput {
+  update: UserUpdateWithoutChildrenDataInput;
+  create: UserCreateWithoutChildrenInput;
 }
 
-export interface UserVaccinationCreateInput {
-  id?: Maybe<ID_Input>;
-  user: UserCreateOneWithoutVaccinationsInput;
-  type: VaccinationCreateOneInput;
-  takenAt?: Maybe<DateTimeInput>;
-  untilNext?: Maybe<String>;
-  protectDuration?: Maybe<String>;
+export interface UserVaccinationUpdateOneInput {
+  create?: Maybe<UserVaccinationCreateInput>;
+  update?: Maybe<UserVaccinationUpdateDataInput>;
+  upsert?: Maybe<UserVaccinationUpsertNestedInput>;
+  delete?: Maybe<Boolean>;
+  disconnect?: Maybe<Boolean>;
+  connect?: Maybe<UserVaccinationWhereUniqueInput>;
 }
 
-export interface UserCreateOneWithoutVaccinationsInput {
-  create?: Maybe<UserCreateWithoutVaccinationsInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface UserCreateWithoutVaccinationsInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  email: String;
-  password: String;
-}
-
-export interface UserVaccinationUpdateInput {
+export interface UserVaccinationUpdateDataInput {
   user?: Maybe<UserUpdateOneRequiredWithoutVaccinationsInput>;
   type?: Maybe<VaccinationUpdateOneRequiredInput>;
   takenAt?: Maybe<DateTimeInput>;
@@ -703,11 +985,191 @@ export interface UserUpdateWithoutVaccinationsDataInput {
   name?: Maybe<String>;
   email?: Maybe<String>;
   password?: Maybe<String>;
+  children?: Maybe<ChildUpdateManyWithoutParentInput>;
+}
+
+export interface ChildUpdateManyWithoutParentInput {
+  create?: Maybe<
+    ChildCreateWithoutParentInput[] | ChildCreateWithoutParentInput
+  >;
+  delete?: Maybe<ChildWhereUniqueInput[] | ChildWhereUniqueInput>;
+  connect?: Maybe<ChildWhereUniqueInput[] | ChildWhereUniqueInput>;
+  set?: Maybe<ChildWhereUniqueInput[] | ChildWhereUniqueInput>;
+  disconnect?: Maybe<ChildWhereUniqueInput[] | ChildWhereUniqueInput>;
+  update?: Maybe<
+    | ChildUpdateWithWhereUniqueWithoutParentInput[]
+    | ChildUpdateWithWhereUniqueWithoutParentInput
+  >;
+  upsert?: Maybe<
+    | ChildUpsertWithWhereUniqueWithoutParentInput[]
+    | ChildUpsertWithWhereUniqueWithoutParentInput
+  >;
+  deleteMany?: Maybe<ChildScalarWhereInput[] | ChildScalarWhereInput>;
+  updateMany?: Maybe<
+    ChildUpdateManyWithWhereNestedInput[] | ChildUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface ChildUpdateWithWhereUniqueWithoutParentInput {
+  where: ChildWhereUniqueInput;
+  data: ChildUpdateWithoutParentDataInput;
+}
+
+export interface ChildUpdateWithoutParentDataInput {
+  name?: Maybe<String>;
+  born?: Maybe<DateTimeInput>;
+  vaccinations?: Maybe<UserVaccinationUpdateOneInput>;
+}
+
+export interface ChildUpsertWithWhereUniqueWithoutParentInput {
+  where: ChildWhereUniqueInput;
+  update: ChildUpdateWithoutParentDataInput;
+  create: ChildCreateWithoutParentInput;
+}
+
+export interface ChildScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  born?: Maybe<DateTimeInput>;
+  born_not?: Maybe<DateTimeInput>;
+  born_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  born_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  born_lt?: Maybe<DateTimeInput>;
+  born_lte?: Maybe<DateTimeInput>;
+  born_gt?: Maybe<DateTimeInput>;
+  born_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<ChildScalarWhereInput[] | ChildScalarWhereInput>;
+  OR?: Maybe<ChildScalarWhereInput[] | ChildScalarWhereInput>;
+  NOT?: Maybe<ChildScalarWhereInput[] | ChildScalarWhereInput>;
+}
+
+export interface ChildUpdateManyWithWhereNestedInput {
+  where: ChildScalarWhereInput;
+  data: ChildUpdateManyDataInput;
+}
+
+export interface ChildUpdateManyDataInput {
+  name?: Maybe<String>;
+  born?: Maybe<DateTimeInput>;
 }
 
 export interface UserUpsertWithoutVaccinationsInput {
   update: UserUpdateWithoutVaccinationsDataInput;
   create: UserCreateWithoutVaccinationsInput;
+}
+
+export interface UserVaccinationUpsertNestedInput {
+  update: UserVaccinationUpdateDataInput;
+  create: UserVaccinationCreateInput;
+}
+
+export interface ChildUpdateManyMutationInput {
+  name?: Maybe<String>;
+  born?: Maybe<DateTimeInput>;
+}
+
+export interface ChildVaccinationCreateInput {
+  id?: Maybe<ID_Input>;
+  child: ChildCreateOneInput;
+  type: VaccinationCreateOneInput;
+  takenAt: DateTimeInput;
+  untilNext?: Maybe<String>;
+  protectDuration?: Maybe<String>;
+}
+
+export interface ChildCreateOneInput {
+  create?: Maybe<ChildCreateInput>;
+  connect?: Maybe<ChildWhereUniqueInput>;
+}
+
+export interface ChildVaccinationUpdateInput {
+  child?: Maybe<ChildUpdateOneRequiredInput>;
+  type?: Maybe<VaccinationUpdateOneRequiredInput>;
+  takenAt?: Maybe<DateTimeInput>;
+  untilNext?: Maybe<String>;
+  protectDuration?: Maybe<String>;
+}
+
+export interface ChildUpdateOneRequiredInput {
+  create?: Maybe<ChildCreateInput>;
+  update?: Maybe<ChildUpdateDataInput>;
+  upsert?: Maybe<ChildUpsertNestedInput>;
+  connect?: Maybe<ChildWhereUniqueInput>;
+}
+
+export interface ChildUpdateDataInput {
+  parent?: Maybe<UserUpdateOneRequiredWithoutChildrenInput>;
+  name?: Maybe<String>;
+  born?: Maybe<DateTimeInput>;
+  vaccinations?: Maybe<UserVaccinationUpdateOneInput>;
+}
+
+export interface ChildUpsertNestedInput {
+  update: ChildUpdateDataInput;
+  create: ChildCreateInput;
+}
+
+export interface ChildVaccinationUpdateManyMutationInput {
+  takenAt?: Maybe<DateTimeInput>;
+  untilNext?: Maybe<String>;
+  protectDuration?: Maybe<String>;
+}
+
+export interface UserCreateInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  email: String;
+  password: String;
+  vaccinations?: Maybe<UserVaccinationCreateManyWithoutUserInput>;
+  children?: Maybe<ChildCreateManyWithoutParentInput>;
+}
+
+export interface UserUpdateInput {
+  name?: Maybe<String>;
+  email?: Maybe<String>;
+  password?: Maybe<String>;
+  vaccinations?: Maybe<UserVaccinationUpdateManyWithoutUserInput>;
+  children?: Maybe<ChildUpdateManyWithoutParentInput>;
+}
+
+export interface UserUpdateManyMutationInput {
+  name?: Maybe<String>;
+  email?: Maybe<String>;
+  password?: Maybe<String>;
+}
+
+export interface UserVaccinationUpdateInput {
+  user?: Maybe<UserUpdateOneRequiredWithoutVaccinationsInput>;
+  type?: Maybe<VaccinationUpdateOneRequiredInput>;
+  takenAt?: Maybe<DateTimeInput>;
+  untilNext?: Maybe<String>;
+  protectDuration?: Maybe<String>;
 }
 
 export interface UserVaccinationUpdateManyMutationInput {
@@ -730,6 +1192,37 @@ export interface VaccinationUpdateManyMutationInput {
   url?: Maybe<String>;
   untilNext?: Maybe<String>;
   protectDuration?: Maybe<String>;
+}
+
+export interface ChildSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<ChildWhereInput>;
+  AND?: Maybe<ChildSubscriptionWhereInput[] | ChildSubscriptionWhereInput>;
+  OR?: Maybe<ChildSubscriptionWhereInput[] | ChildSubscriptionWhereInput>;
+  NOT?: Maybe<ChildSubscriptionWhereInput[] | ChildSubscriptionWhereInput>;
+}
+
+export interface ChildVaccinationSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<ChildVaccinationWhereInput>;
+  AND?: Maybe<
+    | ChildVaccinationSubscriptionWhereInput[]
+    | ChildVaccinationSubscriptionWhereInput
+  >;
+  OR?: Maybe<
+    | ChildVaccinationSubscriptionWhereInput[]
+    | ChildVaccinationSubscriptionWhereInput
+  >;
+  NOT?: Maybe<
+    | ChildVaccinationSubscriptionWhereInput[]
+    | ChildVaccinationSubscriptionWhereInput
+  >;
 }
 
 export interface UserSubscriptionWhereInput {
@@ -784,6 +1277,40 @@ export interface NodeNode {
   id: ID_Output;
 }
 
+export interface Child {
+  id: ID_Output;
+  name: String;
+  born: DateTimeOutput;
+}
+
+export interface ChildPromise extends Promise<Child>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  parent: <T = UserPromise>() => T;
+  name: () => Promise<String>;
+  born: () => Promise<DateTimeOutput>;
+  vaccinations: <T = UserVaccinationPromise>() => T;
+}
+
+export interface ChildSubscription
+  extends Promise<AsyncIterator<Child>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  parent: <T = UserSubscription>() => T;
+  name: () => Promise<AsyncIterator<String>>;
+  born: () => Promise<AsyncIterator<DateTimeOutput>>;
+  vaccinations: <T = UserVaccinationSubscription>() => T;
+}
+
+export interface ChildNullablePromise
+  extends Promise<Child | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  parent: <T = UserPromise>() => T;
+  name: () => Promise<String>;
+  born: () => Promise<DateTimeOutput>;
+  vaccinations: <T = UserVaccinationPromise>() => T;
+}
+
 export interface User {
   id: ID_Output;
   name: String;
@@ -799,6 +1326,15 @@ export interface UserPromise extends Promise<User>, Fragmentable {
   vaccinations: <T = FragmentableArray<UserVaccination>>(args?: {
     where?: UserVaccinationWhereInput;
     orderBy?: UserVaccinationOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  children: <T = FragmentableArray<Child>>(args?: {
+    where?: ChildWhereInput;
+    orderBy?: ChildOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
@@ -825,6 +1361,15 @@ export interface UserSubscription
     first?: Int;
     last?: Int;
   }) => T;
+  children: <T = Promise<AsyncIterator<ChildSubscription>>>(args?: {
+    where?: ChildWhereInput;
+    orderBy?: ChildOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface UserNullablePromise
@@ -837,6 +1382,15 @@ export interface UserNullablePromise
   vaccinations: <T = FragmentableArray<UserVaccination>>(args?: {
     where?: UserVaccinationWhereInput;
     orderBy?: UserVaccinationOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  children: <T = FragmentableArray<Child>>(args?: {
+    where?: ChildWhereInput;
+    orderBy?: ChildOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
@@ -929,25 +1483,25 @@ export interface VaccinationNullablePromise
   protectDuration: () => Promise<String>;
 }
 
-export interface UserConnection {
+export interface ChildConnection {
   pageInfo: PageInfo;
-  edges: UserEdge[];
+  edges: ChildEdge[];
 }
 
-export interface UserConnectionPromise
-  extends Promise<UserConnection>,
+export interface ChildConnectionPromise
+  extends Promise<ChildConnection>,
     Fragmentable {
   pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<UserEdge>>() => T;
-  aggregate: <T = AggregateUserPromise>() => T;
+  edges: <T = FragmentableArray<ChildEdge>>() => T;
+  aggregate: <T = AggregateChildPromise>() => T;
 }
 
-export interface UserConnectionSubscription
-  extends Promise<AsyncIterator<UserConnection>>,
+export interface ChildConnectionSubscription
+  extends Promise<AsyncIterator<ChildConnection>>,
     Fragmentable {
   pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateUserSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<ChildEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateChildSubscription>() => T;
 }
 
 export interface PageInfo {
@@ -971,6 +1525,160 @@ export interface PageInfoSubscription
   hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
   startCursor: () => Promise<AsyncIterator<String>>;
   endCursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface ChildEdge {
+  node: Child;
+  cursor: String;
+}
+
+export interface ChildEdgePromise extends Promise<ChildEdge>, Fragmentable {
+  node: <T = ChildPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface ChildEdgeSubscription
+  extends Promise<AsyncIterator<ChildEdge>>,
+    Fragmentable {
+  node: <T = ChildSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateChild {
+  count: Int;
+}
+
+export interface AggregateChildPromise
+  extends Promise<AggregateChild>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateChildSubscription
+  extends Promise<AsyncIterator<AggregateChild>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface ChildVaccination {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  takenAt: DateTimeOutput;
+  untilNext?: String;
+  protectDuration?: String;
+}
+
+export interface ChildVaccinationPromise
+  extends Promise<ChildVaccination>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  child: <T = ChildPromise>() => T;
+  type: <T = VaccinationPromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  takenAt: () => Promise<DateTimeOutput>;
+  untilNext: () => Promise<String>;
+  protectDuration: () => Promise<String>;
+}
+
+export interface ChildVaccinationSubscription
+  extends Promise<AsyncIterator<ChildVaccination>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  child: <T = ChildSubscription>() => T;
+  type: <T = VaccinationSubscription>() => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  takenAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  untilNext: () => Promise<AsyncIterator<String>>;
+  protectDuration: () => Promise<AsyncIterator<String>>;
+}
+
+export interface ChildVaccinationNullablePromise
+  extends Promise<ChildVaccination | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  child: <T = ChildPromise>() => T;
+  type: <T = VaccinationPromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  takenAt: () => Promise<DateTimeOutput>;
+  untilNext: () => Promise<String>;
+  protectDuration: () => Promise<String>;
+}
+
+export interface ChildVaccinationConnection {
+  pageInfo: PageInfo;
+  edges: ChildVaccinationEdge[];
+}
+
+export interface ChildVaccinationConnectionPromise
+  extends Promise<ChildVaccinationConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<ChildVaccinationEdge>>() => T;
+  aggregate: <T = AggregateChildVaccinationPromise>() => T;
+}
+
+export interface ChildVaccinationConnectionSubscription
+  extends Promise<AsyncIterator<ChildVaccinationConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<ChildVaccinationEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateChildVaccinationSubscription>() => T;
+}
+
+export interface ChildVaccinationEdge {
+  node: ChildVaccination;
+  cursor: String;
+}
+
+export interface ChildVaccinationEdgePromise
+  extends Promise<ChildVaccinationEdge>,
+    Fragmentable {
+  node: <T = ChildVaccinationPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface ChildVaccinationEdgeSubscription
+  extends Promise<AsyncIterator<ChildVaccinationEdge>>,
+    Fragmentable {
+  node: <T = ChildVaccinationSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateChildVaccination {
+  count: Int;
+}
+
+export interface AggregateChildVaccinationPromise
+  extends Promise<AggregateChildVaccination>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateChildVaccinationSubscription
+  extends Promise<AsyncIterator<AggregateChildVaccination>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface UserConnection {
+  pageInfo: PageInfo;
+  edges: UserEdge[];
+}
+
+export interface UserConnectionPromise
+  extends Promise<UserConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<UserEdge>>() => T;
+  aggregate: <T = AggregateUserPromise>() => T;
+}
+
+export interface UserConnectionSubscription
+  extends Promise<AsyncIterator<UserConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateUserSubscription>() => T;
 }
 
 export interface UserEdge {
@@ -1132,6 +1840,106 @@ export interface BatchPayloadSubscription
   extends Promise<AsyncIterator<BatchPayload>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Long>>;
+}
+
+export interface ChildSubscriptionPayload {
+  mutation: MutationType;
+  node: Child;
+  updatedFields: String[];
+  previousValues: ChildPreviousValues;
+}
+
+export interface ChildSubscriptionPayloadPromise
+  extends Promise<ChildSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = ChildPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = ChildPreviousValuesPromise>() => T;
+}
+
+export interface ChildSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<ChildSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = ChildSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = ChildPreviousValuesSubscription>() => T;
+}
+
+export interface ChildPreviousValues {
+  id: ID_Output;
+  name: String;
+  born: DateTimeOutput;
+}
+
+export interface ChildPreviousValuesPromise
+  extends Promise<ChildPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  born: () => Promise<DateTimeOutput>;
+}
+
+export interface ChildPreviousValuesSubscription
+  extends Promise<AsyncIterator<ChildPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  born: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface ChildVaccinationSubscriptionPayload {
+  mutation: MutationType;
+  node: ChildVaccination;
+  updatedFields: String[];
+  previousValues: ChildVaccinationPreviousValues;
+}
+
+export interface ChildVaccinationSubscriptionPayloadPromise
+  extends Promise<ChildVaccinationSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = ChildVaccinationPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = ChildVaccinationPreviousValuesPromise>() => T;
+}
+
+export interface ChildVaccinationSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<ChildVaccinationSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = ChildVaccinationSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = ChildVaccinationPreviousValuesSubscription>() => T;
+}
+
+export interface ChildVaccinationPreviousValues {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  takenAt: DateTimeOutput;
+  untilNext?: String;
+  protectDuration?: String;
+}
+
+export interface ChildVaccinationPreviousValuesPromise
+  extends Promise<ChildVaccinationPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  takenAt: () => Promise<DateTimeOutput>;
+  untilNext: () => Promise<String>;
+  protectDuration: () => Promise<String>;
+}
+
+export interface ChildVaccinationPreviousValuesSubscription
+  extends Promise<AsyncIterator<ChildVaccinationPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  takenAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  untilNext: () => Promise<AsyncIterator<String>>;
+  protectDuration: () => Promise<AsyncIterator<String>>;
 }
 
 export interface UserSubscriptionPayload {
@@ -1305,11 +2113,6 @@ The `String` scalar type represents textual data, represented as UTF-8 character
 export type String = string;
 
 /*
-The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
-*/
-export type Int = number;
-
-/*
 DateTime scalar input type, allowing Date
 */
 export type DateTimeInput = Date | string;
@@ -1318,6 +2121,11 @@ export type DateTimeInput = Date | string;
 DateTime scalar output type, which is always a string
 */
 export type DateTimeOutput = string;
+
+/*
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
+*/
+export type Int = number;
 
 /*
 The `Boolean` scalar type represents `true` or `false`.
@@ -1341,6 +2149,14 @@ export const models: Model[] = [
   },
   {
     name: "UserVaccination",
+    embedded: false
+  },
+  {
+    name: "Child",
+    embedded: false
+  },
+  {
+    name: "ChildVaccination",
     embedded: false
   }
 ];

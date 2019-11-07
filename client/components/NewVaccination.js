@@ -50,7 +50,7 @@ const NewVaccination = (props) => {
 	const [week, setWeek] = useState();
 	const [month, setMonth] = useState();
 	const [year, setYear] = useState();
-	const [isLoading, setIsLoading] = useState();
+	const [isLoading, setIsLoading] = useState(true);
 	const [isDateTimePickerVisible, setIsDateTimePickerVisible] = useState(false);
 
 	let weeks = [];
@@ -88,9 +88,10 @@ const NewVaccination = (props) => {
 		<View style={styles.container}>
 			<Query query={GET_VACCINATIONS_QUERY}>
 				{({ loading, err, data }) => {
-					setIsLoading(loading);
+					
 					if (err) return console.log(err);
-					if (loading) return <ActivityIndicator/>
+					if (loading) return <ActivityIndicator size="large"/>
+					setIsLoading(loading);
 
 					setAllVaccinations(data.getVaccinations);
 
@@ -228,20 +229,19 @@ const NewVaccination = (props) => {
 				}}
 			>
 				{(mutation, { loading, err, data }) => {
-					if (loading) setIsLoading(loading);
-
-					setIsLoading(loading);
-
-					return (
-						<Button
-							title="Lägg till vaccination"
-							onPress={() => {
+					if (isLoading) return null;
+					else if (loading) return null;
+					
+					else {
+						return (
+							<TouchableOpacity style={styles.addButton} onPress={() => {
 								mutation();
-								props.navigation.goBack();
-							}}
-						/>
+								props.navigation.navigate("VaccinationList");
+							}}>
+							<Text style={styles.addButtonText}>Lägg till ny vaccination</Text>
+						</TouchableOpacity>
 					);
-				}}
+				}}}
 			</Mutation>
 		</View>
 	);
@@ -264,6 +264,31 @@ const styles = StyleSheet.create({
 		position: "absolute",
 		top: 24,
 		right: 12,
+	},
+	addButton: {
+		// flexGrow: 1,
+		alignItems: "center",
+		justifyContent: "center",
+		marginVertical: 10,
+		textAlign: "center",
+		width: "90%",
+		height: 60,
+		borderRadius: 50,
+		borderWidth: 0,
+		borderColor: "#6FB556",
+		backgroundColor: "#6FB556"
+	},
+	addButtonText: {
+		fontSize: 18,
+	},
+	loading: {
+		position: 'absolute',
+		left: 0,
+		right: 0,
+		top: 0,
+		bottom: 0,
+		alignItems: 'center',
+		justifyContent: 'center'
 	}
 });
 
@@ -296,7 +321,7 @@ const pickerSelectStyles = StyleSheet.create({
 	iconContainer: {
 		top: 24,
 		right: 12
-	}
+	},
 });
 
 export default NewVaccination;

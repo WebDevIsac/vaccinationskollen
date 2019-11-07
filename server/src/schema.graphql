@@ -4,17 +4,16 @@ type Query {
 	getUser: User
 	getVaccinations: [Vaccination]
 	getUserVaccinations: [UserVaccination]
-}
-
-type Vacc {
-	vaccination: Vaccination
-	userVaccination: UserVaccination
+	getChild(name: String): [Child]
+	getChildrenVaccinations: [ChildVaccination]
 }
 
 type Mutation {
     signup(name: String!, email: String!, password: String!): AuthPayload
     login(email: String!, password: String!): AuthPayload
 	addUserVaccination(vaccinationId: ID!, takenAt: String): UserVaccination
+	addChild(name: String!, born: DateTime!): Child
+	addChildrenVaccination(vaccinationId: ID!, childId: ID!, takenAt: String): ChildVaccination
 }
 
 type User {
@@ -22,6 +21,7 @@ type User {
     name: String!
     email: String!
 	vaccinations: [UserVaccination]
+	children: [Child]
 }
 
 type AuthPayload {
@@ -41,6 +41,24 @@ type Vaccination {
 type UserVaccination {
 	id: ID!
 	user: User!
+	type: Vaccination!
+	createdAt: DateTime!
+	takenAt: String
+	untilNext: String
+	protectDuration: String
+}
+
+type Child {
+	id: ID!
+	parent: User!
+	name: String!
+	born: DateTime!
+	vaccinations: [UserVaccination]
+}
+
+type ChildVaccination {
+	id: ID!
+	child: Child!
 	type: Vaccination!
 	createdAt: DateTime!
 	takenAt: String

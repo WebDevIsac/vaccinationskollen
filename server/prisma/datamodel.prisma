@@ -4,6 +4,7 @@ type User {
     email: String! @unique
     password: String!
 	vaccinations: [UserVaccination]
+	children: [Child]
 }
 
 type Vaccination {
@@ -17,10 +18,28 @@ type Vaccination {
 
 type UserVaccination {
 	id: ID! @id
-	user: User!
+	user: User! 
 	type: Vaccination!
 	createdAt: DateTime! @createdAt
 	takenAt: DateTime
+	untilNext: String
+	protectDuration: String
+}
+
+type Child {
+	id: ID! @id
+	parent: User! 
+	name: String!
+	born: DateTime!
+	vaccinations: UserVaccination
+}
+
+type ChildVaccination {
+	id: ID! @id
+	child: Child!
+	type: Vaccination!
+	createdAt: DateTime! @createdAt
+	takenAt: DateTime!
 	untilNext: String
 	protectDuration: String
 }
