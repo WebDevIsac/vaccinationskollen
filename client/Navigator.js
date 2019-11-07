@@ -4,7 +4,7 @@ import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { withApollo } from "react-apollo";
-import { getToken, signOut } from "./loginUtils";
+import { getToken, signOut } from "./utils/loginUtils";
 import { Ionicons } from "@expo/vector-icons";
 
 import LoginScreen from "./components/Login";
@@ -14,6 +14,7 @@ import ProfileScreen from "./components/Profile";
 import NewVaccinationScreen from "./components/NewVaccination";
 import VaccinationListScreen from "./components/VaccinationList";
 import UpdateProfileScreen from "./components/UpdateProfile";
+import AddChildScreen from "./components/AddChild";
 
 const SignOutFunction = props => {
 	Alert.alert("Logga ut", "Är du säker på att du vill logga ut?", [
@@ -38,7 +39,8 @@ const HomeStack = createStackNavigator({
 const ProfileStack = createStackNavigator({
 	Profile: ProfileScreen,
 	UpdateProfile: UpdateProfileScreen,
-	VaccinationList: VaccinationListScreen
+	VaccinationList: VaccinationListScreen,
+	AddChild: AddChildScreen
 });
 
 const NewVaccinationStack = createStackNavigator({

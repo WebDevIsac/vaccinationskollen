@@ -3,8 +3,8 @@ import { Text, View, StyleSheet, TextInput, Button, AsyncStorage, Alert, Activit
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 
-import { AUTH_TOKEN } from "../constants";
-import { signIn, getToken } from "../loginUtils";
+import { AUTH_TOKEN } from "../utils/constants";
+import { signIn, getToken } from "../utils/loginUtils";
 import navStyles from "../styles/navStyles";
 import { Ionicons } from "@expo/vector-icons";
 

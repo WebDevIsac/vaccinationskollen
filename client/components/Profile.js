@@ -32,6 +32,10 @@ const Profile = (props) => {
 							title="Dina vaccinationer"
 							onPress={() => props.navigation.navigate("VaccinationList")}
 						/>
+						<Button 
+							title="Lägg till barn"
+							onPress={() => props.navigation.navigate("AddChild")}
+						/>
 						{/* <Button 
 							title="Karls Vaccinationer"
 						/> 

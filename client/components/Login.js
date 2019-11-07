@@ -4,7 +4,7 @@ import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 import navStyles from "../styles/navStyles";
 
-import { signIn } from "../loginUtils";
+import { signIn } from "../utils/loginUtils";
 import { Ionicons } from "@expo/vector-icons";
 
 const Login = (props) => {

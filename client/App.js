@@ -4,7 +4,7 @@ import { ApolloProvider } from "react-apollo";
 import { HttpLink, InMemoryCache, ApolloClient, gql } from "apollo-boost";
 import { setContext } from "apollo-link-context";
 
-import { AUTH_TOKEN } from "./constants";
+import { AUTH_TOKEN } from "./utils/constants";
 
 import Navigator from "./Navigator";
 

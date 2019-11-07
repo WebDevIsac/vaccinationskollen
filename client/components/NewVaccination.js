@@ -18,7 +18,7 @@ import { Chevron } from "react-native-shapes";
 import navStyles from "../styles/navStyles";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { Appearance } from "react-native-appearance";
-import { translateDate, setCorrectHours } from "../dateUtils";
+import { translateDate, setCorrectHours } from "../utils/dateUtils";
 
 const GET_VACCINATIONS_QUERY = gql`
 	query getVaccinationsQuery {

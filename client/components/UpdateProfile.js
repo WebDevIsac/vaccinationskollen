@@ -14,16 +14,17 @@ const UPDATE_USER = gql`
 	}
 `;
 
-const UpdateProfile = () => {
-
+const UpdateProfile = (props) => {
+	console.log(props.navigation.state);
 	return (
 		// <Mutation mutation={UPDATE_USER}>
 			<Form>
-				<Item>
+				<Item floatingLabel>
 					<Label>Namn</Label>
-					{/* <Input
-						placeholder="Isac"
-					/> */}
+					<Input
+						placeholder="Ditt namn..."
+						onChange={() => console.log("hello")}
+					/>
 				</Item>
 			</Form>
 		// </Mutation>
