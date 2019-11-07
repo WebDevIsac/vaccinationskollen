@@ -43,8 +43,29 @@ const addUserVaccination = (parent, args, context, info) => {
 	})
 }
 
+const addChild = async (parent, args, context, info) => {
+	const userId = getUserId(context);
+	const child = await context.prisma.createChild({
+		parent: { connect: { id: userId } },
+		name: args.name,
+		born: args.born
+	});
+
+	return child;
+}
+
+const addChildVaccination = async (parent, args, context, info) => {
+	return context.prisma.createChildVaccination({
+		child: { connect: { id: args.childId } },
+		type: { connect: { id: args.vaccinationId } },
+		takenAt: args.takenAt 
+	})
+}
+
 module.exports = {
 	signup,
 	login,
-	addUserVaccination
+	addUserVaccination,
+	addChild,
+	addChildVaccination
 };

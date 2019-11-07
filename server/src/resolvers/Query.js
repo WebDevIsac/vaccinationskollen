@@ -36,8 +36,18 @@ const getChild = async (parent, args, context, info) => {
 	return child;
 }
 
-const getChildVaccinations = (parent, args, context, info) => {
-	
+const getChildVaccinations = async (parent, args, context, info) => {
+	const childId = args.id;
+
+	let childVaccinations = await context.prisma.childVaccinations({where: { child: {id: childId } }});
+	const vaccinations = await context.prisma.childVaccinations({where: { child: {id: childId } }}).type();
+
+	childVaccinations = childVaccinations.map((childVacc, index) => {
+		childVacc.type = vaccinations[index].type;
+		return childVacc;
+	});
+
+	return childVaccinations;
 }
 
 
@@ -45,5 +55,6 @@ module.exports = {
 	getUser,
 	getVaccinations,
 	getUserVaccinations,
-	getChild
+	getChild,
+	getChildVaccinations
 }

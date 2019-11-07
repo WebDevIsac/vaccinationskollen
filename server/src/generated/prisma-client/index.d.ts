@@ -511,10 +511,78 @@ export interface ChildWhereInput {
   born_lte?: Maybe<DateTimeInput>;
   born_gt?: Maybe<DateTimeInput>;
   born_gte?: Maybe<DateTimeInput>;
-  vaccinations?: Maybe<UserVaccinationWhereInput>;
+  vaccinations_every?: Maybe<ChildVaccinationWhereInput>;
+  vaccinations_some?: Maybe<ChildVaccinationWhereInput>;
+  vaccinations_none?: Maybe<ChildVaccinationWhereInput>;
   AND?: Maybe<ChildWhereInput[] | ChildWhereInput>;
   OR?: Maybe<ChildWhereInput[] | ChildWhereInput>;
   NOT?: Maybe<ChildWhereInput[] | ChildWhereInput>;
+}
+
+export interface ChildVaccinationWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  child?: Maybe<ChildWhereInput>;
+  type?: Maybe<VaccinationWhereInput>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  takenAt?: Maybe<DateTimeInput>;
+  takenAt_not?: Maybe<DateTimeInput>;
+  takenAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  takenAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  takenAt_lt?: Maybe<DateTimeInput>;
+  takenAt_lte?: Maybe<DateTimeInput>;
+  takenAt_gt?: Maybe<DateTimeInput>;
+  takenAt_gte?: Maybe<DateTimeInput>;
+  untilNext?: Maybe<String>;
+  untilNext_not?: Maybe<String>;
+  untilNext_in?: Maybe<String[] | String>;
+  untilNext_not_in?: Maybe<String[] | String>;
+  untilNext_lt?: Maybe<String>;
+  untilNext_lte?: Maybe<String>;
+  untilNext_gt?: Maybe<String>;
+  untilNext_gte?: Maybe<String>;
+  untilNext_contains?: Maybe<String>;
+  untilNext_not_contains?: Maybe<String>;
+  untilNext_starts_with?: Maybe<String>;
+  untilNext_not_starts_with?: Maybe<String>;
+  untilNext_ends_with?: Maybe<String>;
+  untilNext_not_ends_with?: Maybe<String>;
+  protectDuration?: Maybe<String>;
+  protectDuration_not?: Maybe<String>;
+  protectDuration_in?: Maybe<String[] | String>;
+  protectDuration_not_in?: Maybe<String[] | String>;
+  protectDuration_lt?: Maybe<String>;
+  protectDuration_lte?: Maybe<String>;
+  protectDuration_gt?: Maybe<String>;
+  protectDuration_gte?: Maybe<String>;
+  protectDuration_contains?: Maybe<String>;
+  protectDuration_not_contains?: Maybe<String>;
+  protectDuration_starts_with?: Maybe<String>;
+  protectDuration_not_starts_with?: Maybe<String>;
+  protectDuration_ends_with?: Maybe<String>;
+  protectDuration_not_ends_with?: Maybe<String>;
+  AND?: Maybe<ChildVaccinationWhereInput[] | ChildVaccinationWhereInput>;
+  OR?: Maybe<ChildVaccinationWhereInput[] | ChildVaccinationWhereInput>;
+  NOT?: Maybe<ChildVaccinationWhereInput[] | ChildVaccinationWhereInput>;
 }
 
 export interface VaccinationWhereInput {
@@ -605,72 +673,6 @@ export type ChildVaccinationWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
 
-export interface ChildVaccinationWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  child?: Maybe<ChildWhereInput>;
-  type?: Maybe<VaccinationWhereInput>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  takenAt?: Maybe<DateTimeInput>;
-  takenAt_not?: Maybe<DateTimeInput>;
-  takenAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  takenAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  takenAt_lt?: Maybe<DateTimeInput>;
-  takenAt_lte?: Maybe<DateTimeInput>;
-  takenAt_gt?: Maybe<DateTimeInput>;
-  takenAt_gte?: Maybe<DateTimeInput>;
-  untilNext?: Maybe<String>;
-  untilNext_not?: Maybe<String>;
-  untilNext_in?: Maybe<String[] | String>;
-  untilNext_not_in?: Maybe<String[] | String>;
-  untilNext_lt?: Maybe<String>;
-  untilNext_lte?: Maybe<String>;
-  untilNext_gt?: Maybe<String>;
-  untilNext_gte?: Maybe<String>;
-  untilNext_contains?: Maybe<String>;
-  untilNext_not_contains?: Maybe<String>;
-  untilNext_starts_with?: Maybe<String>;
-  untilNext_not_starts_with?: Maybe<String>;
-  untilNext_ends_with?: Maybe<String>;
-  untilNext_not_ends_with?: Maybe<String>;
-  protectDuration?: Maybe<String>;
-  protectDuration_not?: Maybe<String>;
-  protectDuration_in?: Maybe<String[] | String>;
-  protectDuration_not_in?: Maybe<String[] | String>;
-  protectDuration_lt?: Maybe<String>;
-  protectDuration_lte?: Maybe<String>;
-  protectDuration_gt?: Maybe<String>;
-  protectDuration_gte?: Maybe<String>;
-  protectDuration_contains?: Maybe<String>;
-  protectDuration_not_contains?: Maybe<String>;
-  protectDuration_starts_with?: Maybe<String>;
-  protectDuration_not_starts_with?: Maybe<String>;
-  protectDuration_ends_with?: Maybe<String>;
-  protectDuration_not_ends_with?: Maybe<String>;
-  AND?: Maybe<ChildVaccinationWhereInput[] | ChildVaccinationWhereInput>;
-  OR?: Maybe<ChildVaccinationWhereInput[] | ChildVaccinationWhereInput>;
-  NOT?: Maybe<ChildVaccinationWhereInput[] | ChildVaccinationWhereInput>;
-}
-
 export type UserWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
   email?: Maybe<String>;
@@ -689,7 +691,7 @@ export interface ChildCreateInput {
   parent: UserCreateOneWithoutChildrenInput;
   name: String;
   born: DateTimeInput;
-  vaccinations?: Maybe<UserVaccinationCreateOneInput>;
+  vaccinations?: Maybe<ChildVaccinationCreateManyWithoutChildInput>;
 }
 
 export interface UserCreateOneWithoutChildrenInput {
@@ -737,52 +739,29 @@ export interface VaccinationCreateInput {
   protectDuration?: Maybe<String>;
 }
 
-export interface UserVaccinationCreateOneInput {
-  create?: Maybe<UserVaccinationCreateInput>;
-  connect?: Maybe<UserVaccinationWhereUniqueInput>;
+export interface ChildVaccinationCreateManyWithoutChildInput {
+  create?: Maybe<
+    | ChildVaccinationCreateWithoutChildInput[]
+    | ChildVaccinationCreateWithoutChildInput
+  >;
+  connect?: Maybe<
+    ChildVaccinationWhereUniqueInput[] | ChildVaccinationWhereUniqueInput
+  >;
 }
 
-export interface UserVaccinationCreateInput {
+export interface ChildVaccinationCreateWithoutChildInput {
   id?: Maybe<ID_Input>;
-  user: UserCreateOneWithoutVaccinationsInput;
   type: VaccinationCreateOneInput;
-  takenAt?: Maybe<DateTimeInput>;
+  takenAt: DateTimeInput;
   untilNext?: Maybe<String>;
   protectDuration?: Maybe<String>;
-}
-
-export interface UserCreateOneWithoutVaccinationsInput {
-  create?: Maybe<UserCreateWithoutVaccinationsInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface UserCreateWithoutVaccinationsInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  email: String;
-  password: String;
-  children?: Maybe<ChildCreateManyWithoutParentInput>;
-}
-
-export interface ChildCreateManyWithoutParentInput {
-  create?: Maybe<
-    ChildCreateWithoutParentInput[] | ChildCreateWithoutParentInput
-  >;
-  connect?: Maybe<ChildWhereUniqueInput[] | ChildWhereUniqueInput>;
-}
-
-export interface ChildCreateWithoutParentInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  born: DateTimeInput;
-  vaccinations?: Maybe<UserVaccinationCreateOneInput>;
 }
 
 export interface ChildUpdateInput {
   parent?: Maybe<UserUpdateOneRequiredWithoutChildrenInput>;
   name?: Maybe<String>;
   born?: Maybe<DateTimeInput>;
-  vaccinations?: Maybe<UserVaccinationUpdateOneInput>;
+  vaccinations?: Maybe<ChildVaccinationUpdateManyWithoutChildInput>;
 }
 
 export interface UserUpdateOneRequiredWithoutChildrenInput {
@@ -957,34 +936,225 @@ export interface UserUpsertWithoutChildrenInput {
   create: UserCreateWithoutChildrenInput;
 }
 
-export interface UserVaccinationUpdateOneInput {
-  create?: Maybe<UserVaccinationCreateInput>;
-  update?: Maybe<UserVaccinationUpdateDataInput>;
-  upsert?: Maybe<UserVaccinationUpsertNestedInput>;
-  delete?: Maybe<Boolean>;
-  disconnect?: Maybe<Boolean>;
-  connect?: Maybe<UserVaccinationWhereUniqueInput>;
+export interface ChildVaccinationUpdateManyWithoutChildInput {
+  create?: Maybe<
+    | ChildVaccinationCreateWithoutChildInput[]
+    | ChildVaccinationCreateWithoutChildInput
+  >;
+  delete?: Maybe<
+    ChildVaccinationWhereUniqueInput[] | ChildVaccinationWhereUniqueInput
+  >;
+  connect?: Maybe<
+    ChildVaccinationWhereUniqueInput[] | ChildVaccinationWhereUniqueInput
+  >;
+  set?: Maybe<
+    ChildVaccinationWhereUniqueInput[] | ChildVaccinationWhereUniqueInput
+  >;
+  disconnect?: Maybe<
+    ChildVaccinationWhereUniqueInput[] | ChildVaccinationWhereUniqueInput
+  >;
+  update?: Maybe<
+    | ChildVaccinationUpdateWithWhereUniqueWithoutChildInput[]
+    | ChildVaccinationUpdateWithWhereUniqueWithoutChildInput
+  >;
+  upsert?: Maybe<
+    | ChildVaccinationUpsertWithWhereUniqueWithoutChildInput[]
+    | ChildVaccinationUpsertWithWhereUniqueWithoutChildInput
+  >;
+  deleteMany?: Maybe<
+    ChildVaccinationScalarWhereInput[] | ChildVaccinationScalarWhereInput
+  >;
+  updateMany?: Maybe<
+    | ChildVaccinationUpdateManyWithWhereNestedInput[]
+    | ChildVaccinationUpdateManyWithWhereNestedInput
+  >;
 }
 
-export interface UserVaccinationUpdateDataInput {
-  user?: Maybe<UserUpdateOneRequiredWithoutVaccinationsInput>;
+export interface ChildVaccinationUpdateWithWhereUniqueWithoutChildInput {
+  where: ChildVaccinationWhereUniqueInput;
+  data: ChildVaccinationUpdateWithoutChildDataInput;
+}
+
+export interface ChildVaccinationUpdateWithoutChildDataInput {
   type?: Maybe<VaccinationUpdateOneRequiredInput>;
   takenAt?: Maybe<DateTimeInput>;
   untilNext?: Maybe<String>;
   protectDuration?: Maybe<String>;
 }
 
-export interface UserUpdateOneRequiredWithoutVaccinationsInput {
-  create?: Maybe<UserCreateWithoutVaccinationsInput>;
-  update?: Maybe<UserUpdateWithoutVaccinationsDataInput>;
-  upsert?: Maybe<UserUpsertWithoutVaccinationsInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
+export interface ChildVaccinationUpsertWithWhereUniqueWithoutChildInput {
+  where: ChildVaccinationWhereUniqueInput;
+  update: ChildVaccinationUpdateWithoutChildDataInput;
+  create: ChildVaccinationCreateWithoutChildInput;
 }
 
-export interface UserUpdateWithoutVaccinationsDataInput {
+export interface ChildVaccinationScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  takenAt?: Maybe<DateTimeInput>;
+  takenAt_not?: Maybe<DateTimeInput>;
+  takenAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  takenAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  takenAt_lt?: Maybe<DateTimeInput>;
+  takenAt_lte?: Maybe<DateTimeInput>;
+  takenAt_gt?: Maybe<DateTimeInput>;
+  takenAt_gte?: Maybe<DateTimeInput>;
+  untilNext?: Maybe<String>;
+  untilNext_not?: Maybe<String>;
+  untilNext_in?: Maybe<String[] | String>;
+  untilNext_not_in?: Maybe<String[] | String>;
+  untilNext_lt?: Maybe<String>;
+  untilNext_lte?: Maybe<String>;
+  untilNext_gt?: Maybe<String>;
+  untilNext_gte?: Maybe<String>;
+  untilNext_contains?: Maybe<String>;
+  untilNext_not_contains?: Maybe<String>;
+  untilNext_starts_with?: Maybe<String>;
+  untilNext_not_starts_with?: Maybe<String>;
+  untilNext_ends_with?: Maybe<String>;
+  untilNext_not_ends_with?: Maybe<String>;
+  protectDuration?: Maybe<String>;
+  protectDuration_not?: Maybe<String>;
+  protectDuration_in?: Maybe<String[] | String>;
+  protectDuration_not_in?: Maybe<String[] | String>;
+  protectDuration_lt?: Maybe<String>;
+  protectDuration_lte?: Maybe<String>;
+  protectDuration_gt?: Maybe<String>;
+  protectDuration_gte?: Maybe<String>;
+  protectDuration_contains?: Maybe<String>;
+  protectDuration_not_contains?: Maybe<String>;
+  protectDuration_starts_with?: Maybe<String>;
+  protectDuration_not_starts_with?: Maybe<String>;
+  protectDuration_ends_with?: Maybe<String>;
+  protectDuration_not_ends_with?: Maybe<String>;
+  AND?: Maybe<
+    ChildVaccinationScalarWhereInput[] | ChildVaccinationScalarWhereInput
+  >;
+  OR?: Maybe<
+    ChildVaccinationScalarWhereInput[] | ChildVaccinationScalarWhereInput
+  >;
+  NOT?: Maybe<
+    ChildVaccinationScalarWhereInput[] | ChildVaccinationScalarWhereInput
+  >;
+}
+
+export interface ChildVaccinationUpdateManyWithWhereNestedInput {
+  where: ChildVaccinationScalarWhereInput;
+  data: ChildVaccinationUpdateManyDataInput;
+}
+
+export interface ChildVaccinationUpdateManyDataInput {
+  takenAt?: Maybe<DateTimeInput>;
+  untilNext?: Maybe<String>;
+  protectDuration?: Maybe<String>;
+}
+
+export interface ChildUpdateManyMutationInput {
+  name?: Maybe<String>;
+  born?: Maybe<DateTimeInput>;
+}
+
+export interface ChildVaccinationCreateInput {
+  id?: Maybe<ID_Input>;
+  child: ChildCreateOneWithoutVaccinationsInput;
+  type: VaccinationCreateOneInput;
+  takenAt: DateTimeInput;
+  untilNext?: Maybe<String>;
+  protectDuration?: Maybe<String>;
+}
+
+export interface ChildCreateOneWithoutVaccinationsInput {
+  create?: Maybe<ChildCreateWithoutVaccinationsInput>;
+  connect?: Maybe<ChildWhereUniqueInput>;
+}
+
+export interface ChildCreateWithoutVaccinationsInput {
+  id?: Maybe<ID_Input>;
+  parent: UserCreateOneWithoutChildrenInput;
+  name: String;
+  born: DateTimeInput;
+}
+
+export interface ChildVaccinationUpdateInput {
+  child?: Maybe<ChildUpdateOneRequiredWithoutVaccinationsInput>;
+  type?: Maybe<VaccinationUpdateOneRequiredInput>;
+  takenAt?: Maybe<DateTimeInput>;
+  untilNext?: Maybe<String>;
+  protectDuration?: Maybe<String>;
+}
+
+export interface ChildUpdateOneRequiredWithoutVaccinationsInput {
+  create?: Maybe<ChildCreateWithoutVaccinationsInput>;
+  update?: Maybe<ChildUpdateWithoutVaccinationsDataInput>;
+  upsert?: Maybe<ChildUpsertWithoutVaccinationsInput>;
+  connect?: Maybe<ChildWhereUniqueInput>;
+}
+
+export interface ChildUpdateWithoutVaccinationsDataInput {
+  parent?: Maybe<UserUpdateOneRequiredWithoutChildrenInput>;
+  name?: Maybe<String>;
+  born?: Maybe<DateTimeInput>;
+}
+
+export interface ChildUpsertWithoutVaccinationsInput {
+  update: ChildUpdateWithoutVaccinationsDataInput;
+  create: ChildCreateWithoutVaccinationsInput;
+}
+
+export interface ChildVaccinationUpdateManyMutationInput {
+  takenAt?: Maybe<DateTimeInput>;
+  untilNext?: Maybe<String>;
+  protectDuration?: Maybe<String>;
+}
+
+export interface UserCreateInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  email: String;
+  password: String;
+  vaccinations?: Maybe<UserVaccinationCreateManyWithoutUserInput>;
+  children?: Maybe<ChildCreateManyWithoutParentInput>;
+}
+
+export interface ChildCreateManyWithoutParentInput {
+  create?: Maybe<
+    ChildCreateWithoutParentInput[] | ChildCreateWithoutParentInput
+  >;
+  connect?: Maybe<ChildWhereUniqueInput[] | ChildWhereUniqueInput>;
+}
+
+export interface ChildCreateWithoutParentInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  born: DateTimeInput;
+  vaccinations?: Maybe<ChildVaccinationCreateManyWithoutChildInput>;
+}
+
+export interface UserUpdateInput {
   name?: Maybe<String>;
   email?: Maybe<String>;
   password?: Maybe<String>;
+  vaccinations?: Maybe<UserVaccinationUpdateManyWithoutUserInput>;
   children?: Maybe<ChildUpdateManyWithoutParentInput>;
 }
 
@@ -1018,7 +1188,7 @@ export interface ChildUpdateWithWhereUniqueWithoutParentInput {
 export interface ChildUpdateWithoutParentDataInput {
   name?: Maybe<String>;
   born?: Maybe<DateTimeInput>;
-  vaccinations?: Maybe<UserVaccinationUpdateOneInput>;
+  vaccinations?: Maybe<ChildVaccinationUpdateManyWithoutChildInput>;
 }
 
 export interface ChildUpsertWithWhereUniqueWithoutParentInput {
@@ -1079,89 +1249,32 @@ export interface ChildUpdateManyDataInput {
   born?: Maybe<DateTimeInput>;
 }
 
-export interface UserUpsertWithoutVaccinationsInput {
-  update: UserUpdateWithoutVaccinationsDataInput;
-  create: UserCreateWithoutVaccinationsInput;
-}
-
-export interface UserVaccinationUpsertNestedInput {
-  update: UserVaccinationUpdateDataInput;
-  create: UserVaccinationCreateInput;
-}
-
-export interface ChildUpdateManyMutationInput {
-  name?: Maybe<String>;
-  born?: Maybe<DateTimeInput>;
-}
-
-export interface ChildVaccinationCreateInput {
-  id?: Maybe<ID_Input>;
-  child: ChildCreateOneInput;
-  type: VaccinationCreateOneInput;
-  takenAt: DateTimeInput;
-  untilNext?: Maybe<String>;
-  protectDuration?: Maybe<String>;
-}
-
-export interface ChildCreateOneInput {
-  create?: Maybe<ChildCreateInput>;
-  connect?: Maybe<ChildWhereUniqueInput>;
-}
-
-export interface ChildVaccinationUpdateInput {
-  child?: Maybe<ChildUpdateOneRequiredInput>;
-  type?: Maybe<VaccinationUpdateOneRequiredInput>;
-  takenAt?: Maybe<DateTimeInput>;
-  untilNext?: Maybe<String>;
-  protectDuration?: Maybe<String>;
-}
-
-export interface ChildUpdateOneRequiredInput {
-  create?: Maybe<ChildCreateInput>;
-  update?: Maybe<ChildUpdateDataInput>;
-  upsert?: Maybe<ChildUpsertNestedInput>;
-  connect?: Maybe<ChildWhereUniqueInput>;
-}
-
-export interface ChildUpdateDataInput {
-  parent?: Maybe<UserUpdateOneRequiredWithoutChildrenInput>;
-  name?: Maybe<String>;
-  born?: Maybe<DateTimeInput>;
-  vaccinations?: Maybe<UserVaccinationUpdateOneInput>;
-}
-
-export interface ChildUpsertNestedInput {
-  update: ChildUpdateDataInput;
-  create: ChildCreateInput;
-}
-
-export interface ChildVaccinationUpdateManyMutationInput {
-  takenAt?: Maybe<DateTimeInput>;
-  untilNext?: Maybe<String>;
-  protectDuration?: Maybe<String>;
-}
-
-export interface UserCreateInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  email: String;
-  password: String;
-  vaccinations?: Maybe<UserVaccinationCreateManyWithoutUserInput>;
-  children?: Maybe<ChildCreateManyWithoutParentInput>;
-}
-
-export interface UserUpdateInput {
-  name?: Maybe<String>;
-  email?: Maybe<String>;
-  password?: Maybe<String>;
-  vaccinations?: Maybe<UserVaccinationUpdateManyWithoutUserInput>;
-  children?: Maybe<ChildUpdateManyWithoutParentInput>;
-}
-
 export interface UserUpdateManyMutationInput {
   name?: Maybe<String>;
   email?: Maybe<String>;
   password?: Maybe<String>;
+}
+
+export interface UserVaccinationCreateInput {
+  id?: Maybe<ID_Input>;
+  user: UserCreateOneWithoutVaccinationsInput;
+  type: VaccinationCreateOneInput;
+  takenAt?: Maybe<DateTimeInput>;
+  untilNext?: Maybe<String>;
+  protectDuration?: Maybe<String>;
+}
+
+export interface UserCreateOneWithoutVaccinationsInput {
+  create?: Maybe<UserCreateWithoutVaccinationsInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface UserCreateWithoutVaccinationsInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  email: String;
+  password: String;
+  children?: Maybe<ChildCreateManyWithoutParentInput>;
 }
 
 export interface UserVaccinationUpdateInput {
@@ -1170,6 +1283,25 @@ export interface UserVaccinationUpdateInput {
   takenAt?: Maybe<DateTimeInput>;
   untilNext?: Maybe<String>;
   protectDuration?: Maybe<String>;
+}
+
+export interface UserUpdateOneRequiredWithoutVaccinationsInput {
+  create?: Maybe<UserCreateWithoutVaccinationsInput>;
+  update?: Maybe<UserUpdateWithoutVaccinationsDataInput>;
+  upsert?: Maybe<UserUpsertWithoutVaccinationsInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface UserUpdateWithoutVaccinationsDataInput {
+  name?: Maybe<String>;
+  email?: Maybe<String>;
+  password?: Maybe<String>;
+  children?: Maybe<ChildUpdateManyWithoutParentInput>;
+}
+
+export interface UserUpsertWithoutVaccinationsInput {
+  update: UserUpdateWithoutVaccinationsDataInput;
+  create: UserCreateWithoutVaccinationsInput;
 }
 
 export interface UserVaccinationUpdateManyMutationInput {
@@ -1288,7 +1420,15 @@ export interface ChildPromise extends Promise<Child>, Fragmentable {
   parent: <T = UserPromise>() => T;
   name: () => Promise<String>;
   born: () => Promise<DateTimeOutput>;
-  vaccinations: <T = UserVaccinationPromise>() => T;
+  vaccinations: <T = FragmentableArray<ChildVaccination>>(args?: {
+    where?: ChildVaccinationWhereInput;
+    orderBy?: ChildVaccinationOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface ChildSubscription
@@ -1298,7 +1438,17 @@ export interface ChildSubscription
   parent: <T = UserSubscription>() => T;
   name: () => Promise<AsyncIterator<String>>;
   born: () => Promise<AsyncIterator<DateTimeOutput>>;
-  vaccinations: <T = UserVaccinationSubscription>() => T;
+  vaccinations: <
+    T = Promise<AsyncIterator<ChildVaccinationSubscription>>
+  >(args?: {
+    where?: ChildVaccinationWhereInput;
+    orderBy?: ChildVaccinationOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface ChildNullablePromise
@@ -1308,7 +1458,15 @@ export interface ChildNullablePromise
   parent: <T = UserPromise>() => T;
   name: () => Promise<String>;
   born: () => Promise<DateTimeOutput>;
-  vaccinations: <T = UserVaccinationPromise>() => T;
+  vaccinations: <T = FragmentableArray<ChildVaccination>>(args?: {
+    where?: ChildVaccinationWhereInput;
+    orderBy?: ChildVaccinationOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface User {
@@ -1483,6 +1641,50 @@ export interface VaccinationNullablePromise
   protectDuration: () => Promise<String>;
 }
 
+export interface ChildVaccination {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  takenAt: DateTimeOutput;
+  untilNext?: String;
+  protectDuration?: String;
+}
+
+export interface ChildVaccinationPromise
+  extends Promise<ChildVaccination>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  child: <T = ChildPromise>() => T;
+  type: <T = VaccinationPromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  takenAt: () => Promise<DateTimeOutput>;
+  untilNext: () => Promise<String>;
+  protectDuration: () => Promise<String>;
+}
+
+export interface ChildVaccinationSubscription
+  extends Promise<AsyncIterator<ChildVaccination>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  child: <T = ChildSubscription>() => T;
+  type: <T = VaccinationSubscription>() => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  takenAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  untilNext: () => Promise<AsyncIterator<String>>;
+  protectDuration: () => Promise<AsyncIterator<String>>;
+}
+
+export interface ChildVaccinationNullablePromise
+  extends Promise<ChildVaccination | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  child: <T = ChildPromise>() => T;
+  type: <T = VaccinationPromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  takenAt: () => Promise<DateTimeOutput>;
+  untilNext: () => Promise<String>;
+  protectDuration: () => Promise<String>;
+}
+
 export interface ChildConnection {
   pageInfo: PageInfo;
   edges: ChildEdge[];
@@ -1558,50 +1760,6 @@ export interface AggregateChildSubscription
   extends Promise<AsyncIterator<AggregateChild>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface ChildVaccination {
-  id: ID_Output;
-  createdAt: DateTimeOutput;
-  takenAt: DateTimeOutput;
-  untilNext?: String;
-  protectDuration?: String;
-}
-
-export interface ChildVaccinationPromise
-  extends Promise<ChildVaccination>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  child: <T = ChildPromise>() => T;
-  type: <T = VaccinationPromise>() => T;
-  createdAt: () => Promise<DateTimeOutput>;
-  takenAt: () => Promise<DateTimeOutput>;
-  untilNext: () => Promise<String>;
-  protectDuration: () => Promise<String>;
-}
-
-export interface ChildVaccinationSubscription
-  extends Promise<AsyncIterator<ChildVaccination>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  child: <T = ChildSubscription>() => T;
-  type: <T = VaccinationSubscription>() => T;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  takenAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  untilNext: () => Promise<AsyncIterator<String>>;
-  protectDuration: () => Promise<AsyncIterator<String>>;
-}
-
-export interface ChildVaccinationNullablePromise
-  extends Promise<ChildVaccination | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  child: <T = ChildPromise>() => T;
-  type: <T = VaccinationPromise>() => T;
-  createdAt: () => Promise<DateTimeOutput>;
-  takenAt: () => Promise<DateTimeOutput>;
-  untilNext: () => Promise<String>;
-  protectDuration: () => Promise<String>;
 }
 
 export interface ChildVaccinationConnection {

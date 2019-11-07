@@ -5,7 +5,7 @@ type Query {
 	getVaccinations: [Vaccination]
 	getUserVaccinations: [UserVaccination]
 	getChild(name: String): [Child]
-	getChildrenVaccinations: [ChildVaccination]
+	getChildVaccinations: [ChildVaccination]
 }
 
 type Mutation {
@@ -13,7 +13,7 @@ type Mutation {
     login(email: String!, password: String!): AuthPayload
 	addUserVaccination(vaccinationId: ID!, takenAt: String): UserVaccination
 	addChild(name: String!, born: DateTime!): Child
-	addChildrenVaccination(vaccinationId: ID!, childId: ID!, takenAt: String): ChildVaccination
+	addChildVaccination(childId: ID!, vaccinationId: ID!, takenAt: String): ChildVaccination
 }
 
 type User {
@@ -53,7 +53,7 @@ type Child {
 	parent: User!
 	name: String!
 	born: DateTime!
-	vaccinations: [UserVaccination]
+	vaccinations: [ChildVaccination]
 }
 
 type ChildVaccination {
