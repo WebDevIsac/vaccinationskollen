@@ -11,7 +11,6 @@ import {
 	TouchableOpacity
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
-// import { DatePicker } from "react-native-woodpicker";
 import { Query, Mutation } from "react-apollo";
 import gql from "graphql-tag";
 import { Chevron } from "react-native-shapes";

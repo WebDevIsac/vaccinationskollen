@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Header } from "react-navigation-stack";
-import { View, Text, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity, TextInput } from 'react-native';
+import { Chevron } from "react-native-shapes";
 import navStyles from "../styles/navStyles";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
+import RNPickerSelect from "react-native-picker-select";
+import { translateDate, setCorrectHours } from "../utils/dateUtils";
 
 const GET_USER_VACCINATIONS_QUERY = gql`
 	query getUserVaccinationsQuery {
@@ -23,6 +26,14 @@ const GET_USER_VACCINATIONS_QUERY = gql`
 
 const VaccinationList = (props) => {
 
+	const [sorting, setSorting] = useState([{value: "date_DESC", label: "Senast tillagda"}]);
+
+	const sortingOpts = [
+		{ value: "date_DESC", label: "Senast tillagda" },
+		{ value: "date_ASC", label: "Först tillagda" },
+		{ value: "name_DESC", label: "Vaccination A-Ö" },
+		{ value: "name_ASC", label: "Vaccination Ö-A" },
+	]
 
 	return (
 		<Query query={GET_USER_VACCINATIONS_QUERY}>
@@ -32,12 +43,12 @@ const VaccinationList = (props) => {
 
 				let updateVaccinations = data.getUserVaccinations.map(vaccination => {
 					if (vaccination.takenAt) {
-						vaccination.takenAt = vaccination.takenAt.split("T");
-						vaccination.takenAt = vaccination.takenAt[0];
+						vaccination.takenAt = new Date(vaccination.takenAt);
+						vaccination.takenAt = translateDate(vaccination.takenAt).toString();
 					}
-
-					vaccination.createdAt = vaccination.createdAt.split("T");
-					vaccination.createdAt = vaccination.createdAt[0];
+					
+					vaccination.createdAt = new Date(vaccination.createdAt);
+					vaccination.createdAt = translateDate(vaccination.createdAt).toString();
 
 					return vaccination;
 				});
@@ -46,23 +57,32 @@ const VaccinationList = (props) => {
 				return (
 					<ScrollView contentContainerStyle={styles.container}>
 						<View style={styles.filterView}>
-							<Text style={styles.filterText}>Sök</Text>
-							<View style={{width: 1, height: "100%", backgroundColor: "black"}}></View>
-							<Text style={styles.filterText}>Sortera</Text>
+							<TextInput style={styles.filterText} placeholder="Sök" placeholderTextColor="#FFF" />
+							<View style={styles.filterLine}></View>
+							<RNPickerSelect
+								placeholderTextColor="#FFF"
+								placeholder={{
+									label: "Sortera efter...",
+									value: null
+								}}
+								style={pickerSelectStyles}
+								onValueChange={value => {
+									setSorting(value);
+								}}
+								value={sorting}
+								items={sortingOpts}
+								Icon={() => {
+									return <Chevron size={1.5} color="gray" />;
+								}}
+							/>
 						</View>
 						{updateVaccinations.map(vaccination => {
 							return (
 								<View key={vaccination.id} style={styles.vaccinationItem}>
-									{/* <View style={styles.vaccinationLeft}>
-
-									</View>
-									<View style={styles.vaccinationRight}>
-
-									</View> */}
 									<Text>Vaccination mot {vaccination.type.name}</Text>
 									<Text>Dos {vaccination.type.dose}</Text>
 									<Text>Tagen: {vaccination.takenAt}</Text>
-									<Text></Text>
+									<Text>Tillagd: {vaccination.createdAt}</Text>
 								</View>
 							)
 						})}
@@ -90,17 +110,28 @@ const styles = StyleSheet.create({
 		width: "100%"
 	},
 	filterView: {
+		position: "relative",
 		marginTop: 10,
-		flexGrow: 1,
 		flexDirection: "row",
 		alignItems: "center",
-		justifyContent: "space-around",
+		justifyContent: "space-between",
 		width: "90%",
 		height: 60,
 		backgroundColor: "gray",
 	},
 	filterText: {
 		fontSize: 18,
+		paddingHorizontal: 10,
+		width: "45%",
+		color: "#FFF"
+	},
+	filterLine: {
+		width: 1, 
+		height: "100%", 
+		backgroundColor: "black",
+		position: "absolute",
+		top: 0,
+		left: "50%",
 	},
 	vaccinationItem: {
 		flex: 1,
@@ -109,11 +140,9 @@ const styles = StyleSheet.create({
 		backgroundColor: "#FEE0E0",
 		borderWidth: 0,
 		borderRadius: 20,
-		marginVertical: 10,
 		padding: 10,
 	},
 	addButton: {
-		flexGrow: 1,
 		alignItems: "center",
 		justifyContent: "center",
 		marginVertical: 10,
@@ -128,6 +157,38 @@ const styles = StyleSheet.create({
 	addButtonText: {
 		fontSize: 18,
 	},
-})
+});
+
+const pickerSelectStyles = StyleSheet.create({
+	inputIOS: {
+		fontSize: 16,
+		paddingVertical: 8,
+		paddingHorizontal: 8,
+		marginVertical: 8,
+		borderWidth: 1,
+		borderColor: "gray",
+		borderRadius: 4,
+		color: "#FFF",
+		paddingRight: 30, // to ensure the text is never behind the icon
+		width: "100%",
+		height: 40
+	},
+	inputAndroid: {
+		fontSize: 16,
+		paddingHorizontal: 10,
+		paddingVertical: 8,
+		borderWidth: 0.5,
+		borderColor: "purple",
+		borderRadius: 8,
+		color: "#FFF",
+		paddingRight: 30, // to ensure the text is never behind the icon
+		width: "100%",
+		height: 40
+	},
+	iconContainer: {
+		top: 24,
+		right: 12
+	},
+});
 
 export default VaccinationList;
