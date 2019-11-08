@@ -56,18 +56,19 @@ const AddChild = () => {
 									value={name}
 								/>
 							</Item>
-							<Item style={{borderColor: "transparent", width: "100%"}} >
-							<TouchableOpacity
-								onPress={() => setIsDateTimePickerVisible(true)}
-								style={{ position: "relative", width: "100%" }}
-							>
-								<TextInput
-									value={bornDate.toString()}
-									pointerEvents="none"
-									style={pickerSelectStyles.inputIOS}
-								/>
-								<Chevron size={1.5} color="gray" style={styles.icon} />
-							</TouchableOpacity>
+							<Item style={{borderColor: "transparent", width: "100%"}} floatingLabel>
+								<Label>Födelsedatum</Label>
+								<TouchableOpacity
+									onPress={() => setIsDateTimePickerVisible(true)}
+									style={{ position: "relative", width: "100%" }}
+								>
+									<TextInput
+										value={bornDate.toString()}
+										pointerEvents="none"
+										style={pickerSelectStyles.inputIOS}
+									/>
+									<Chevron size={1.5} color="gray" style={styles.icon} />
+								</TouchableOpacity>
 							</Item>
 							<DateTimePicker
 								titleIOS="Välj födelsedatum"
@@ -82,6 +83,12 @@ const AddChild = () => {
 								isDarkModeEnabled={isDarkModeEnabled}
 							/>
 						</View>
+						<TouchableOpacity style={styles.addButton} onPress={() => {
+							mutation();
+							props.navigation.navigate("Profile");
+						}}>
+							<Text style={styles.addButtonText}>Lägg till barn</Text>
+						</TouchableOpacity>
 					</View>
 				)
 			}}
@@ -109,7 +116,23 @@ const styles = StyleSheet.create({
 	},
 	inputContainer: {
 		width: "80%"
-	}
+	},
+	addButton: {
+		// flexGrow: 1,
+		alignItems: "center",
+		justifyContent: "center",
+		marginVertical: 10,
+		textAlign: "center",
+		width: "80%",
+		height: 60,
+		borderRadius: 50,
+		borderWidth: 0,
+		borderColor: "#6FB556",
+		backgroundColor: "#6FB556"
+	},
+	addButtonText: {
+		fontSize: 18,
+	},
 });
 
 const pickerSelectStyles = StyleSheet.create({

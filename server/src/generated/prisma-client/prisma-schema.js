@@ -629,6 +629,7 @@ type User {
   name: String!
   email: String!
   password: String!
+  born: DateTime!
   vaccinations(where: UserVaccinationWhereInput, orderBy: UserVaccinationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserVaccination!]
   children(where: ChildWhereInput, orderBy: ChildOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Child!]
 }
@@ -644,6 +645,7 @@ input UserCreateInput {
   name: String!
   email: String!
   password: String!
+  born: DateTime!
   vaccinations: UserVaccinationCreateManyWithoutUserInput
   children: ChildCreateManyWithoutParentInput
 }
@@ -663,6 +665,7 @@ input UserCreateWithoutChildrenInput {
   name: String!
   email: String!
   password: String!
+  born: DateTime!
   vaccinations: UserVaccinationCreateManyWithoutUserInput
 }
 
@@ -671,6 +674,7 @@ input UserCreateWithoutVaccinationsInput {
   name: String!
   email: String!
   password: String!
+  born: DateTime!
   children: ChildCreateManyWithoutParentInput
 }
 
@@ -688,6 +692,8 @@ enum UserOrderByInput {
   email_DESC
   password_ASC
   password_DESC
+  born_ASC
+  born_DESC
 }
 
 type UserPreviousValues {
@@ -695,6 +701,7 @@ type UserPreviousValues {
   name: String!
   email: String!
   password: String!
+  born: DateTime!
 }
 
 type UserSubscriptionPayload {
@@ -719,6 +726,7 @@ input UserUpdateInput {
   name: String
   email: String
   password: String
+  born: DateTime
   vaccinations: UserVaccinationUpdateManyWithoutUserInput
   children: ChildUpdateManyWithoutParentInput
 }
@@ -727,6 +735,7 @@ input UserUpdateManyMutationInput {
   name: String
   email: String
   password: String
+  born: DateTime
 }
 
 input UserUpdateOneRequiredWithoutChildrenInput {
@@ -747,6 +756,7 @@ input UserUpdateWithoutChildrenDataInput {
   name: String
   email: String
   password: String
+  born: DateTime
   vaccinations: UserVaccinationUpdateManyWithoutUserInput
 }
 
@@ -754,6 +764,7 @@ input UserUpdateWithoutVaccinationsDataInput {
   name: String
   email: String
   password: String
+  born: DateTime
   children: ChildUpdateManyWithoutParentInput
 }
 
@@ -1095,6 +1106,14 @@ input UserWhereInput {
   password_not_starts_with: String
   password_ends_with: String
   password_not_ends_with: String
+  born: DateTime
+  born_not: DateTime
+  born_in: [DateTime!]
+  born_not_in: [DateTime!]
+  born_lt: DateTime
+  born_lte: DateTime
+  born_gt: DateTime
+  born_gte: DateTime
   vaccinations_every: UserVaccinationWhereInput
   vaccinations_some: UserVaccinationWhereInput
   vaccinations_none: UserVaccinationWhereInput

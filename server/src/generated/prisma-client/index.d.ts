@@ -317,7 +317,9 @@ export type UserOrderByInput =
   | "email_ASC"
   | "email_DESC"
   | "password_ASC"
-  | "password_DESC";
+  | "password_DESC"
+  | "born_ASC"
+  | "born_DESC";
 
 export type VaccinationOrderByInput =
   | "id_ASC"
@@ -462,6 +464,14 @@ export interface UserWhereInput {
   password_not_starts_with?: Maybe<String>;
   password_ends_with?: Maybe<String>;
   password_not_ends_with?: Maybe<String>;
+  born?: Maybe<DateTimeInput>;
+  born_not?: Maybe<DateTimeInput>;
+  born_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  born_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  born_lt?: Maybe<DateTimeInput>;
+  born_lte?: Maybe<DateTimeInput>;
+  born_gt?: Maybe<DateTimeInput>;
+  born_gte?: Maybe<DateTimeInput>;
   vaccinations_every?: Maybe<UserVaccinationWhereInput>;
   vaccinations_some?: Maybe<UserVaccinationWhereInput>;
   vaccinations_none?: Maybe<UserVaccinationWhereInput>;
@@ -704,6 +714,7 @@ export interface UserCreateWithoutChildrenInput {
   name: String;
   email: String;
   password: String;
+  born: DateTimeInput;
   vaccinations?: Maybe<UserVaccinationCreateManyWithoutUserInput>;
 }
 
@@ -775,6 +786,7 @@ export interface UserUpdateWithoutChildrenDataInput {
   name?: Maybe<String>;
   email?: Maybe<String>;
   password?: Maybe<String>;
+  born?: Maybe<DateTimeInput>;
   vaccinations?: Maybe<UserVaccinationUpdateManyWithoutUserInput>;
 }
 
@@ -1132,6 +1144,7 @@ export interface UserCreateInput {
   name: String;
   email: String;
   password: String;
+  born: DateTimeInput;
   vaccinations?: Maybe<UserVaccinationCreateManyWithoutUserInput>;
   children?: Maybe<ChildCreateManyWithoutParentInput>;
 }
@@ -1154,6 +1167,7 @@ export interface UserUpdateInput {
   name?: Maybe<String>;
   email?: Maybe<String>;
   password?: Maybe<String>;
+  born?: Maybe<DateTimeInput>;
   vaccinations?: Maybe<UserVaccinationUpdateManyWithoutUserInput>;
   children?: Maybe<ChildUpdateManyWithoutParentInput>;
 }
@@ -1253,6 +1267,7 @@ export interface UserUpdateManyMutationInput {
   name?: Maybe<String>;
   email?: Maybe<String>;
   password?: Maybe<String>;
+  born?: Maybe<DateTimeInput>;
 }
 
 export interface UserVaccinationCreateInput {
@@ -1274,6 +1289,7 @@ export interface UserCreateWithoutVaccinationsInput {
   name: String;
   email: String;
   password: String;
+  born: DateTimeInput;
   children?: Maybe<ChildCreateManyWithoutParentInput>;
 }
 
@@ -1296,6 +1312,7 @@ export interface UserUpdateWithoutVaccinationsDataInput {
   name?: Maybe<String>;
   email?: Maybe<String>;
   password?: Maybe<String>;
+  born?: Maybe<DateTimeInput>;
   children?: Maybe<ChildUpdateManyWithoutParentInput>;
 }
 
@@ -1474,6 +1491,7 @@ export interface User {
   name: String;
   email: String;
   password: String;
+  born: DateTimeOutput;
 }
 
 export interface UserPromise extends Promise<User>, Fragmentable {
@@ -1481,6 +1499,7 @@ export interface UserPromise extends Promise<User>, Fragmentable {
   name: () => Promise<String>;
   email: () => Promise<String>;
   password: () => Promise<String>;
+  born: () => Promise<DateTimeOutput>;
   vaccinations: <T = FragmentableArray<UserVaccination>>(args?: {
     where?: UserVaccinationWhereInput;
     orderBy?: UserVaccinationOrderByInput;
@@ -1508,6 +1527,7 @@ export interface UserSubscription
   name: () => Promise<AsyncIterator<String>>;
   email: () => Promise<AsyncIterator<String>>;
   password: () => Promise<AsyncIterator<String>>;
+  born: () => Promise<AsyncIterator<DateTimeOutput>>;
   vaccinations: <
     T = Promise<AsyncIterator<UserVaccinationSubscription>>
   >(args?: {
@@ -1537,6 +1557,7 @@ export interface UserNullablePromise
   name: () => Promise<String>;
   email: () => Promise<String>;
   password: () => Promise<String>;
+  born: () => Promise<DateTimeOutput>;
   vaccinations: <T = FragmentableArray<UserVaccination>>(args?: {
     where?: UserVaccinationWhereInput;
     orderBy?: UserVaccinationOrderByInput;
@@ -2130,6 +2151,7 @@ export interface UserPreviousValues {
   name: String;
   email: String;
   password: String;
+  born: DateTimeOutput;
 }
 
 export interface UserPreviousValuesPromise
@@ -2139,6 +2161,7 @@ export interface UserPreviousValuesPromise
   name: () => Promise<String>;
   email: () => Promise<String>;
   password: () => Promise<String>;
+  born: () => Promise<DateTimeOutput>;
 }
 
 export interface UserPreviousValuesSubscription
@@ -2148,6 +2171,7 @@ export interface UserPreviousValuesSubscription
   name: () => Promise<AsyncIterator<String>>;
   email: () => Promise<AsyncIterator<String>>;
   password: () => Promise<AsyncIterator<String>>;
+  born: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface UserVaccinationSubscriptionPayload {

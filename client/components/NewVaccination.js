@@ -238,8 +238,8 @@ const NewVaccination = (props) => {
 								mutation();
 								props.navigation.navigate("VaccinationList");
 							}}>
-							<Text style={styles.addButtonText}>Lägg till ny vaccination</Text>
-						</TouchableOpacity>
+								<Text style={styles.addButtonText}>Lägg till ny vaccination</Text>
+							</TouchableOpacity>
 					);
 				}}}
 			</Mutation>
@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		marginVertical: 10,
 		textAlign: "center",
-		width: "90%",
+		width: "80%",
 		height: 60,
 		borderRadius: 50,
 		borderWidth: 0,

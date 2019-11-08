@@ -9,7 +9,7 @@ type Query {
 }
 
 type Mutation {
-    signup(name: String!, email: String!, password: String!): AuthPayload
+    signup(name: String!, email: String!, password: String!, born: DateTime!): AuthPayload
     login(email: String!, password: String!): AuthPayload
 	addUserVaccination(vaccinationId: ID!, takenAt: String): UserVaccination
 	addChild(name: String!, born: DateTime!): Child
@@ -20,6 +20,7 @@ type User {
     id: ID!
     name: String!
     email: String!
+	born: DateTime!
 	vaccinations: [UserVaccination]
 	children: [Child]
 }

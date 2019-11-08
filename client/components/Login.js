@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, TextInput, Button, AsyncStorage, Alert, ActivityIndicator, TouchableOpacity } from "react-native";
+import { Item, Label, Input } from "native-base";
+import { Chevron } from "react-native-shapes";
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 import navStyles from "../styles/navStyles";
@@ -53,27 +55,29 @@ const Login = (props) => {
 						setIsLoading(loading);
 						return (
 							<View style={{width: "90%"}}>
-								<View style={styles.inputView}>
-									<Ionicons name="ios-mail" size={25} color="gray" style={styles.inputIcon} />
-									<TextInput
-										style={[styles.input, emailError && {borderColor: "#FF3355"}]}
+								<Item floatingLabel style={[styles.item, emailError && {borderWidth: 1, borderColor: "#FF3355"}]}>
+									<Label>
+										<Ionicons name="ios-mail" size={25} color="gray" style={styles.inputIcon} /> Email
+									</Label>
+									<Input
+										keyboardType="email-address"
 										textContentType="emailAddress"
-										placeholder="Your email"
 										onChangeText={text => setEmail(text)}
 										value={email}
 									/>
-								</View>
+								</Item>
 								<Text style={emailError ? styles.errorMessage : styles.hideMessage}>{emailError}</Text>
-								<View style={styles.inputView}>
-									<Ionicons name="ios-lock" size={25} color="gray" style={styles.inputIcon} />
-									<TextInput
-										style={[styles.input, passwordError && {borderColor: "#FF3355"}]}
+								<Item floatingLabel style={styles.item}>
+									<Label>
+										<Ionicons name="ios-lock" size={25} color="gray" style={styles.inputIcon} /> Lösenord
+									</Label>
+									<Input
+										secureTextEntry={true}
 										textContentType="password"
-										placeholder="Your password"
 										onChangeText={text => setPassword(text)}
 										value={password}
 									/>
-								</View>
+								</Item>
 								<Text style={passwordError ? styles.errorMessage : styles.hideMessage}>{passwordError}</Text>
 								<TouchableOpacity style={styles.button} onPress={() => {
 									mutation();
@@ -111,6 +115,9 @@ const styles = StyleSheet.create({
 	inputView: {
 		width: "100%",
 		position: "relative",
+	},
+	item: {
+		marginVertical: 20,
 	},
 	input: {
 		marginVertical: 10,
