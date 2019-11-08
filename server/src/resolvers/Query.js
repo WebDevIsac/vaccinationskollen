@@ -50,11 +50,33 @@ const getChildVaccinations = async (parent, args, context, info) => {
 	return childVaccinations;
 }
 
+const getFamilyVaccinations = async (parent, args, context, info) => {
+	const userId = getUserId(context);
+	
+	let user = await context.prisma.user({ id: userId });
+	let children = await context.prisma.user({ id: userId }).children();
+
+	children = children.map(async (child, index) => {
+		child = {
+			...child,
+			vaccinations: await getChildVaccinations(null, args.id = child.id, context, info)
+		}
+
+		return child;
+	})
+
+	user.vaccinations = await getUserVaccinations(null, null, context, null);
+	user.children = await children;
+
+	return user;
+}
+
 
 module.exports = {
 	getUser,
 	getVaccinations,
 	getUserVaccinations,
 	getChild,
-	getChildVaccinations
+	getChildVaccinations,
+	getFamilyVaccinations,
 }

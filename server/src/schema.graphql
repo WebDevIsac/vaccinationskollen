@@ -6,6 +6,7 @@ type Query {
 	getUserVaccinations: [UserVaccination]
 	getChild(name: String): [Child]
 	getChildVaccinations: [ChildVaccination]
+	getFamilyVaccinations: User
 }
 
 type Mutation {
