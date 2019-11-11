@@ -17,7 +17,7 @@ import { Chevron } from "react-native-shapes";
 import navStyles from "../styles/navStyles";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { Appearance } from "react-native-appearance";
-import { translateDate, setCorrectHours } from "../utils/dateUtils";
+import { translateDate, setCorrectHours, setDateFromTime } from "../utils/dateUtils";
 
 const GET_VACCINATIONS_QUERY = gql`
 	query getVaccinationsQuery {
@@ -25,44 +25,61 @@ const GET_VACCINATIONS_QUERY = gql`
 			id
 			name
 			dose
+			untilNext
+			protectDuration
 		}
 	}
 `;
 
 const ADD_USER_VACCINATION = gql`
-	mutation AddUserVaccination($vaccinationId: ID!, $takenAt: String) {
-		addUserVaccination(vaccinationId: $vaccinationId, takenAt: $takenAt) {
+	mutation AddUserVaccination($vaccinationId: ID!, $takenAt: String, $nextDose: String, $protectUntil: String) {
+		addUserVaccination(vaccinationId: $vaccinationId, takenAt: $takenAt, nextDose: $nextDose, protectUntil: $protectUntil) {
 			id
 		}
 	}
 `;
 
 const colorScheme = Appearance.getColorScheme();
-const isDarkModeEnabled = colorScheme === 'dark';
+const isDarkModeEnabled = colorScheme === "dark";
 
-const NewVaccination = (props) => {
+const NewVaccination = props => {
 	const [id, setId] = useState();
 	const [date, setDate] = useState(translateDate(new Date()));
-	const [doses, setDoses] = useState([{value: "1", label: "Dos 1"}]);
+	const [doses, setDoses] = useState([{ value: "1", label: "Dos 1" }]);
 	const [name, setName] = useState();
 	const [allVaccinations, setAllVaccinations] = useState();
-	const [week, setWeek] = useState();
-	const [month, setMonth] = useState();
-	const [year, setYear] = useState();
+	const [nextDose, setNextDose] = useState();
+	const [nextDoseDate, setNextDoseDate] = useState();
+	const [untilNext, setUntilNext] = useState();
+	const [protectUntil, setProtectUntil] = useState();
+	const [protectUntilDate, setProtectUntilDate] = useState();
+	const [protectDuration, setProtectDuration] = useState();
 	const [isLoading, setIsLoading] = useState(true);
-	const [isDateTimePickerVisible, setIsDateTimePickerVisible] = useState(false);
+	const [isDateTimePickerVisible, setIsDateTimePickerVisible] = useState(
+		false
+	);
 
-	let weeks = [];
+	let time = [];
 	for (let i = 0; i < 4; i++) {
-		weeks.push({ label: (i + 1).toString(), value: (i + 1).toString() });
+		let string = i < 0 ? " vecka" : " veckor";
+		time.push({
+			label: (i + 1).toString() + string,
+			value: (i + 1).toString() + string
+		});
 	}
-	let months = [];
 	for (let i = 0; i < 12; i++) {
-		months.push({ label: (i + 1).toString(), value: (i + 1).toString() });
+		let string = i < 0 ? " månad" : " månader";
+		time.push({
+			label: (i + 1).toString() + string,
+			value: (i + 1).toString() + string
+		});
 	}
-	let years = [];
 	for (let i = 0; i < 50; i++) {
-		years.push({ label: (i + 1).toString(), value: (i + 1).toString() });
+		let string = " år";
+		time.push({
+			label: (i + 1).toString() + string,
+			value: (i + 1).toString() + string
+		});
 	}
 
 	useEffect(() => {
@@ -83,13 +100,19 @@ const NewVaccination = (props) => {
 		}
 	}, [name]);
 
+	useEffect(() => {
+		if (id) {
+			setUntilNext(allVaccinations.find(item => item.id === id).untilNext);
+			setProtectDuration(allVaccinations.find(item => item.id === id).protectDuration)
+		}
+	}, [id])
+	
 	return (
 		<View style={styles.container}>
 			<Query query={GET_VACCINATIONS_QUERY}>
 				{({ loading, err, data }) => {
-					
 					if (err) return console.log(err);
-					if (loading) return <ActivityIndicator size="large"/>
+					if (loading) return <ActivityIndicator size="large" />;
 					setIsLoading(loading);
 
 					setAllVaccinations(data.getVaccinations);
@@ -114,7 +137,7 @@ const NewVaccination = (props) => {
 					});
 
 					return (
-						<View style={{width:"80%"}}>
+						<View style={{ width: "80%" }}>
 							<RNPickerSelect
 								placeholder={{
 									label: "Välj en vaccination...",
@@ -138,56 +161,43 @@ const NewVaccination = (props) => {
 								value={id ? id : null}
 								items={doses}
 								Icon={() => {
-									return (
-										<Chevron size={1.5} color="gray" />
-									);
-								}}
-							/>
-							<RNPickerSelect
-								placeholder={{
-									label: "Antal veckor...",
-									value: null
-								}}
-								style={pickerSelectStyles}
-								onValueChange={value => {
-									setWeek(value);
-								}}
-								value={week ? week : null}
-								items={weeks}
-								Icon={() => {
 									return <Chevron size={1.5} color="gray" />;
 								}}
 							/>
 							<RNPickerSelect
 								placeholder={{
-									label: "Antal månader...",
+									label: "Nästa dos ska tas...",
 									value: null
 								}}
 								style={pickerSelectStyles}
 								onValueChange={value => {
-									setMonth(value);
+									setNextDose(value);
+									setNextDoseDate(setDateFromTime(value, setCorrectHours(new Date(date))));
 								}}
-								value={month ? month : null}
-								items={months}
+								value={nextDose ? nextDose : null}
+								items={time}
 								Icon={() => {
 									return <Chevron size={1.5} color="gray" />;
 								}}
 							/>
+							<Text style={!untilNext && {display: "none"}}>{untilNext && `Nästa dos rekommenderas tas om ${untilNext}`}</Text>
 							<RNPickerSelect
 								placeholder={{
-									label: "Antal år...",
+									label: "Vaccination skyddar i...",
 									value: null
 								}}
 								style={pickerSelectStyles}
 								onValueChange={value => {
-									setYear(value);
+									setProtectUntil(value);
+									setProtectUntilDate(setDateFromTime(value, setCorrectHours(new Date(date))));
 								}}
-								value={year ? year : null}
-								items={years}
+								value={protectUntil ? protectUntil : null}
+								items={time}
 								Icon={() => {
 									return <Chevron size={1.5} color="gray" />;
 								}}
-							/>
+								/>
+							<Text style={!protectDuration && {display: "none"}}>{protectDuration && `Enligt våra uppgifter skyddar vaccination dig i ${protectDuration}`}</Text>
 							<TouchableOpacity
 								onPress={() => setIsDateTimePickerVisible(true)}
 								style={{ position: "relative" }}
@@ -197,18 +207,24 @@ const NewVaccination = (props) => {
 									pointerEvents="none"
 									style={pickerSelectStyles.inputIOS}
 								/>
-								<Chevron size={1.5} color="gray" style={styles.icon} />
+								<Chevron
+									size={1.5}
+									color="gray"
+									style={styles.icon}
+								/>
 							</TouchableOpacity>
 							<DateTimePicker
 								titleIOS="Välj datum"
 								date={new Date(date)}
 								isVisible={isDateTimePickerVisible}
-								onConfirm={(data) => {
+								onConfirm={data => {
 									let translatedDate = translateDate(data);
 									setDate(translatedDate);
 									setIsDateTimePickerVisible(false);
 								}}
-								onCancel={() => setIsDateTimePickerVisible(false)}
+								onCancel={() =>
+									setIsDateTimePickerVisible(false)
+								}
 								isDarkModeEnabled={isDarkModeEnabled}
 							/>
 						</View>
@@ -217,30 +233,41 @@ const NewVaccination = (props) => {
 			</Query>
 			<Mutation
 				mutation={ADD_USER_VACCINATION}
-				variables={{ vaccinationId: id, takenAt: setCorrectHours(new Date(date)) }}
-				onError={({ graphQLErrors }) => {
-					Alert.alert(
-						"Failed to add vaccination",
-						graphQLErrors[0].message,
-						{ text: "OK" },
-						{ cancelable: false }
-					);
+				variables={{
+					vaccinationId: id,
+					takenAt: setCorrectHours(new Date(date)),
+					nextDose: nextDoseDate,
+					protectUntil: protectUntilDate
+				}}
+				onError={({ networkError, graphQLErrors }) => {
+					graphQLErrors.map(err => {
+						console.log("gql error: " + err);
+					})
+					console.log("network error: " + networkError);
 				}}
 			>
 				{(mutation, { loading, err, data }) => {
 					if (isLoading) return null;
 					else if (loading) return null;
-					
+					else if (err) {console.log(err); return null;}
 					else {
 						return (
-							<TouchableOpacity style={styles.addButton} onPress={() => {
-								mutation();
-								props.navigation.navigate("VaccinationList");
-							}}>
-								<Text style={styles.addButtonText}>Lägg till ny vaccination</Text>
+							<TouchableOpacity
+								style={styles.addButton}
+								onPress={() => {
+									mutation();
+									// props.navigation.navigate(
+									// 	"VaccinationList"
+									// );
+								}}
+							>
+								<Text style={styles.addButtonText}>
+									Lägg till ny vaccination
+								</Text>
 							</TouchableOpacity>
-					);
-				}}}
+						);
+					}
+				}}
 			</Mutation>
 		</View>
 	);
@@ -262,7 +289,7 @@ const styles = StyleSheet.create({
 	icon: {
 		position: "absolute",
 		top: 24,
-		right: 12,
+		right: 12
 	},
 	addButton: {
 		// flexGrow: 1,
@@ -278,16 +305,16 @@ const styles = StyleSheet.create({
 		backgroundColor: "#6FB556"
 	},
 	addButtonText: {
-		fontSize: 18,
+		fontSize: 18
 	},
 	loading: {
-		position: 'absolute',
+		position: "absolute",
 		left: 0,
 		right: 0,
 		top: 0,
 		bottom: 0,
-		alignItems: 'center',
-		justifyContent: 'center'
+		alignItems: "center",
+		justifyContent: "center"
 	}
 });
 
@@ -320,7 +347,7 @@ const pickerSelectStyles = StyleSheet.create({
 	iconContainer: {
 		top: 24,
 		right: 12
-	},
+	}
 });
 
 export default NewVaccination;

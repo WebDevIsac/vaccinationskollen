@@ -26,8 +26,9 @@ const Home = (props) => {
 				return (
 					<View style={styles.container}>
 						<Text>{welcomeMessage}</Text>
+						<Text>Dessa vaccinationer bör fyllas på snart igen</Text>
+						
 						<Text>Dina senast tagna vaccinationer</Text>
-						<Text>Dessa vaccinationer rekommenderas fyllas på snart igen</Text>
 					</View>
 				)
 			}}
