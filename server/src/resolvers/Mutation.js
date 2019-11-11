@@ -39,7 +39,9 @@ const addUserVaccination = (parent, args, context, info) => {
 	return context.prisma.createUserVaccination({
 		user: { connect: { id: userId } },
 		type: { connect: { id: args.vaccinationId } },
-		takenAt: args.takenAt
+		takenAt: args.takenAt,
+		nextDose: args.nextDose,
+		protectUntil: args.protectUntil
 	})
 }
 
@@ -55,7 +57,10 @@ const addChild = async (parent, args, context, info) => {
 }
 
 const addChildVaccination = async (parent, args, context, info) => {
-	return context.prisma.createChildVaccination({
+	const userId = getUserId(context);
+
+	return context.prisma.createUserVaccination({
+		user: { connect: { id: userId } },
 		child: { connect: { id: args.childId } },
 		type: { connect: { id: args.vaccinationId } },
 		takenAt: args.takenAt 

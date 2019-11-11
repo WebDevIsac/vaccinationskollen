@@ -3,18 +3,29 @@ scalar DateTime
 type Query {
 	getUser: User
 	getVaccinations: [Vaccination]
-	getUserVaccinations: [UserVaccination]
+	getUserVaccinations(filter: String, skip: Int, first: Int, orderBy: VaccinationOrderByInput): [UserVaccination]
 	getChild(name: String): [Child]
-	getChildVaccinations: [ChildVaccination]
-	getFamilyVaccinations: User
+	getChildVaccinations(id: String, filter: String, skip: Int, first: Int, orderBy: VaccinationOrderByInput): [UserVaccination]
+	getFamilyVaccinations(filter: String, skip: Int, fist: Int, orderBy: VaccinationOrderByInput): [UserVaccination]
+}
+
+enum VaccinationOrderByInput {
+	takenAt_ASC
+	takenAt_DESC
+	createdAt_ASC
+	createdAt_DESC
+	nextDose_ASC
+	nextDose_DESC
+	protectUntil_ASC
+	protectUntil_DESC
 }
 
 type Mutation {
     signup(name: String!, email: String!, password: String!, born: DateTime!): AuthPayload
     login(email: String!, password: String!): AuthPayload
-	addUserVaccination(vaccinationId: ID!, takenAt: String): UserVaccination
+	addUserVaccination(vaccinationId: ID!, takenAt: String, nextDose: String, protectUntil: String): UserVaccination
 	addChild(name: String!, born: DateTime!): Child
-	addChildVaccination(childId: ID!, vaccinationId: ID!, takenAt: String): ChildVaccination
+	addChildVaccination(childId: ID!, vaccinationId: ID!, takenAt: String, nextDose: String, protectUntil: String): UserVaccination
 }
 
 type User {
@@ -31,6 +42,14 @@ type AuthPayload {
     user: User
 }
 
+type Child {
+	id: ID!
+	parent: User!
+	name: String!
+	born: DateTime!
+	vaccinations: [UserVaccination]
+}
+
 type Vaccination {
 	id: ID!
 	name: String!
@@ -43,27 +62,10 @@ type Vaccination {
 type UserVaccination {
 	id: ID!
 	user: User!
+	child: Child
 	type: Vaccination!
 	createdAt: DateTime!
 	takenAt: String
-	untilNext: String
-	protectDuration: String
-}
-
-type Child {
-	id: ID!
-	parent: User!
-	name: String!
-	born: DateTime!
-	vaccinations: [ChildVaccination]
-}
-
-type ChildVaccination {
-	id: ID!
-	child: Child!
-	type: Vaccination!
-	createdAt: DateTime!
-	takenAt: String
-	untilNext: String
-	protectDuration: String
+	nextDose: String
+	protectUntil: String
 }

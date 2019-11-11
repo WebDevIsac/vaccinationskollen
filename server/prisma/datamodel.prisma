@@ -8,6 +8,14 @@ type User {
 	children: [Child]
 }
 
+type Child {
+	id: ID! @id
+	parent: User! 
+	name: String!
+	born: DateTime!
+	vaccinations: [UserVaccination]
+}
+
 type Vaccination {
 	id: ID! @id
 	name: String!
@@ -20,27 +28,10 @@ type Vaccination {
 type UserVaccination {
 	id: ID! @id
 	user: User! 
+	child: Child
 	type: Vaccination!
 	createdAt: DateTime! @createdAt
 	takenAt: DateTime
-	untilNext: String
-	protectDuration: String
-}
-
-type Child {
-	id: ID! @id
-	parent: User! 
-	name: String!
-	born: DateTime!
-	vaccinations: [ChildVaccination]
-}
-
-type ChildVaccination {
-	id: ID! @id
-	child: Child!
-	type: Vaccination!
-	createdAt: DateTime! @createdAt
-	takenAt: DateTime!
-	untilNext: String
-	protectDuration: String
+	nextDose: DateTime
+	protectUntil: DateTime
 }

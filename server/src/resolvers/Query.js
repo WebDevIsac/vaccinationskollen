@@ -12,10 +12,36 @@ const getVaccinations = (parent, args, context, info) => {
 const getUserVaccinations = async (parent, args, context, info) => {
 	const userId = getUserId(context);
 
-	const vaccinations = await context.prisma.userVaccinations({where: { user: { id: userId } } }).type();
-	let userVaccinations = await context.prisma.userVaccinations({where: { user: { id: userId } } });
+	let user = await context.prisma.user({ id: userId });
+	delete user.password;
+
+	let userVaccinations = await context.prisma.userVaccinations({
+		where: { 
+			OR: [
+				{type: {dose: parseInt(args.filter)}},
+				{type: {name_contains: args.filter}}
+			]
+		},
+		skip: args.skip,
+		first: args.first,
+		orderBy: args.orderBy
+	})
+	
+	const vaccinations = await context.prisma.userVaccinations({
+		where: { 
+			OR: [
+				{type: {dose: parseInt(args.filter)}},
+				{type: {name_contains: args.filter}}
+			]
+		},
+		skip: args.skip,
+		first: args.first,
+		orderBy: args.orderBy
+	}).type();
+
 	userVaccinations = userVaccinations.map((userVacc, index) => {
 		userVacc.type = vaccinations[index].type;
+		userVacc.user = user;
 		return userVacc;
 	})
 
@@ -37,40 +63,99 @@ const getChild = async (parent, args, context, info) => {
 }
 
 const getChildVaccinations = async (parent, args, context, info) => {
+	const userId = getUserId(context);
 	const childId = args.id;
 
-	let childVaccinations = await context.prisma.childVaccinations({where: { child: {id: childId } }});
-	const vaccinations = await context.prisma.childVaccinations({where: { child: {id: childId } }}).type();
+	let user = await context.prisma.user({ id: userId });
+	delete user.password;
+
+	let child = await context.prisma.child({ id: childId });
+
+	let childVaccinations = await context.prisma.userVaccinations({
+		where: { 
+			child: { id: childId },
+			OR: [
+				{type: {dose: parseInt(args.filter)}},
+				{type: {name_contains: args.filter}}
+			]
+		},
+		skip: args.skip,
+		first: args.first,
+		orderBy: args.orderBy
+	});
+	const vaccinations = await context.prisma.userVaccinations({
+		where: { 
+			child: { id: childId },
+			OR: [
+				{type: {dose: parseInt(args.filter)}},
+				{type: {name_contains: args.filter}}
+			]
+		},
+		skip: args.skip,
+		first: args.first,
+		orderBy: args.orderBy
+	}).type();
 
 	childVaccinations = childVaccinations.map((childVacc, index) => {
 		childVacc.type = vaccinations[index].type;
+		childVacc.user = user;
+		childVacc.child = child;
 		return childVacc;
 	});
 
 	return childVaccinations;
 }
 
-const getFamilyVaccinations = async (parent, args, context, info) => {
+const getFamilyVaccinations = async(parent, args, context, info) => {
 	const userId = getUserId(context);
-	
+
 	let user = await context.prisma.user({ id: userId });
-	let children = await context.prisma.user({ id: userId }).children();
 
-	children = children.map(async (child, index) => {
-		child = {
-			...child,
-			vaccinations: await getChildVaccinations(null, args.id = child.id, context, info)
-		}
+	delete user.password;
 
-		return child;
-	})
+	let userVaccinations = await context.prisma.userVaccinations({
+		where: { 
+			OR: [
+				{type: {dose: parseInt(args.filter)}},
+				{type: {name_contains: args.filter}}
+			]
+		},
+		skip: args.skip,
+		first: args.first,
+		orderBy: args.orderBy
+	});
+	let vaccinations = await context.prisma.userVaccinations({
+		where: { 
+			OR: [
+				{type: {dose: parseInt(args.filter)}},
+				{type: {name_contains: args.filter}}
+			]
+		},
+		skip: args.skip,
+		first: args.first,
+		orderBy: args.orderBy
+	}).type();
+	let children = await context.prisma.userVaccinations({
+		where: { 
+			OR: [
+				{type: {dose: parseInt(args.filter)}},
+				{type: {name_contains: args.filter}}
+			]
+		},
+		skip: args.skip,
+		first: args.first,
+		orderBy: args.orderBy
+	}).child();
 
-	user.vaccinations = await getUserVaccinations(null, null, context, null);
-	user.children = await children;
 
-	return user;
+	userVaccinations.map((userVacc, index) => {
+		userVacc.user = user;
+		userVacc.type = vaccinations[index].type;
+		userVacc.child = children[index].child;
+	});
+
+	return userVaccinations;
 }
-
 
 module.exports = {
 	getUser,
@@ -78,5 +163,5 @@ module.exports = {
 	getUserVaccinations,
 	getChild,
 	getChildVaccinations,
-	getFamilyVaccinations,
+	getFamilyVaccinations
 }

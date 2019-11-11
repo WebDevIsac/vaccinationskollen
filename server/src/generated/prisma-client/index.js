@@ -9,19 +9,15 @@ var models = [
     embedded: false
   },
   {
+    name: "Child",
+    embedded: false
+  },
+  {
     name: "Vaccination",
     embedded: false
   },
   {
     name: "UserVaccination",
-    embedded: false
-  },
-  {
-    name: "Child",
-    embedded: false
-  },
-  {
-    name: "ChildVaccination",
     embedded: false
   }
 ];
