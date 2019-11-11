@@ -23,9 +23,8 @@ enum VaccinationOrderByInput {
 type Mutation {
     signup(name: String!, email: String!, password: String!, born: DateTime!): AuthPayload
     login(email: String!, password: String!): AuthPayload
-	addUserVaccination(vaccinationId: ID!, takenAt: String, nextDose: String, protectUntil: String): UserVaccination
+	addUserVaccination(childId: ID, vaccinationId: ID!, takenAt: String, nextDose: String, protectUntil: String): UserVaccination
 	addChild(name: String!, born: DateTime!): Child
-	addChildVaccination(childId: ID!, vaccinationId: ID!, takenAt: String, nextDose: String, protectUntil: String): UserVaccination
 }
 
 type User {

@@ -36,13 +36,25 @@ const login = async (parent, args, context, info) => {
 const addUserVaccination = (parent, args, context, info) => {
 	const userId = getUserId(context);
 
-	return context.prisma.createUserVaccination({
-		user: { connect: { id: userId } },
-		type: { connect: { id: args.vaccinationId } },
-		takenAt: args.takenAt,
-		nextDose: args.nextDose,
-		protectUntil: args.protectUntil
-	})
+	if (args.childId != null) {
+		return context.prisma.createUserVaccination({
+			user: { connect: { id: userId } },
+			child: { connect: { id: args.childId } },
+			type: { connect: { id: args.vaccinationId } },
+			takenAt: args.takenAt,
+			nextDose: args.nextDose,
+			protectUntil: args.protectUntil
+		})
+	} else {
+		return context.prisma.createUserVaccination({
+			user: { connect: { id: userId } },
+			type: { connect: { id: args.vaccinationId } },
+			takenAt: args.takenAt,
+			nextDose: args.nextDose,
+			protectUntil: args.protectUntil
+		})
+
+	}
 }
 
 const addChild = async (parent, args, context, info) => {
@@ -56,21 +68,20 @@ const addChild = async (parent, args, context, info) => {
 	return child;
 }
 
-const addChildVaccination = async (parent, args, context, info) => {
-	const userId = getUserId(context);
+// const addChildVaccination = async (parent, args, context, info) => {
+// 	const userId = getUserId(context);
 
-	return context.prisma.createUserVaccination({
-		user: { connect: { id: userId } },
-		child: { connect: { id: args.childId } },
-		type: { connect: { id: args.vaccinationId } },
-		takenAt: args.takenAt 
-	})
-}
+// 	return context.prisma.createUserVaccination({
+// 		user: { connect: { id: userId } },
+// 		child: { connect: { id: args.childId } },
+// 		type: { connect: { id: args.vaccinationId } },
+// 		takenAt: args.takenAt 
+// 	})
+// }
 
 module.exports = {
 	signup,
 	login,
 	addUserVaccination,
 	addChild,
-	addChildVaccination
 };

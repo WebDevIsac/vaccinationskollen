@@ -76,6 +76,7 @@ const VaccinationList = (props) => {
 								}}
 							/>
 						</View>
+						{!updateVaccinations && <Text>Du har inte lagt till några vaccinationer ännu. </Text>}
 						{updateVaccinations.map(vaccination => {
 							return (
 								<View key={vaccination.id} style={styles.vaccinationItem}>

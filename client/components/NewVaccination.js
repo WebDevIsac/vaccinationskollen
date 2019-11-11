@@ -19,14 +19,39 @@ import DateTimePicker from "react-native-modal-datetime-picker";
 import { Appearance } from "react-native-appearance";
 import { translateDate, setCorrectHours, setDateFromTime } from "../utils/dateUtils";
 
-const GET_VACCINATIONS_QUERY = gql`
-	query getVaccinationsQuery {
+// const GET_VACCINATIONS_QUERY = gql`
+// 	query GetVaccinationsQuery {
+// 		getVaccinations {
+// 			id
+// 			name
+// 			dose
+// 			untilNext
+// 			protectDuration
+// 		}
+// 	}
+// `;
+
+// const GET_CHILDREN_QUERY = gql`
+// 	query GetChild {
+// 		getChild {
+// 			id
+// 			name
+// 		}
+// 	}
+// `;
+
+const GET_CHILDREN_AND_VACCINATIONS_QUERY = gql`
+	query GetChildrenAndVaccinationsQuery {
 		getVaccinations {
 			id
 			name
 			dose
 			untilNext
 			protectDuration
+		}
+		getChild {
+			id
+			name
 		}
 	}
 `;
@@ -58,6 +83,8 @@ const NewVaccination = props => {
 	const [isDateTimePickerVisible, setIsDateTimePickerVisible] = useState(
 		false
 	);
+	const [children, setChildren] = useState();
+	const [taker, setTaker] = useState();
 
 	let time = [];
 	for (let i = 0; i < 4; i++) {
@@ -109,13 +136,23 @@ const NewVaccination = props => {
 	
 	return (
 		<View style={styles.container}>
-			<Query query={GET_VACCINATIONS_QUERY}>
+			<Query query={GET_CHILDREN_AND_VACCINATIONS_QUERY}>
 				{({ loading, err, data }) => {
 					if (err) return console.log(err);
 					if (loading) return <ActivityIndicator size="large" />;
 					setIsLoading(loading);
 
 					setAllVaccinations(data.getVaccinations);
+					
+					let userNames = [{value: "null", label: "Jag"}];
+
+					data.getChild.map(child => {
+						child = {
+							value: child.id,
+							label: child.name
+						}
+						userNames.push(child);
+					});
 
 					let names = data.getVaccinations.filter(
 						(vaccination, index, self) => {
@@ -138,6 +175,19 @@ const NewVaccination = props => {
 
 					return (
 						<View style={{ width: "80%" }}>
+							<RNPickerSelect
+								placeholder={{
+									label: "Vem har tagit vaccinationen...",
+									value: null
+								}}
+								style={pickerSelectStyles}
+								onValueChange={value => setTaker(value)}
+								value={taker ? taker : null}
+								items={userNames}
+								Icon={() => {
+									return <Chevron size={1.5} color="gray" />;
+								}}
+							/>
 							<RNPickerSelect
 								placeholder={{
 									label: "Välj en vaccination...",
