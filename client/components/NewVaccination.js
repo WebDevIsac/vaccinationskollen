@@ -57,8 +57,8 @@ const GET_CHILDREN_AND_VACCINATIONS_QUERY = gql`
 `;
 
 const ADD_USER_VACCINATION = gql`
-	mutation AddUserVaccination($vaccinationId: ID!, $takenAt: String, $nextDose: String, $protectUntil: String) {
-		addUserVaccination(vaccinationId: $vaccinationId, takenAt: $takenAt, nextDose: $nextDose, protectUntil: $protectUntil) {
+	mutation AddUserVaccination($childId: ID, $vaccinationId: ID!, $takenAt: String, $nextDose: String, $protectUntil: String) {
+		addUserVaccination(childId: $childId, vaccinationId: $vaccinationId, takenAt: $takenAt, nextDose: $nextDose, protectUntil: $protectUntil) {
 			id
 		}
 	}
@@ -133,7 +133,7 @@ const NewVaccination = props => {
 			setProtectDuration(allVaccinations.find(item => item.id === id).protectDuration)
 		}
 	}, [id])
-	
+
 	return (
 		<View style={styles.container}>
 			<Query query={GET_CHILDREN_AND_VACCINATIONS_QUERY}>
@@ -284,6 +284,7 @@ const NewVaccination = props => {
 			<Mutation
 				mutation={ADD_USER_VACCINATION}
 				variables={{
+					childId: taker,
 					vaccinationId: id,
 					takenAt: setCorrectHours(new Date(date)),
 					nextDose: nextDoseDate,
@@ -342,7 +343,6 @@ const styles = StyleSheet.create({
 		right: 12
 	},
 	addButton: {
-		// flexGrow: 1,
 		alignItems: "center",
 		justifyContent: "center",
 		marginVertical: 10,
