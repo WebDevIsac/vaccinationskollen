@@ -3,6 +3,7 @@ import { Text, StyleSheet, View, Button, ActivityIndicator } from "react-native"
 import navStyles from "../styles/navStyles";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
+import LoadingIndicator from "./LoadingIndicator";
 
 const GET_USER_QUERY = gql`
 	query getUserQuery {
@@ -19,7 +20,7 @@ const Home = (props) => {
 		<Query query={GET_USER_QUERY}>
 			{({ loading, err, data }) => {
 				if (err) return console.log(err);
-				if (loading) return <View style={styles.loading}><ActivityIndicator size="large" /></View>
+				if (loading) return <LoadingIndicator />
 
 				let welcomeMessage = `Välkommen${firstTime ? "" : " tillbaka"} ${data.getUser.name}`;
 

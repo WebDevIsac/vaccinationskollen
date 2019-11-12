@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from "react-navigation-stack";
 import { View, Text, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity, TextInput } from 'react-native';
 import { Chevron } from "react-native-shapes";
@@ -7,10 +7,11 @@ import { Query } from "react-apollo";
 import gql from "graphql-tag";
 import RNPickerSelect from "react-native-picker-select";
 import { translateDate, setCorrectHours } from "../utils/dateUtils";
+import LoadingIndicator from './LoadingIndicator';
 
 const GET_USER_VACCINATIONS_QUERY = gql`
-	query getUserVaccinationsQuery {
-		getUserVaccinations {
+	query getUserVaccinationsQuery($orderBy: String) {
+		getUserVaccinations(orderBy: $orderBy) {
 			id
 			takenAt
 			createdAt
@@ -26,23 +27,32 @@ const GET_USER_VACCINATIONS_QUERY = gql`
 
 const VaccinationList = (props) => {
 
-	const [sorting, setSorting] = useState([{value: "date_DESC", label: "Senast tillagda"}]);
+	const [sorting, setSorting] = useState([{value: "takenAt_DESC", label: "Senast tillagda"}]);
+	const [refetchSorting, setRefetchSorting] = useState(false);
 
 	const sortingOpts = [
-		{ value: "date_DESC", label: "Senast tillagda" },
-		{ value: "date_ASC", label: "Först tillagda" },
-		{ value: "name_DESC", label: "Vaccination A-Ö" },
-		{ value: "name_ASC", label: "Vaccination Ö-A" },
-	]
+		{ value: "takenAt_DESC", label: "Senast tagna" },
+		{ value: "takenAt_ASC", label: "Först tagna" },
+		{ value: "createdAt_DESC", label: "Senast tillagda" },
+		{ value: "createdAt_ASC", label: "Först tillagda" },
+		{ value: "nextDose_DESC", label: "Kortast till nästa dos" },
+		{ value: "nextDose_ASC", label: "Längst till nästa dos" },
+		{ value: "protectUntil_DESC", label: "Kortast skydd kvar" },
+		{ value: "protectUntil_ASC", label: "Längst skydd kvar" },
+	];
+
+	useEffect(() => {
+		setRefetchSorting(true);
+	}, [sorting])
 
 	return (
-		<Query query={GET_USER_VACCINATIONS_QUERY}>
+		<Query query={GET_USER_VACCINATIONS_QUERY} variables={{orderBy: sorting}}>
 			{({ loading, err, data, refetch }) => {
-				console.log(loading);
 				if (err) return console.log(err);
-				if (loading) return <ActivityIndicator/>
+				if (loading) return <LoadingIndicator />
 
 				if (props.navigation.getParam("refetch")) refetch();
+				if (refetchSorting) refetch();
 
 				let updateVaccinations = data.getUserVaccinations.map(vaccination => {
 					if (vaccination.takenAt) {
