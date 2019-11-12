@@ -10,7 +10,7 @@ import { translateDate, setCorrectHours } from "../utils/dateUtils";
 import LoadingIndicator from './LoadingIndicator';
 
 const GET_USER_VACCINATIONS_QUERY = gql`
-	query getUserVaccinationsQuery($orderBy: String) {
+	query getUserVaccinationsQuery($orderBy: VaccinationOrderByInput) {
 		getUserVaccinations(orderBy: $orderBy) {
 			id
 			takenAt
@@ -18,8 +18,6 @@ const GET_USER_VACCINATIONS_QUERY = gql`
 			type {
 				name
 				dose
-				untilNext
-				protectDuration
 			}
 		}
 	}
@@ -27,8 +25,9 @@ const GET_USER_VACCINATIONS_QUERY = gql`
 
 const VaccinationList = (props) => {
 
-	const [sorting, setSorting] = useState([{value: "takenAt_DESC", label: "Senast tillagda"}]);
+	const [orderBy, setOrderBy] = useState();
 	const [refetchSorting, setRefetchSorting] = useState(false);
+	const [userVaccinations, setUserVaccinations] = useState([]);
 
 	const sortingOpts = [
 		{ value: "takenAt_DESC", label: "Senast tagna" },
@@ -41,31 +40,23 @@ const VaccinationList = (props) => {
 		{ value: "protectUntil_ASC", label: "Längst skydd kvar" },
 	];
 
-	useEffect(() => {
-		setRefetchSorting(true);
-	}, [sorting])
+	const executeSorting = async () => {
+		const result = await props.screenProps.client.query({
+			query: GET_USER_VACCINATIONS_QUERY,
+			variables: orderBy
+		});
+		const sortedUserVaccinations = result.data.getUserVaccinations;
+		setUserVaccinations(sortedUserVaccinations)
+	}
 
 	return (
-		<Query query={GET_USER_VACCINATIONS_QUERY} variables={{orderBy: sorting}}>
+		<Query query={GET_USER_VACCINATIONS_QUERY} variables={orderBy}>
 			{({ loading, err, data, refetch }) => {
 				if (err) return console.log(err);
 				if (loading) return <LoadingIndicator />
-
-				if (props.navigation.getParam("refetch")) refetch();
-				if (refetchSorting) refetch();
-
-				let updateVaccinations = data.getUserVaccinations.map(vaccination => {
-					if (vaccination.takenAt) {
-						vaccination.takenAt = new Date(vaccination.takenAt);
-						vaccination.takenAt = translateDate(vaccination.takenAt).toString();
-					}
-					
-					vaccination.createdAt = new Date(vaccination.createdAt);
-					vaccination.createdAt = translateDate(vaccination.createdAt).toString();
-
-					return vaccination;
-				});
-
+				else executeSorting();
+				
+				if (props.navigation.getParam("refetch")) executeSorting();
 
 				return (
 					<ScrollView contentContainerStyle={styles.container}>
@@ -80,17 +71,19 @@ const VaccinationList = (props) => {
 								}}
 								style={pickerSelectStyles}
 								onValueChange={value => {
-									setSorting(value);
+									setOrderBy({orderBy: value});
+									setRefetchSorting(true);
+									executeSorting();
 								}}
-								value={sorting}
+								value={orderBy ? orderBy.orderBy : null}
 								items={sortingOpts}
 								Icon={() => {
 									return <Chevron size={1.5} color="gray" />;
 								}}
 							/>
 						</View>
-						{!updateVaccinations && <Text>Du har inte lagt till några vaccinationer ännu. </Text>}
-						{updateVaccinations.map(vaccination => {
+						{!userVaccinations && <Text>Du har inte lagt till några vaccinationer ännu. </Text>}
+						{userVaccinations.map(vaccination => {
 							return (
 								<View key={vaccination.id} style={styles.vaccinationItem}>
 									<Text>Vaccination mot {vaccination.type.name}</Text>
