@@ -15,33 +15,70 @@ const getUserVaccinations = async (parent, args, context, info) => {
 	let user = await context.prisma.user({ id: userId });
 	delete user.password;
 
-	let userVaccinations = await context.prisma.userVaccinations({
-		where: { 
-			OR: [
-				{type: {dose: parseInt(args.filter)}},
-				{type: {name_contains: args.filter}}
-			]
-		},
-		skip: args.skip,
-		first: args.first,
-		orderBy: args.orderBy
-	})
-	
-	const vaccinations = await context.prisma.userVaccinations({
-		where: { 
-			OR: [
-				{type: {dose: parseInt(args.filter)}},
-				{type: {name_contains: args.filter}}
-			]
-		},
-		skip: args.skip,
-		first: args.first,
-		orderBy: args.orderBy
-	}).type();
+	let userVaccinations;
+	let vaccinations;
+	let child;
+
+	if (args.childId) {
+		const childId = args.childId;
+		
+		child = await context.prisma.child({ id: childId });
+
+		userVaccinations = await context.prisma.userVaccinations({
+			where: { 
+				child: { id: childId },
+				OR: [
+					{type: {dose: parseInt(args.filter)}},
+					{type: {name_contains: args.filter}}
+				]
+			},
+			skip: args.skip,
+			first: args.first,
+			orderBy: args.orderBy
+		});
+		vaccinations = await context.prisma.userVaccinations({
+			where: { 
+				child: { id: childId },
+				OR: [
+					{type: {dose: parseInt(args.filter)}},
+					{type: {name_contains: args.filter}}
+				]
+			},
+			skip: args.skip,
+			first: args.first,
+			orderBy: args.orderBy
+		}).type();
+		
+	} else {
+		userVaccinations = await context.prisma.userVaccinations({
+			where: {
+				OR: [
+					{type: {dose: parseInt(args.filter)}},
+					{type: {name_contains: args.filter}}
+				]
+			},
+			skip: args.skip,
+			first: args.first,
+			orderBy: args.orderBy
+		})
+		
+		vaccinations = await context.prisma.userVaccinations({
+			where: {
+				OR: [
+					{type: {dose: parseInt(args.filter)}},
+					{type: {name_contains: args.filter}}
+				]
+			},
+			skip: args.skip,
+			first: args.first,
+			orderBy: args.orderBy
+		}).type();
+	}
 
 	userVaccinations = userVaccinations.map((userVacc, index) => {
 		userVacc.type = vaccinations[index].type;
 		userVacc.user = user;
+		userVacc.child = child;
 		return userVacc;
 	})
 
