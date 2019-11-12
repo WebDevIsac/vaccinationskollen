@@ -290,12 +290,26 @@ const NewVaccination = props => {
 					nextDose: nextDoseDate,
 					protectUntil: protectUntilDate
 				}}
+				onCompleted={() => {
+					setTaker(null);
+					setName(null);
+					setId(null);
+					setNextDose(null)
+					setNextDoseDate(null)
+					setProtectUntil(null)
+					setProtectUntilDate(null)
+					setDate(translateDate(new Date()))
+					setUntilNext(null);
+					setProtectDuration(null);
+					props.navigation.navigate("VaccinationList", {refetch: true});
+				}}
 				onError={({ networkError, graphQLErrors }) => {
 					graphQLErrors.map(err => {
-						console.log("gql error: " + err);
+						console.log("gql error: " + err.message);
 					})
 					console.log("network error: " + networkError);
 				}}
+				refetchQueries={["GET_USER_VACCINATIONS_QUERY"]}
 			>
 				{(mutation, { loading, err, data }) => {
 					if (isLoading) return null;
@@ -307,9 +321,6 @@ const NewVaccination = props => {
 								style={styles.addButton}
 								onPress={() => {
 									mutation();
-									// props.navigation.navigate(
-									// 	"VaccinationList"
-									// );
 								}}
 							>
 								<Text style={styles.addButtonText}>

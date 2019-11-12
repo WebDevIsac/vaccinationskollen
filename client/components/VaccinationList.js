@@ -37,9 +37,12 @@ const VaccinationList = (props) => {
 
 	return (
 		<Query query={GET_USER_VACCINATIONS_QUERY}>
-			{({ loading, err, data }) => {
+			{({ loading, err, data, refetch }) => {
+				console.log(loading);
 				if (err) return console.log(err);
 				if (loading) return <ActivityIndicator/>
+
+				if (props.navigation.getParam("refetch")) refetch();
 
 				let updateVaccinations = data.getUserVaccinations.map(vaccination => {
 					if (vaccination.takenAt) {

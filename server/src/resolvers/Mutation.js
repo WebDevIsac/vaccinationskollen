@@ -36,7 +36,7 @@ const login = async (parent, args, context, info) => {
 const addUserVaccination = (parent, args, context, info) => {
 	const userId = getUserId(context);
 
-	if (args.childId != null) {
+	if (args.childId != null && args.childId != "null") {
 		return context.prisma.createUserVaccination({
 			user: { connect: { id: userId } },
 			child: { connect: { id: args.childId } },
