@@ -6,7 +6,7 @@ type Query {
 	getUserVaccinations(childId: String, filter: String, skip: Int, first: Int, orderBy: VaccinationOrderByInput): [UserVaccination]
 	getChild(name: String): [Child]
 	getChildVaccinations(id: String, filter: String, skip: Int, first: Int, orderBy: VaccinationOrderByInput): [UserVaccination]
-	getFamilyVaccinations(filter: String, skip: Int, fist: Int, orderBy: VaccinationOrderByInput): [UserVaccination]
+	getFamilyVaccinations(filter: String, skip: Int, first: Int, orderBy: VaccinationOrderByInput): [UserVaccination]
 }
 
 enum VaccinationOrderByInput {
