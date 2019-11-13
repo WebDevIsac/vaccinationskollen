@@ -30,8 +30,6 @@ const SortAllVaccinations = (props) => {
 
 	const { order, client } = props;
 
-	const [vaccinations, setVaccinations] = useState([]);
-
 	let orderBy;
 	const first = 3;
 
@@ -43,41 +41,6 @@ const SortAllVaccinations = (props) => {
 		orderBy = "protectUntil_ASC"
 	}
 
-	const executeSorting = async () => {
-		const result = await client.query({
-			query: gql`
-				query GetSortedVaccinationsQuery($orderBy: VaccinationOrderByInput, $first: Int) {
-					getFamilyVaccinations(orderBy: $orderBy, first: $first) {
-						id
-						user {
-							name
-						}
-						child {
-							name
-						}
-						type {
-							name
-							dose
-						}
-						takenAt
-						createdAt
-						nextDose
-						protectUntil
-					}
-				}
-			`,
-			variables: {
-				orderBy,
-				first
-			}
-		});
-
-		const sortedVaccinations = await result.data.getFamilyVaccinations;
-		await setVaccinations(sortedVaccinations);
-	}
-
-	executeSorting();
-	
 	let message;
 
 	if (order == "fill") {
@@ -89,22 +52,33 @@ const SortAllVaccinations = (props) => {
 	}
 
 	return (
-		<View style={styles.container}>
-			{!vaccinations && <Text>Du har inga tillagda vaccinationer</Text>}
-			{vaccinations && <Text>{message}</Text>}
-			{vaccinations.map(vaccination => {
+		<Query query={GET_SORTED_VACCINATIONS_QUERY} variables={{ orderBy: orderBy, first: first }}>
+			{({ loading, err, data, refetch }) => {
+				if (err) {console.log(err); return null;}
+				if (loading) return <LoadingIndicator />
+
+				refetch();
+
 				return (
-					<View key={vaccination.id} style={{marginVertical: 10}}>
-						<Text>Vacciantion: {vaccination.type.name}</Text>
-						<Text>Dos: {vaccination.type.dose}</Text>
-						<Text>Vaccinationstagare: {vaccination.child ? vaccination.child.name : vaccination.user.name}</Text>
-						<Text>Tagen: {vaccination.takenAt}</Text>
-						<Text>{vaccination.nextDose && `Nästa dos: ${vaccination.nextDose}`}</Text>
-						<Text>{vaccination.protectUntil && `Skyddar tills: ${vaccination.protectUntil}`}</Text>
+					<View style={styles.container}>
+						{!data.getFamilyVaccinations && <Text>Du har inga tillagda vaccinationer</Text>}
+						{data.getFamilyVaccinations && <Text>{message}</Text>}
+						{data.getFamilyVaccinations.map(vaccination => {
+							return (
+								<View key={vaccination.id} style={{marginVertical: 10}}>
+									<Text>Vacciantion: {vaccination.type.name}</Text>
+									<Text>Dos: {vaccination.type.dose}</Text>
+									<Text>Vaccinationstagare: {vaccination.child ? vaccination.child.name : vaccination.user.name}</Text>
+									<Text>Tagen: {vaccination.takenAt}</Text>
+									<Text>{vaccination.nextDose && `Nästa dos: ${vaccination.nextDose}`}</Text>
+									<Text>{vaccination.protectUntil && `Skyddar tills: ${vaccination.protectUntil}`}</Text>
+								</View>
+							)
+						})}
 					</View>
 				)
-			})}
-		</View>
+			}}
+		</Query>
 	)
 }
 

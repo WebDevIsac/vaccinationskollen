@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from "react-navigation-stack";
-import { View, Text, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { Chevron } from "react-native-shapes";
 import navStyles from "../styles/navStyles";
 import { Query } from "react-apollo";
@@ -9,8 +9,8 @@ import RNPickerSelect from "react-native-picker-select";
 import { translateDate, setCorrectHours } from "../utils/dateUtils";
 import LoadingIndicator from './LoadingIndicator';
 
-const GET_CHILD = gql`
-	query getUserVaccinationsQuery($childId: String, $orderBy: VaccinationOrderByInput) {
+const GET_VACCINATIONS_AND_CHILD_QUERY = gql`
+	query getVaccinationsAndChildQuery($childId: String, $orderBy: VaccinationOrderByInput) {
 		getUserVaccinations(childId: $childId, orderBy: $orderBy) {
 			id
 			takenAt
@@ -49,13 +49,13 @@ const VaccinationList = (props) => {
 	];
 
 	return (
-		<Query query={GET_CHILD} variables={{childId: childId, orderBy: orderBy}}>
-			{({ loading, err, data, refetch, networkStatus }) => {
+		<Query query={GET_VACCINATIONS_AND_CHILD_QUERY} variables={{childId: childId, orderBy: orderBy}}>
+			{({ loading, err, data, refetch }) => {
 				if (err) return console.log(err);
 				if (loading) return <LoadingIndicator />
 				else setUserVaccinations(data.getUserVaccinations);
 				
-				if (props.navigation.getParam("refetch")) executeSorting("refetch");
+				if (props.navigation.getParam("refetch")) refetch();
 
 				let children = data.getChild.map(child => {
 					child = {
