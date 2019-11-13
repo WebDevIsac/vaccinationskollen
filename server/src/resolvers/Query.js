@@ -148,42 +148,160 @@ const getFamilyVaccinations = async(parent, args, context, info) => {
 	const userId = getUserId(context);
 
 	let user = await context.prisma.user({ id: userId });
-
 	delete user.password;
 
-	let userVaccinations = await context.prisma.userVaccinations({
-		where: { 
-			OR: [
-				{type: {dose: parseInt(args.filter)}},
-				{type: {name_contains: args.filter}}
-			]
-		},
-		skip: args.skip,
-		first: args.first,
-		orderBy: args.orderBy
-	});
-	let vaccinations = await context.prisma.userVaccinations({
-		where: { 
-			OR: [
-				{type: {dose: parseInt(args.filter)}},
-				{type: {name_contains: args.filter}}
-			]
-		},
-		skip: args.skip,
-		first: args.first,
-		orderBy: args.orderBy
-	}).type();
-	let children = await context.prisma.userVaccinations({
-		where: { 
-			OR: [
-				{type: {dose: parseInt(args.filter)}},
-				{type: {name_contains: args.filter}}
-			]
-		},
-		skip: args.skip,
-		first: args.first,
-		orderBy: args.orderBy
-	}).child();
+	let userVaccinations;
+	let vaccinations;
+	let children;
+
+	let orderBy = args.orderBy ? args.orderBy : "";
+
+	if (orderBy.includes("takenAt")) {
+		userVaccinations = await context.prisma.userVaccinations({
+			where: {
+				takenAt_not: null,
+				OR: [
+					{type: {dose: parseInt(args.filter)}},
+					{type: {name_contains: args.filter}}
+				]
+			},
+			skip: args.skip,
+			first: args.first,
+			orderBy: args.orderBy
+		});
+		vaccinations = await context.prisma.userVaccinations({
+			where: { 
+				takenAt_not: null,
+				OR: [
+					{type: {dose: parseInt(args.filter)}},
+					{type: {name_contains: args.filter}}
+				]
+			},
+			skip: args.skip,
+			first: args.first,
+			orderBy: args.orderBy
+		}).type();
+		children = await context.prisma.userVaccinations({
+			where: { 
+				takenAt_not: null,
+				OR: [
+					{type: {dose: parseInt(args.filter)}},
+					{type: {name_contains: args.filter}}
+				]
+			},
+			skip: args.skip,
+			first: args.first,
+			orderBy: args.orderBy
+		}).child();
+	} else if (orderBy.includes("nextDose")) {
+		userVaccinations = await context.prisma.userVaccinations({
+			where: {
+				nextDose_not: null,
+				OR: [
+					{type: {dose: parseInt(args.filter)}},
+					{type: {name_contains: args.filter}}
+				]
+			},
+			skip: args.skip,
+			first: args.first,
+			orderBy: args.orderBy
+		});
+		vaccinations = await context.prisma.userVaccinations({
+			where: {
+				nextDose_not: null, 
+				OR: [
+					{type: {dose: parseInt(args.filter)}},
+					{type: {name_contains: args.filter}}
+				]
+			},
+			skip: args.skip,
+			first: args.first,
+			orderBy: args.orderBy
+		}).type();
+		children = await context.prisma.userVaccinations({
+			where: {
+				nextDose_not: null, 
+				OR: [
+					{type: {dose: parseInt(args.filter)}},
+					{type: {name_contains: args.filter}}
+				]
+			},
+			skip: args.skip,
+			first: args.first,
+			orderBy: args.orderBy
+		}).child();
+	} else if (orderBy.includes("protectUntil")) {
+		userVaccinations = await context.prisma.userVaccinations({
+			where: {
+				protectUntil_not: null,
+				OR: [
+					{type: {dose: parseInt(args.filter)}},
+					{type: {name_contains: args.filter}}
+				]
+			},
+			skip: args.skip,
+			first: args.first,
+			orderBy: args.orderBy
+		});
+		vaccinations = await context.prisma.userVaccinations({
+			where: {
+				protectUntil_not: null, 
+				OR: [
+					{type: {dose: parseInt(args.filter)}},
+					{type: {name_contains: args.filter}}
+				]
+			},
+			skip: args.skip,
+			first: args.first,
+			orderBy: args.orderBy
+		}).type();
+		children = await context.prisma.userVaccinations({
+			where: {
+				protectUntil_not: null, 
+				OR: [
+					{type: {dose: parseInt(args.filter)}},
+					{type: {name_contains: args.filter}}
+				]
+			},
+			skip: args.skip,
+			first: args.first,
+			orderBy: args.orderBy
+		}).child();
+	} else {
+		userVaccinations = await context.prisma.userVaccinations({
+			where: {
+				OR: [
+					{type: {dose: parseInt(args.filter)}},
+					{type: {name_contains: args.filter}}
+				]
+			},
+			skip: args.skip,
+			first: args.first,
+			orderBy: args.orderBy
+		});
+		vaccinations = await context.prisma.userVaccinations({
+			where: { 
+				OR: [
+					{type: {dose: parseInt(args.filter)}},
+					{type: {name_contains: args.filter}}
+				]
+			},
+			skip: args.skip,
+			first: args.first,
+			orderBy: args.orderBy
+		}).type();
+		children = await context.prisma.userVaccinations({
+			where: { 
+				OR: [
+					{type: {dose: parseInt(args.filter)}},
+					{type: {name_contains: args.filter}}
+				]
+			},
+			skip: args.skip,
+			first: args.first,
+			orderBy: args.orderBy
+		}).child();
+	}
 
 
 	userVaccinations.map((userVacc, index) => {
