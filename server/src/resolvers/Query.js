@@ -18,6 +18,7 @@ const getUserVaccinations = async (parent, args, context, info) => {
 	let userVaccinations;
 	let vaccinations;
 	let child;
+	let orderBy = args.orderBy ? args.orderBy : "createdAt_DESC";
 
 	if (args.childId) {
 		const childId = args.childId;
@@ -34,7 +35,7 @@ const getUserVaccinations = async (parent, args, context, info) => {
 			},
 			skip: args.skip,
 			first: args.first,
-			orderBy: args.orderBy
+			orderBy: orderBy
 		});
 		vaccinations = await context.prisma.userVaccinations({
 			where: { 
@@ -46,7 +47,7 @@ const getUserVaccinations = async (parent, args, context, info) => {
 			},
 			skip: args.skip,
 			first: args.first,
-			orderBy: args.orderBy
+			orderBy: orderBy
 		}).type();
 		
 	} else {

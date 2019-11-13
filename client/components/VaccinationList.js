@@ -9,24 +9,19 @@ import RNPickerSelect from "react-native-picker-select";
 import { translateDate, setCorrectHours } from "../utils/dateUtils";
 import LoadingIndicator from './LoadingIndicator';
 
-const GET_USER_VACCINATIONS_QUERY = gql`
-	query getUserVaccinationsQuery($orderBy: VaccinationOrderByInput) {
-		getUserVaccinations(orderBy: $orderBy) {
+const GET_CHILD = gql`
+	query GetChild {
+		getChild {
 			id
-			takenAt
-			createdAt
-			type {
-				name
-				dose
-			}
+			name
 		}
 	}
 `;
 
 const VaccinationList = (props) => {
 
-	const [orderBy, setOrderBy] = useState();
-	const [refetchSorting, setRefetchSorting] = useState(false);
+	const [orderBy, setOrderBy] = useState(null);
+	const [childId, setChildId] = useState(null);
 	const [userVaccinations, setUserVaccinations] = useState([]);
 
 	const sortingOpts = [
@@ -42,24 +37,71 @@ const VaccinationList = (props) => {
 
 	const executeSorting = async () => {
 		const result = await props.screenProps.client.query({
-			query: GET_USER_VACCINATIONS_QUERY,
-			variables: orderBy
+			query: gql`
+				query getUserVaccinationsQuery($childId: String, $orderBy: VaccinationOrderByInput) {
+					getUserVaccinations(childId: $childId, orderBy: $orderBy) {
+						id
+						takenAt
+						createdAt
+						type {
+							name
+							dose
+						}
+						child {
+							id
+							name
+						}
+					}
+				}
+			`,
+			variables: {
+				childId,
+				orderBy
+			}
 		});
-		const sortedUserVaccinations = result.data.getUserVaccinations;
-		setUserVaccinations(sortedUserVaccinations)
+
+		const sortedUserVaccinations = await result.data.getUserVaccinations;
+		await setUserVaccinations(sortedUserVaccinations);
+
 	}
 
 	return (
-		<Query query={GET_USER_VACCINATIONS_QUERY} variables={orderBy}>
-			{({ loading, err, data, refetch }) => {
+		<Query query={GET_CHILD}>
+			{({ loading, err, data }) => {
 				if (err) return console.log(err);
 				if (loading) return <LoadingIndicator />
 				else executeSorting();
 				
 				if (props.navigation.getParam("refetch")) executeSorting();
 
+				let children = data.getChild.map(child => {
+					child = {
+						value: child.id,
+						label: child.name
+					}
+
+					return child;
+				});
+
 				return (
 					<ScrollView contentContainerStyle={styles.container}>
+						<RNPickerSelect 
+							placeholderTextColor="#000"
+							placeholder={{
+								label: "Mina vaccinationer",
+								value: null
+							}}
+							style={pickerSelectStylesColor}
+							onValueChange={value => {
+								setChildId(value);
+								executeSorting();
+							}}
+							value={childId ? childId : null}
+							items={children}
+							Icon={() => {
+								return <Chevron size={1.5} color="gray" />
+							}}
+						/>
 						<View style={styles.filterView}>
 							<TextInput style={styles.filterText} placeholder="Sök" placeholderTextColor="#FFF" />
 							<View style={styles.filterLine}></View>
@@ -71,11 +113,10 @@ const VaccinationList = (props) => {
 								}}
 								style={pickerSelectStyles}
 								onValueChange={value => {
-									setOrderBy({orderBy: value});
-									setRefetchSorting(true);
+									setOrderBy(value);
 									executeSorting();
 								}}
-								value={orderBy ? orderBy.orderBy : null}
+								value={orderBy ? orderBy : null}
 								items={sortingOpts}
 								Icon={() => {
 									return <Chevron size={1.5} color="gray" />;
@@ -90,6 +131,7 @@ const VaccinationList = (props) => {
 									<Text>Dos {vaccination.type.dose}</Text>
 									<Text>Tagen: {vaccination.takenAt}</Text>
 									<Text>Tillagd: {vaccination.createdAt}</Text>
+									<Text>{vaccination.child && `Child: ${vaccination.child.name}`}</Text>
 								</View>
 							)
 						})}
@@ -104,7 +146,7 @@ const VaccinationList = (props) => {
 }
 
 VaccinationList.navigationOptions = {
-	title: "Dina Vaccinationer",
+	title: "Mina Vaccinationer",
 	...navStyles
 }
 
@@ -176,7 +218,7 @@ const pickerSelectStyles = StyleSheet.create({
 		borderColor: "gray",
 		borderRadius: 4,
 		color: "#FFF",
-		paddingRight: 30, // to ensure the text is never behind the icon
+		paddingRight: 30,
 		width: "100%",
 		height: 40
 	},
@@ -188,7 +230,39 @@ const pickerSelectStyles = StyleSheet.create({
 		borderColor: "purple",
 		borderRadius: 8,
 		color: "#FFF",
-		paddingRight: 30, // to ensure the text is never behind the icon
+		paddingRight: 30,
+		width: "100%",
+		height: 40
+	},
+	iconContainer: {
+		top: 24,
+		right: 12
+	},
+});
+
+const pickerSelectStylesColor = StyleSheet.create({
+	inputIOS: {
+		fontSize: 16,
+		paddingVertical: 8,
+		paddingHorizontal: 8,
+		marginVertical: 8,
+		borderWidth: 1,
+		borderColor: "gray",
+		borderRadius: 4,
+		color: "#000",
+		paddingRight: 30,
+		width: "100%",
+		height: 40
+	},
+	inputAndroid: {
+		fontSize: 16,
+		paddingHorizontal: 10,
+		paddingVertical: 8,
+		borderWidth: 0.5,
+		borderColor: "purple",
+		borderRadius: 8,
+		color: "#000",
+		paddingRight: 30,
 		width: "100%",
 		height: 40
 	},
