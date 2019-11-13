@@ -10,7 +10,20 @@ import { translateDate, setCorrectHours } from "../utils/dateUtils";
 import LoadingIndicator from './LoadingIndicator';
 
 const GET_CHILD = gql`
-	query GetChild {
+	query getUserVaccinationsQuery($childId: String, $orderBy: VaccinationOrderByInput) {
+		getUserVaccinations(childId: $childId, orderBy: $orderBy) {
+			id
+			takenAt
+			createdAt
+			type {
+				name
+				dose
+			}
+			child {
+				id
+				name
+			}
+		}
 		getChild {
 			id
 			name
@@ -35,41 +48,12 @@ const VaccinationList = (props) => {
 		{ value: "protectUntil_ASC", label: "Längst skydd kvar" },
 	];
 
-	const executeSorting = async () => {
-		const result = await props.screenProps.client.query({
-			query: gql`
-				query getUserVaccinationsQuery($childId: String, $orderBy: VaccinationOrderByInput) {
-					getUserVaccinations(childId: $childId, orderBy: $orderBy) {
-						id
-						takenAt
-						createdAt
-						type {
-							name
-							dose
-						}
-						child {
-							id
-							name
-						}
-					}
-				}
-			`,
-			variables: {
-				childId,
-				orderBy
-			}
-		});
-
-		const sortedUserVaccinations = await result.data.getUserVaccinations;
-		await setUserVaccinations(sortedUserVaccinations);
-	}
-
 	return (
-		<Query query={GET_CHILD}>
-			{({ loading, err, data }) => {
+		<Query query={GET_CHILD} variables={{childId: childId, orderBy: orderBy}}>
+			{({ loading, err, data, refetch, networkStatus }) => {
 				if (err) return console.log(err);
 				if (loading) return <LoadingIndicator />
-				else executeSorting();
+				else setUserVaccinations(data.getUserVaccinations);
 				
 				if (props.navigation.getParam("refetch")) executeSorting("refetch");
 
@@ -91,9 +75,9 @@ const VaccinationList = (props) => {
 								value: null
 							}}
 							style={pickerSelectStylesColor}
-							onValueChange={value => {
-								setChildId(value);
-								executeSorting();
+							onValueChange={async (value) => {
+								await setChildId(value);
+								await refetch();
 							}}
 							value={childId ? childId : null}
 							items={children}
@@ -111,9 +95,9 @@ const VaccinationList = (props) => {
 									value: null
 								}}
 								style={pickerSelectStyles}
-								onValueChange={value => {
-									setOrderBy(value);
-									executeSorting();
+								onValueChange={async (value) => {
+									await setOrderBy(value);
+									await refetch();
 								}}
 								value={orderBy ? orderBy : null}
 								items={sortingOpts}
