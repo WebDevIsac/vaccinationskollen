@@ -27,6 +27,7 @@ const getUserVaccinations = async (parent, args, context, info) => {
 
 		userVaccinations = await context.prisma.userVaccinations({
 			where: { 
+				user: { id: userId },
 				child: { id: childId },
 				OR: [
 					{type: {dose: parseInt(args.filter)}},
@@ -53,6 +54,7 @@ const getUserVaccinations = async (parent, args, context, info) => {
 	} else {
 		userVaccinations = await context.prisma.userVaccinations({
 			where: {
+				user: { id: userId },
 				OR: [
 					{type: {dose: parseInt(args.filter)}},
 					{type: {name_contains: args.filter}}
@@ -100,50 +102,6 @@ const getChild = async (parent, args, context, info) => {
 	return child;
 }
 
-const getChildVaccinations = async (parent, args, context, info) => {
-	const userId = getUserId(context);
-	const childId = args.id;
-
-	let user = await context.prisma.user({ id: userId });
-	delete user.password;
-
-	let child = await context.prisma.child({ id: childId });
-
-	let childVaccinations = await context.prisma.userVaccinations({
-		where: { 
-			child: { id: childId },
-			OR: [
-				{type: {dose: parseInt(args.filter)}},
-				{type: {name_contains: args.filter}}
-			]
-		},
-		skip: args.skip,
-		first: args.first,
-		orderBy: args.orderBy
-	});
-	const vaccinations = await context.prisma.userVaccinations({
-		where: { 
-			child: { id: childId },
-			OR: [
-				{type: {dose: parseInt(args.filter)}},
-				{type: {name_contains: args.filter}}
-			]
-		},
-		skip: args.skip,
-		first: args.first,
-		orderBy: args.orderBy
-	}).type();
-
-	childVaccinations = childVaccinations.map((childVacc, index) => {
-		childVacc.type = vaccinations[index].type;
-		childVacc.user = user;
-		childVacc.child = child;
-		return childVacc;
-	});
-
-	return childVaccinations;
-}
-
 const getFamilyVaccinations = async(parent, args, context, info) => {
 	const userId = getUserId(context);
 
@@ -159,6 +117,7 @@ const getFamilyVaccinations = async(parent, args, context, info) => {
 	if (orderBy.includes("takenAt")) {
 		userVaccinations = await context.prisma.userVaccinations({
 			where: {
+				user: { id: userId },
 				takenAt_not: null,
 				OR: [
 					{type: {dose: parseInt(args.filter)}},
@@ -170,7 +129,8 @@ const getFamilyVaccinations = async(parent, args, context, info) => {
 			orderBy: args.orderBy
 		});
 		vaccinations = await context.prisma.userVaccinations({
-			where: { 
+			where: {
+				user: { id: userId }, 
 				takenAt_not: null,
 				OR: [
 					{type: {dose: parseInt(args.filter)}},
@@ -182,7 +142,8 @@ const getFamilyVaccinations = async(parent, args, context, info) => {
 			orderBy: args.orderBy
 		}).type();
 		children = await context.prisma.userVaccinations({
-			where: { 
+			where: {
+				user: { id: userId }, 
 				takenAt_not: null,
 				OR: [
 					{type: {dose: parseInt(args.filter)}},
@@ -196,6 +157,7 @@ const getFamilyVaccinations = async(parent, args, context, info) => {
 	} else if (orderBy.includes("nextDose")) {
 		userVaccinations = await context.prisma.userVaccinations({
 			where: {
+				user: { id: userId },
 				nextDose_not: null,
 				OR: [
 					{type: {dose: parseInt(args.filter)}},
@@ -208,6 +170,7 @@ const getFamilyVaccinations = async(parent, args, context, info) => {
 		});
 		vaccinations = await context.prisma.userVaccinations({
 			where: {
+				user: { id: userId },
 				nextDose_not: null, 
 				OR: [
 					{type: {dose: parseInt(args.filter)}},
@@ -220,6 +183,7 @@ const getFamilyVaccinations = async(parent, args, context, info) => {
 		}).type();
 		children = await context.prisma.userVaccinations({
 			where: {
+				user: { id: userId },
 				nextDose_not: null, 
 				OR: [
 					{type: {dose: parseInt(args.filter)}},
@@ -233,6 +197,7 @@ const getFamilyVaccinations = async(parent, args, context, info) => {
 	} else if (orderBy.includes("protectUntil")) {
 		userVaccinations = await context.prisma.userVaccinations({
 			where: {
+				user: { id: userId },
 				protectUntil_not: null,
 				OR: [
 					{type: {dose: parseInt(args.filter)}},
@@ -245,6 +210,7 @@ const getFamilyVaccinations = async(parent, args, context, info) => {
 		});
 		vaccinations = await context.prisma.userVaccinations({
 			where: {
+				user: { id: userId },
 				protectUntil_not: null, 
 				OR: [
 					{type: {dose: parseInt(args.filter)}},
@@ -257,6 +223,7 @@ const getFamilyVaccinations = async(parent, args, context, info) => {
 		}).type();
 		children = await context.prisma.userVaccinations({
 			where: {
+				user: { id: userId },
 				protectUntil_not: null, 
 				OR: [
 					{type: {dose: parseInt(args.filter)}},
@@ -270,6 +237,7 @@ const getFamilyVaccinations = async(parent, args, context, info) => {
 	} else {
 		userVaccinations = await context.prisma.userVaccinations({
 			where: {
+				user: { id: userId },
 				OR: [
 					{type: {dose: parseInt(args.filter)}},
 					{type: {name_contains: args.filter}}
@@ -280,7 +248,8 @@ const getFamilyVaccinations = async(parent, args, context, info) => {
 			orderBy: args.orderBy
 		});
 		vaccinations = await context.prisma.userVaccinations({
-			where: { 
+			where: {
+				user: { id: userId }, 
 				OR: [
 					{type: {dose: parseInt(args.filter)}},
 					{type: {name_contains: args.filter}}
@@ -291,7 +260,8 @@ const getFamilyVaccinations = async(parent, args, context, info) => {
 			orderBy: args.orderBy
 		}).type();
 		children = await context.prisma.userVaccinations({
-			where: { 
+			where: {
+				user: { id: userId }, 
 				OR: [
 					{type: {dose: parseInt(args.filter)}},
 					{type: {name_contains: args.filter}}
@@ -318,6 +288,5 @@ module.exports = {
 	getVaccinations,
 	getUserVaccinations,
 	getChild,
-	getChildVaccinations,
 	getFamilyVaccinations
 }
