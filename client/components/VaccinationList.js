@@ -62,7 +62,6 @@ const VaccinationList = (props) => {
 
 		const sortedUserVaccinations = await result.data.getUserVaccinations;
 		await setUserVaccinations(sortedUserVaccinations);
-
 	}
 
 	return (
@@ -72,7 +71,7 @@ const VaccinationList = (props) => {
 				if (loading) return <LoadingIndicator />
 				else executeSorting();
 				
-				if (props.navigation.getParam("refetch")) executeSorting();
+				if (props.navigation.getParam("refetch")) executeSorting("refetch");
 
 				let children = data.getChild.map(child => {
 					child = {
