@@ -77,11 +77,21 @@ const SortAllVaccinations = (props) => {
 	}
 
 	executeSorting();
+	
+	let message;
+
+	if (order == "fill") {
+		message = "Vaccinationer som snart ska tas igen"
+	} else if (order == "taken") {
+		message = "Nyligen tagna vaccinationer"
+	} else if (order == "protect") {
+		message = "Vaccinationer som bör kollas över"
+	}
 
 	return (
-		<View contentContainerStyle={styles.container}>
+		<View style={styles.container}>
 			{!vaccinations && <Text>Du har inga tillagda vaccinationer</Text>}
-			{vaccinations && <Text>{order}</Text>}
+			{vaccinations && <Text>{message}</Text>}
 			{vaccinations.map(vaccination => {
 				return (
 					<View key={vaccination.id} style={{marginVertical: 10}}>
@@ -100,6 +110,7 @@ const SortAllVaccinations = (props) => {
 
 const styles = StyleSheet.create({
 	container: {
+		width: "60%",
 		flex: 1,
 		backgroundColor: "#FFF",
 		alignItems: "center",

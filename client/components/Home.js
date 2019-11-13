@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, StyleSheet, ScrollView, Button, ActivityIndicator } from "react-native";
+import { Text, View, StyleSheet, ScrollView } from "react-native";
 import navStyles from "../styles/navStyles";
 import LoadingIndicator from "./LoadingIndicator";
 import SortAllVaccinations from "./SortAllVaccinations";
@@ -27,7 +27,8 @@ Home.navigationOptions = {
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
+		width: "100%",
+		flexGrow: 1,
 		backgroundColor: "#FFF",
 		alignItems: "center",
 		justifyContent: "space-between",
