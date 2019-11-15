@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 import LoadingIndicator from './LoadingIndicator';
+import VaccinationCard from './VaccinationCard';
 
 const GET_SORTED_VACCINATIONS_QUERY = gql`
 	query GetSortedVaccinationsQuery($orderBy: VaccinationOrderByInput, $first: Int) {
@@ -26,29 +27,22 @@ const GET_SORTED_VACCINATIONS_QUERY = gql`
 	}
 `;
 
-const SortAllVaccinations = (props) => {
-
-	const { order, client } = props;
+const SortAllVaccinations = ({order}) => {
 
 	let orderBy;
 	const first = 3;
 
-	if (order === "fill") {
-		orderBy = "nextDose_ASC"
-	} else if (order === "taken") {
-		orderBy = "takenAt_DESC"
-	} else if (order === "protect") {
-		orderBy = "protectUntil_ASC"
-	}
-
 	let message;
 
 	if (order == "fill") {
+		orderBy = "nextDose_ASC"
 		message = "Vaccinationer som snart ska tas igen"
-	} else if (order == "taken") {
-		message = "Nyligen tagna vaccinationer"
 	} else if (order == "protect") {
-		message = "Vaccinationer som bör kollas över"
+		orderBy = "protectUntil_ASC"
+		message = "Dessa vaccinationsskydd går ut snart"
+	} else if (order == "taken") {
+		orderBy = "takenAt_DESC"
+		message = "Nyligen tagna vaccinationer"
 	}
 
 	return (
@@ -62,17 +56,10 @@ const SortAllVaccinations = (props) => {
 				return (
 					<View style={styles.container}>
 						{!data.getFamilyVaccinations && <Text>Du har inga tillagda vaccinationer</Text>}
-						{data.getFamilyVaccinations && <Text>{message}</Text>}
+						{data.getFamilyVaccinations && <Text style={styles.sortTypeText}>{message}</Text>}
 						{data.getFamilyVaccinations.map(vaccination => {
 							return (
-								<View key={vaccination.id} style={{marginVertical: 10}}>
-									<Text>Vacciantion: {vaccination.type.name}</Text>
-									<Text>Dos: {vaccination.type.dose}</Text>
-									<Text>Vaccinationstagare: {vaccination.child ? vaccination.child.name : vaccination.user.name}</Text>
-									<Text>Tagen: {vaccination.takenAt}</Text>
-									<Text>{vaccination.nextDose && `Nästa dos: ${vaccination.nextDose}`}</Text>
-									<Text>{vaccination.protectUntil && `Skyddar tills: ${vaccination.protectUntil}`}</Text>
-								</View>
+								<VaccinationCard key={vaccination.id} vaccination={vaccination} />
 							)
 						})}
 					</View>
@@ -84,12 +71,16 @@ const SortAllVaccinations = (props) => {
 
 const styles = StyleSheet.create({
 	container: {
-		width: "60%",
+		width: "100%",
 		flex: 1,
 		backgroundColor: "#FFF",
 		alignItems: "center",
 		justifyContent: "space-between",
 	},
+	sortTypeText: {
+		fontSize: 18,
+		textDecorationLine: "underline"
+	}
 })
 
 export default SortAllVaccinations

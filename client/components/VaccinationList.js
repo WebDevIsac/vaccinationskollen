@@ -8,6 +8,7 @@ import gql from "graphql-tag";
 import RNPickerSelect from "react-native-picker-select";
 import { translateDate, setCorrectHours } from "../utils/dateUtils";
 import LoadingIndicator from './LoadingIndicator';
+import VaccinationCard from './VaccinationCard';
 
 const GET_VACCINATIONS_AND_CHILD_QUERY = gql`
 	query getVaccinationsAndChildQuery($childId: String, $orderBy: VaccinationOrderByInput) {
@@ -109,13 +110,7 @@ const VaccinationList = (props) => {
 						{!userVaccinations && <Text>Du har inte lagt till några vaccinationer ännu. </Text>}
 						{userVaccinations.map(vaccination => {
 							return (
-								<View key={vaccination.id} style={styles.vaccinationItem}>
-									<Text>Vaccination mot {vaccination.type.name}</Text>
-									<Text>Dos {vaccination.type.dose}</Text>
-									<Text>Tagen: {vaccination.takenAt}</Text>
-									<Text>Tillagd: {vaccination.createdAt}</Text>
-									<Text>{vaccination.child && `Child: ${vaccination.child.name}`}</Text>
-								</View>
+								<VaccinationCard key={vaccination.id} vaccination={vaccination}/>
 							)
 						})}
 						<TouchableOpacity style={styles.addButton} onPress={() => props.navigation.navigate("NewVaccination") }>
@@ -164,15 +159,6 @@ const styles = StyleSheet.create({
 		position: "absolute",
 		top: 0,
 		left: "50%",
-	},
-	vaccinationItem: {
-		flex: 1,
-		height: 120,
-		width: "90%",
-		backgroundColor: "#FEE0E0",
-		borderWidth: 0,
-		borderRadius: 20,
-		padding: 10,
 	},
 	addButton: {
 		alignItems: "center",
