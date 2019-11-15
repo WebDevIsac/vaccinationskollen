@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Header } from "react-navigation-stack";
+import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { Chevron } from "react-native-shapes";
 import navStyles from "../styles/navStyles";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 import RNPickerSelect from "react-native-picker-select";
-import { translateDate, setCorrectHours } from "../utils/dateUtils";
 import LoadingIndicator from './LoadingIndicator';
 import VaccinationCard from './VaccinationCard';
+import { Ionicons } from "@expo/vector-icons";
 
 const GET_VACCINATIONS_AND_CHILD_QUERY = gql`
 	query getVaccinationsAndChildQuery($childId: String, $orderBy: VaccinationOrderByInput) {
@@ -71,45 +70,52 @@ const VaccinationList = (props) => {
 
 				return (
 					<ScrollView contentContainerStyle={styles.container}>
-						<RNPickerSelect 
-							placeholderTextColor="#000"
-							placeholder={{
-								label: "Mina vaccinationer",
-								value: null
-							}}
-							style={pickerSelectStylesColor}
-							onValueChange={async (value) => {
-								await setChildId(value);
-								await refetch();
-							}}
-							value={childId ? childId : null}
-							items={children}
-							Icon={() => {
-								return <Chevron size={1.5} color="gray" />
-							}}
-						/>
-						<View style={styles.filterView}>
-							<TextInput style={styles.filterText} placeholder="Sök" placeholderTextColor="#FFF" />
-							<View style={styles.filterLine}></View>
-							<RNPickerSelect
-								placeholderTextColor="#FFF"
+						<View style={styles.topContainer}>
+							<View style={styles.filterView}>
+								<TextInput style={styles.filterText} placeholder="Sök" placeholderTextColor="#FFF" />
+								<View style={styles.filterLine}></View>
+								<RNPickerSelect
+									placeholderTextColor="#FFF"
+									placeholder={{
+										label: "Sortera efter...",
+										value: null
+									}}
+									style={pickerSelectStyles}
+									onValueChange={async (value) => {
+										await setOrderBy(value);
+										await refetch();
+									}}
+									value={orderBy ? orderBy : null}
+									items={sortingOpts}
+									Icon={() => {
+										return <Chevron size={1.5} color="gray" />;
+									}}
+								/>
+							</View>
+							<RNPickerSelect 
+								placeholderTextColor="#000"
 								placeholder={{
-									label: "Sortera efter...",
+									label: "Mina vaccinationer",
 									value: null
 								}}
-								style={pickerSelectStyles}
+								style={pickerSelectStylesColor}
 								onValueChange={async (value) => {
-									await setOrderBy(value);
+									await setChildId(value);
 									await refetch();
 								}}
-								value={orderBy ? orderBy : null}
-								items={sortingOpts}
+								value={childId ? childId : null}
+								items={children}
 								Icon={() => {
-									return <Chevron size={1.5} color="gray" />;
+									return <Chevron size={1.5} color="gray" />
 								}}
 							/>
 						</View>
-						{!userVaccinations && <Text>Du har inte lagt till några vaccinationer ännu. </Text>}
+						{userVaccinations.length === 0 && (
+							<View style={styles.emptyMessageBox}>
+								<Text style={styles.emptyMessage}>Du har inte lagt till några vaccinationer ännu.</Text>
+								<Ionicons name="ios-arrow-round-down" size={35} colo="gray" />
+							</View>
+						)}
 						{userVaccinations.map(vaccination => {
 							return (
 								<VaccinationCard key={vaccination.id} vaccination={vaccination}/>
@@ -135,16 +141,20 @@ const styles = StyleSheet.create({
 		flexGrow: 1,
 		backgroundColor: "#FFF",
 		alignItems: "center",
-		justifyContent: "space-around",
-		width: "100%"
+		justifyContent: "space-between",
+		width: "100%",
+	},
+	topContainer: {
+		width: "100%",
+		alignItems: "center",
+		justifyContent: "flex-start",
 	},
 	filterView: {
 		position: "relative",
-		marginTop: 10,
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "space-between",
-		width: "90%",
+		width: "100%",
 		height: 60,
 		backgroundColor: "gray",
 	},
@@ -162,12 +172,21 @@ const styles = StyleSheet.create({
 		top: 0,
 		left: "50%",
 	},
+	emptyMessageBox: {
+		width: "80%",
+		alignItems: "center"
+	},
+	emptyMessage: {
+		fontSize: 18,
+		textAlign: "center",
+		marginBottom: 10
+	},
 	addButton: {
 		alignItems: "center",
 		justifyContent: "center",
 		marginVertical: 10,
 		textAlign: "center",
-		width: "90%",
+		width: "80%",
 		height: 60,
 		borderRadius: 50,
 		borderWidth: 0,
@@ -222,8 +241,9 @@ const pickerSelectStylesColor = StyleSheet.create({
 		borderRadius: 4,
 		color: "#000",
 		paddingRight: 30,
-		width: "100%",
-		height: 40
+		width: "80%",
+		height: 40,
+		alignSelf: "center"
 	},
 	inputAndroid: {
 		fontSize: 16,
@@ -234,12 +254,13 @@ const pickerSelectStylesColor = StyleSheet.create({
 		borderRadius: 8,
 		color: "#000",
 		paddingRight: 30,
-		width: "100%",
-		height: 40
+		width: "80%",
+		height: 40,
+		alignSelf: "center"
 	},
 	iconContainer: {
 		top: 24,
-		right: 12
+		right: "15%"
 	},
 });
 
