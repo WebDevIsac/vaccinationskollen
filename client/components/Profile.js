@@ -3,6 +3,7 @@ import { View, Text, ActivityIndicator, StyleSheet, Button } from 'react-native'
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 import navStyles from "../styles/navStyles";
+import LoadingIndicator from './LoadingIndicator';
 
 const GET_USER_QUERY = gql`
 	query getUserQuery {
@@ -18,7 +19,7 @@ const Profile = (props) => {
 		<Query query={GET_USER_QUERY}>
 			{({ loading, err, data }) => {
 				if (err) return console.log(err);
-				if (loading) return <ActivityIndicator/>
+				if (loading) return <LoadingIndicator />
 
 				return (
 					<View style={styles.container}>

@@ -1,17 +1,23 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
+import { translateDate } from '../utils/dateUtils';
 
 const VaccinationCard = ({vaccination}) => {
 
 	let { type, takenAt, createdAt, nextDose, protectUntil, child } = vaccination;
+
+	takenAt = takenAt && translateDate(new Date(takenAt));
+	createdAt = createdAt && translateDate(new Date(createdAt));
+	nextDose = nextDose && translateDate(new Date(nextDose));
+	protectUntil = protectUntil && translateDate(new Date(protectUntil));
 
 	return (
 		<View style={styles.vaccinationItem}>
 			<Text>Vacinationstagare: {child ? child.name : "Jag"}</Text>
 			<Text>Vaccination mot {type.name}</Text>
 			<Text>Dos {type.dose}</Text>
-			<Text>Nästa dos ska tas: {nextDose}</Text>
-			<Text>Denna dosen skyddar tills: {protectUntil}</Text>
+			{nextDose && <Text>Nästa dos ska tas: {nextDose}</Text>}
+			{protectUntil && <Text>Denna dosen skyddar tills: {protectUntil}</Text>}
 			<Text>Tagen: {takenAt}</Text>
 			<Text>Tillagd: {createdAt}</Text>
 		</View>

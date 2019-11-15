@@ -16,6 +16,8 @@ const GET_VACCINATIONS_AND_CHILD_QUERY = gql`
 			id
 			takenAt
 			createdAt
+			nextDose
+			protectUntil
 			type {
 				name
 				dose
@@ -45,8 +47,8 @@ const VaccinationList = (props) => {
 		{ value: "createdAt_ASC", label: "Först tillagda" },
 		{ value: "nextDose_DESC", label: "Kortast till nästa dos" },
 		{ value: "nextDose_ASC", label: "Längst till nästa dos" },
-		{ value: "protectUntil_DESC", label: "Kortast skydd kvar" },
-		{ value: "protectUntil_ASC", label: "Längst skydd kvar" },
+		{ value: "protectUntil_ASC", label: "Kortast skydd kvar" },
+		{ value: "protectUntil_DESC", label: "Längst skydd kvar" },
 	];
 
 	return (
