@@ -100,6 +100,10 @@ const getUserVaccinations = async (parent, args, context, info) => {
 		else if (orderBy.includes("ASC")) return dateA < dateB ? -1 : 1;
 		else return dateA < dateB ? 1 : -1;
 	})
+	
+	if (args.first) {
+		userVaccinations = userVaccinations.slice(0, args.first);
+	}
 
 	return userVaccinations;
 }
@@ -138,7 +142,6 @@ const getFamilyVaccinations = async(parent, args, context, info) => {
 			]
 		},
 		skip: args.skip,
-		first: args.first,
 		orderBy: orderBy
 	});
 	vaccinations = await context.prisma.userVaccinations({
@@ -150,7 +153,6 @@ const getFamilyVaccinations = async(parent, args, context, info) => {
 			]
 		},
 		skip: args.skip,
-		first: args.first,
 		orderBy: orderBy
 	}).type();
 	children = await context.prisma.userVaccinations({
@@ -162,7 +164,6 @@ const getFamilyVaccinations = async(parent, args, context, info) => {
 			]
 		},
 		skip: args.skip,
-		first: args.first,
 		orderBy: orderBy
 	}).child();
 
@@ -189,6 +190,10 @@ const getFamilyVaccinations = async(parent, args, context, info) => {
 		else if (orderBy.includes("ASC")) return dateA < dateB ? -1 : 1;
 		else return dateA < dateB ? 1 : -1;
 	})
+
+	if (args.first) {
+		userVaccinations = userVaccinations.slice(0, args.first);
+	}
 
 	return userVaccinations;
 }
