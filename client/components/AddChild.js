@@ -56,25 +56,23 @@ const AddChild = () => {
 									value={name}
 								/>
 							</Item>
-							<Item style={{borderColor: "transparent", width: "100%"}} floatingLabel>
-								<Label>Födelsedatum</Label>
-								<TouchableOpacity
-									onPress={() => setIsDateTimePickerVisible(true)}
-									style={{ position: "relative", width: "100%" }}
-								>
-									<TextInput
-										value={bornDate.toString()}
-										pointerEvents="none"
-										style={pickerSelectStyles.inputIOS}
-									/>
-									<Chevron size={1.5} color="gray" style={styles.icon} />
-								</TouchableOpacity>
-							</Item>
+							<Label>Födelsedatum</Label>
+							<TouchableOpacity
+								onPress={() => setIsDateTimePickerVisible(true)}
+								style={{ position: "relative", width: "100%" }}
+							>
+								<TextInput
+									value={bornDate.toString()}
+									pointerEvents="none"
+									style={pickerSelectStyles.inputIOS}
+								/>
+								<Chevron size={1.5} color="gray" style={styles.icon} />
+							</TouchableOpacity>
 							<DateTimePicker
 								titleIOS="Välj födelsedatum"
 								date={new Date(bornDate)}
 								isVisible={isDateTimePickerVisible}
-								onConfirm={(data) => {
+								onConfirm={data => {
 									let translatedDate = translateDate(data);
 									setBornDate(translatedDate);
 									setIsDateTimePickerVisible(false);
@@ -141,7 +139,7 @@ const pickerSelectStyles = StyleSheet.create({
 		paddingVertical: 8,
 		paddingHorizontal: 8,
 		marginVertical: 8,
-		borderWidth: 1,
+		borderBottomWidth: 1,
 		borderColor: "gray",
 		borderRadius: 4,
 		color: "black",
@@ -153,7 +151,7 @@ const pickerSelectStyles = StyleSheet.create({
 		fontSize: 16,
 		paddingHorizontal: 10,
 		paddingVertical: 8,
-		borderWidth: 0.5,
+		borderBottomWidth: 0.5,
 		borderColor: "purple",
 		borderRadius: 8,
 		color: "black",

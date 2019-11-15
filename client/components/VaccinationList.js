@@ -112,15 +112,17 @@ const VaccinationList = (props) => {
 						</View>
 						{userVaccinations.length === 0 && (
 							<View style={styles.emptyMessageBox}>
-								<Text style={styles.emptyMessage}>Du har inte lagt till några vaccinationer ännu.</Text>
+								<Text style={styles.emptyMessage}>{childId && children.find(child => child.value === childId).label} har inte lagt till några vaccinationer ännu.</Text>
 								<Ionicons name="ios-arrow-round-down" size={35} colo="gray" />
 							</View>
 						)}
+						<View style={{ flex: 1, width: "100%", alignItems: "center" }}>
 						{userVaccinations.map(vaccination => {
 							return (
 								<VaccinationCard key={vaccination.id} vaccination={vaccination}/>
 							)
 						})}
+						</View>
 						<TouchableOpacity style={styles.addButton} onPress={() => props.navigation.navigate("NewVaccination") }>
 							<Text style={styles.addButtonText}>Lägg till ny vaccination</Text>
 						</TouchableOpacity>
