@@ -263,8 +263,11 @@ const NewVaccination = props => {
 									style={styles.icon}
 								/>
 							</TouchableOpacity>
+							<Label>Datum vaccination togs</Label>
 							<DateTimePicker
 								titleIOS="Välj datum"
+								cancelTextIOS="Avbryt"
+								confirmTextIOS="Klar"
 								date={new Date(date)}
 								isVisible={isDateTimePickerVisible}
 								onConfirm={data => {

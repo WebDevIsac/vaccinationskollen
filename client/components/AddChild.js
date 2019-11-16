@@ -70,6 +70,8 @@ const AddChild = () => {
 							</TouchableOpacity>
 							<DateTimePicker
 								titleIOS="Välj födelsedatum"
+								cancelTextIOS="Avbryt"
+								confirmTextIOS="Klar"
 								date={new Date(bornDate)}
 								isVisible={isDateTimePickerVisible}
 								onConfirm={data => {
@@ -104,7 +106,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: "#FFF",
 		alignItems: "center",
-		justifyContent: "space-around",
+		justifyContent: "space-between",
 		width: "100%"
 	},
 	icon: {
@@ -116,7 +118,6 @@ const styles = StyleSheet.create({
 		width: "80%"
 	},
 	addButton: {
-		// flexGrow: 1,
 		alignItems: "center",
 		justifyContent: "center",
 		marginVertical: 10,

@@ -111,17 +111,17 @@ const VaccinationList = (props) => {
 							/>
 						</View>
 						{userVaccinations.length === 0 && (
-							<View style={styles.emptyMessageBox}>
+							<View style={styles.emptyMessageContainer}>
 								<Text style={styles.emptyMessage}>{childId && children.find(child => child.value === childId).label} har inte lagt till några vaccinationer ännu.</Text>
 								<Ionicons name="ios-arrow-round-down" size={35} colo="gray" />
 							</View>
 						)}
-						<View style={{ flex: 1, width: "100%", alignItems: "center" }}>
-						{userVaccinations.map(vaccination => {
-							return (
-								<VaccinationCard key={vaccination.id} vaccination={vaccination}/>
-							)
-						})}
+						<View style={styles.vaccinationListContainer}>
+							{userVaccinations.map(vaccination => {
+								return (
+									<VaccinationCard key={vaccination.id} vaccination={vaccination}/>
+								)
+							})}
 						</View>
 						<TouchableOpacity style={styles.addButton} onPress={() => props.navigation.navigate("NewVaccination") }>
 							<Text style={styles.addButtonText}>Lägg till ny vaccination</Text>
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
 		top: 0,
 		left: "50%",
 	},
-	emptyMessageBox: {
+	emptyMessageContainer: {
 		width: "80%",
 		alignItems: "center"
 	},
@@ -182,6 +182,11 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		textAlign: "center",
 		marginBottom: 10
+	},
+	vaccinationListContainer: {
+		flex: 1,
+		width: "100%",
+		alignItems: "center"
 	},
 	addButton: {
 		alignItems: "center",

@@ -112,8 +112,11 @@ const Register = ({screenProps}) => {
 										<Chevron size={1.5} color="gray" style={styles.chevronIcon} />
 									</TouchableOpacity>
 								</View>
+								<Label>Födelsedatum</Label>
 								<DateTimePicker
 									titleIOS="Välj födelsedatum"
+									cancelTextIOS="Avbryt"
+									confirmTextIOS="Klar"
 									date={new Date(bornDate)}
 									isVisible={isDateTimePickerVisible}
 									onConfirm={(data) => {
