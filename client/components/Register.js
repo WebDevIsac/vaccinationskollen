@@ -130,7 +130,7 @@ const Register = ({screenProps}) => {
 								<TouchableOpacity style={styles.button} onPress={() => {
 									mutation();
 								}}>
-									<Text style={{ fontSize: 18, color: "#FFF" }}>Skapa konto</Text>
+									<Text style={styles.buttonText}>Skapa konto</Text>
 								</TouchableOpacity>
 							</View>
 						)
@@ -213,6 +213,10 @@ const styles = StyleSheet.create({
 		borderWidth: 0,
 		borderColor: "#6FB556",
 		backgroundColor: "#6FB556"
+	},
+	buttonText: {
+		fontSize: 18, 
+		color: "#FFF"
 	},
 	errorMessage: {
 		marginTop: 8,

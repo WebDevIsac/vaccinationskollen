@@ -16,6 +16,7 @@ const Login = (props) => {
 	const [password, setPassword] = useState("password");
 	const [emailError, setEmailError] = useState("");
 	const [passwordError, setPasswordError] = useState("");
+	const [inputs, setInputs] = useState([]);
 
 	const LOGIN_MUTATION = gql`
 		mutation LoginMutation($email: String!, $password: String!) {
@@ -31,6 +32,7 @@ const Login = (props) => {
 		screenProps.updateToken();
 		screenProps.setFirstTime(false);
 	};
+	console.log(inputs);
 
 	return (
 		<View style={styles.container}>
@@ -60,6 +62,9 @@ const Login = (props) => {
 										<Ionicons name="ios-mail" size={25} color="gray" style={styles.inputIcon} /> Email
 									</Label>
 									<Input
+										ref={input => console.log(input)}
+										returnKeyLabel="Nästa"
+										returnKeyType={"next"}
 										keyboardType="email-address"
 										textContentType="emailAddress"
 										onChangeText={text => setEmail(text)}
@@ -82,7 +87,7 @@ const Login = (props) => {
 								<TouchableOpacity style={styles.button} onPress={() => {
 									mutation();
 								}}>
-									<Text style={{ fontSize: 18, color: "#FFF" }}>Logga in</Text>
+									<Text style={styles.buttonText}>Logga in</Text>
 								</TouchableOpacity>
 							</View>
 						)
@@ -148,6 +153,10 @@ const styles = StyleSheet.create({
 		borderWidth: 0,
 		borderColor: "#6FB556",
 		backgroundColor: "#6FB556"
+	},
+	buttonText: {
+		fontSize: 18, 
+		color: "#FFF"
 	},
 	errorMessage: {
 		fontSize: 12,
