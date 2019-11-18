@@ -11,8 +11,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { sortVaccinations } from "../utils/sortUtils";
 
 const GET_VACCINATIONS_AND_CHILD_QUERY = gql`
-	query getVaccinationsAndChildQuery {
-		getUserVaccinations {
+	query getVaccinationsAndChildQuery($childId: String) {
+		getUserVaccinations(childId: $childId) {
 			id
 			takenAt
 			createdAt
@@ -51,19 +51,16 @@ const VaccinationList = (props) => {
 		{ value: "protectUntil_DESC", label: "Längst skydd kvar" },
 	];
 
-	useEffect(() => {
-		setUserVaccinations(sortVaccinations(userVaccinations, orderBy));
-	}, [orderBy])
-
 	return (
-		<Query query={GET_VACCINATIONS_AND_CHILD_QUERY}>
+		<Query query={GET_VACCINATIONS_AND_CHILD_QUERY} variables={{ childId: childId }}>
 			{({ loading, err, data, refetch }) => {
 				if (err) return console.log(err);
 				if (loading) return <LoadingIndicator />
-				if (userVaccinations.length === 0) setUserVaccinations(data.getUserVaccinations);
-				else setUserVaccinations(sortVaccinations(userVaccinations, orderBy));
 
-				if (props.navigation.getParam("refetch")) refetch();
+				refetch();
+
+				setUserVaccinations(sortVaccinations(data.getUserVaccinations, orderBy));
+
 				
 				let children = data.getChild.map(child => {
 					child = {
@@ -118,7 +115,7 @@ const VaccinationList = (props) => {
 						{userVaccinations.length === 0 && (
 							<View style={styles.emptyMessageContainer}>
 								<Text style={styles.emptyMessage}>{childId ? children.find(child => child.value === childId).label : "Du"} har inte lagt till några vaccinationer ännu.</Text>
-								<Ionicons name="ios-arrow-round-down" size={35} colo="gray" />
+								{/* <Ionicons name="ios-arrow-round-down" size={35} colo="gray" /> */}
 							</View>
 						)}
 						<View style={styles.vaccinationListContainer}>

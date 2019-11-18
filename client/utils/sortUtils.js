@@ -12,8 +12,8 @@ export const sortVaccinations = (vaccinations, sortArgs, amount) => {
 				dateA = a.takenAt;
 				dateB = b.takenAt;
 			} else if (sortArgs.includes("createdAt")) {
-				dateA = a.takenAt;
-				dateB = b.takenAt;
+				dateA = a.createdAt;
+				dateB = b.createdAt;
 			}
         } else {
             dateA = a.createdAt;

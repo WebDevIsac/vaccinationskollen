@@ -43,7 +43,7 @@ const Home = (props) => {
 				if (loading) return <LoadingIndicator />
 
 				refetch();
-				
+
 				let allVaccinations = data.getFamilyVaccinations;
 				
 				let welcomeMessage = `Välkommen ${firstTime ? "" : "tillbaka"} ${data.getUser.name}`;
