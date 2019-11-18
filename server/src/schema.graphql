@@ -28,6 +28,11 @@ type Mutation {
 	deleteUserVaccination(id: ID): UserVaccination
 }
 
+type Subscription {
+  newVaccination: UserVaccination
+  deleteVaccination: UserVaccination
+}
+
 type User {
     id: ID!
     name: String!
