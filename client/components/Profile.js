@@ -16,19 +16,15 @@ const GET_USER_QUERY = gql`
 
 const Profile = (props) => {
 	return (
-		<Query query={GET_USER_QUERY}>
-			{({ loading, err, data }) => {
-				if (err) return console.log(err);
-				if (loading) return <LoadingIndicator />
+		// <Query query={GET_USER_QUERY}>
+		// 	{({ loading, err, data }) => {
+		// 		if (err) return console.log(err);
+		// 		if (loading) return <LoadingIndicator />
 
-				return (
+		// 		console.log(data);
+
+		// 		return (
 					<View style={styles.container}>
-						<Text>Name: {data.getUser.name}</Text>
-						<Text>Email: {data.getUser.email}</Text>
-						<Button
-							title="Uppdatera profil"
-							onPress={() => props.navigation.navigate("UpdateProfile", { user: data.getUser })}
-						/>
 						<Button
 							title="Dina vaccinationer"
 							onPress={() => props.navigation.navigate("VaccinationList")}
@@ -37,16 +33,10 @@ const Profile = (props) => {
 							title="Lägg till barn"
 							onPress={() => props.navigation.navigate("AddChild")}
 						/>
-						{/* <Button 
-							title="Karls Vaccinationer"
-						/> 
-						<Button 
-							title="Lisas vaccinationer"
-						/>  */}
 					</View>
-				)
-			}}
-		</Query>
+		// 		)
+		// 	}}
+		// </Query>
 	)
 }
 

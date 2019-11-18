@@ -8,7 +8,8 @@ import {
 	Alert,
 	ScrollView,
 	TextInput,
-	TouchableOpacity
+	TouchableOpacity,
+	Label
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { Query, Mutation } from "react-apollo";
@@ -18,27 +19,6 @@ import navStyles from "../styles/navStyles";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { Appearance } from "react-native-appearance";
 import { translateDate, setCorrectHours, setDateFromTime } from "../utils/dateUtils";
-
-// const GET_VACCINATIONS_QUERY = gql`
-// 	query GetVaccinationsQuery {
-// 		getVaccinations {
-// 			id
-// 			name
-// 			dose
-// 			untilNext
-// 			protectDuration
-// 		}
-// 	}
-// `;
-
-// const GET_CHILDREN_QUERY = gql`
-// 	query GetChild {
-// 		getChild {
-// 			id
-// 			name
-// 		}
-// 	}
-// `;
 
 const GET_CHILDREN_AND_VACCINATIONS_QUERY = gql`
 	query GetChildrenAndVaccinationsQuery {
@@ -248,6 +228,7 @@ const NewVaccination = props => {
 								}}
 								/>
 							<Text style={!protectDuration && {display: "none"}}>{protectDuration && `Enligt våra uppgifter skyddar vaccination dig i ${protectDuration}`}</Text>
+							<Text>Datum vaccination togs</Text>
 							<TouchableOpacity
 								onPress={() => setIsDateTimePickerVisible(true)}
 								style={{ position: "relative" }}
@@ -263,7 +244,6 @@ const NewVaccination = props => {
 									style={styles.icon}
 								/>
 							</TouchableOpacity>
-							<Label>Datum vaccination togs</Label>
 							<DateTimePicker
 								titleIOS="Välj datum"
 								cancelTextIOS="Avbryt"

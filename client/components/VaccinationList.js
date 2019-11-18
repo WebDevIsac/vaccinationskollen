@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { Chevron } from "react-native-shapes";
 import navStyles from "../styles/navStyles";
@@ -8,10 +8,11 @@ import RNPickerSelect from "react-native-picker-select";
 import LoadingIndicator from './LoadingIndicator';
 import VaccinationCard from './VaccinationCard';
 import { Ionicons } from "@expo/vector-icons";
+import { sortVaccinations } from "../utils/sortUtils";
 
 const GET_VACCINATIONS_AND_CHILD_QUERY = gql`
-	query getVaccinationsAndChildQuery($childId: String, $orderBy: VaccinationOrderByInput) {
-		getUserVaccinations(childId: $childId, orderBy: $orderBy) {
+	query getVaccinationsAndChildQuery {
+		getUserVaccinations {
 			id
 			takenAt
 			createdAt
@@ -44,29 +45,34 @@ const VaccinationList = (props) => {
 		{ value: "takenAt_ASC", label: "Först tagna" },
 		{ value: "createdAt_DESC", label: "Senast tillagda" },
 		{ value: "createdAt_ASC", label: "Först tillagda" },
-		{ value: "nextDose_DESC", label: "Kortast till nästa dos" },
-		{ value: "nextDose_ASC", label: "Längst till nästa dos" },
+		{ value: "nextDose_ASC", label: "Kortast till nästa dos" },
+		{ value: "nextDose_DESC", label: "Längst till nästa dos" },
 		{ value: "protectUntil_ASC", label: "Kortast skydd kvar" },
 		{ value: "protectUntil_DESC", label: "Längst skydd kvar" },
 	];
 
+	useEffect(() => {
+		setUserVaccinations(sortVaccinations(userVaccinations, orderBy));
+	}, [orderBy])
+
 	return (
-		<Query query={GET_VACCINATIONS_AND_CHILD_QUERY} variables={{childId: childId, orderBy: orderBy}}>
+		<Query query={GET_VACCINATIONS_AND_CHILD_QUERY}>
 			{({ loading, err, data, refetch }) => {
 				if (err) return console.log(err);
 				if (loading) return <LoadingIndicator />
-				else setUserVaccinations(data.getUserVaccinations);
-				
-				if (props.navigation.getParam("refetch")) refetch();
+				if (userVaccinations.length === 0) setUserVaccinations(data.getUserVaccinations);
+				else setUserVaccinations(sortVaccinations(userVaccinations, orderBy));
 
+				if (props.navigation.getParam("refetch")) refetch();
+				
 				let children = data.getChild.map(child => {
 					child = {
 						value: child.id,
 						label: child.name
 					}
-
 					return child;
 				});
+
 
 				return (
 					<ScrollView contentContainerStyle={styles.container}>
@@ -83,7 +89,6 @@ const VaccinationList = (props) => {
 									style={pickerSelectStyles}
 									onValueChange={async (value) => {
 										await setOrderBy(value);
-										await refetch();
 									}}
 									value={orderBy ? orderBy : null}
 									items={sortingOpts}
@@ -112,14 +117,14 @@ const VaccinationList = (props) => {
 						</View>
 						{userVaccinations.length === 0 && (
 							<View style={styles.emptyMessageContainer}>
-								<Text style={styles.emptyMessage}>{childId && children.find(child => child.value === childId).label} har inte lagt till några vaccinationer ännu.</Text>
+								<Text style={styles.emptyMessage}>{childId ? children.find(child => child.value === childId).label : "Du"} har inte lagt till några vaccinationer ännu.</Text>
 								<Ionicons name="ios-arrow-round-down" size={35} colo="gray" />
 							</View>
 						)}
 						<View style={styles.vaccinationListContainer}>
-							{userVaccinations.map(vaccination => {
+							{userVaccinations.map((vaccination, index) => {
 								return (
-									<VaccinationCard key={vaccination.id} vaccination={vaccination}/>
+									<VaccinationCard update={userVaccinations[index]} key={vaccination.id} vaccination={vaccination} refetch={refetch} />
 								)
 							})}
 						</View>
