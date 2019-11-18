@@ -8,6 +8,7 @@ import LoadingIndicator from './LoadingIndicator';
 const GET_USER_QUERY = gql`
 	query getUserQuery {
 		getUser {
+			id
 			email
 			name
 		}
@@ -16,14 +17,12 @@ const GET_USER_QUERY = gql`
 
 const Profile = (props) => {
 	return (
-		// <Query query={GET_USER_QUERY}>
-		// 	{({ loading, err, data }) => {
-		// 		if (err) return console.log(err);
-		// 		if (loading) return <LoadingIndicator />
+		<Query query={GET_USER_QUERY}>
+			{({ loading, err, data }) => {
+				if (err) return console.log(err);
+				if (loading) return <LoadingIndicator />
 
-		// 		console.log(data);
-
-		// 		return (
+				return (
 					<View style={styles.container}>
 						<Button
 							title="Dina vaccinationer"
@@ -34,9 +33,9 @@ const Profile = (props) => {
 							onPress={() => props.navigation.navigate("AddChild")}
 						/>
 					</View>
-		// 		)
-		// 	}}
-		// </Query>
+				)
+			}}
+		</Query>
 	)
 }
 

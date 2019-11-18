@@ -74,7 +74,7 @@ const NewVaccination = props => {
 			value: (i + 1).toString() + string
 		});
 	}
-	for (let i = 0; i < 12; i++) {
+	for (let i = 0; i < 11; i++) {
 		let string = i < 0 ? " månad" : " månader";
 		time.push({
 			label: (i + 1).toString() + string,
@@ -167,6 +167,7 @@ const NewVaccination = props => {
 								Icon={() => {
 									return <Chevron size={1.5} color="gray" />;
 								}}
+								doneText="Klar"
 							/>
 							<RNPickerSelect
 								placeholder={{
@@ -180,6 +181,7 @@ const NewVaccination = props => {
 								Icon={() => {
 									return <Chevron size={1.5} color="gray" />;
 								}}
+								doneText="Klar"
 							/>
 							<RNPickerSelect
 								placeholder={{
@@ -193,6 +195,7 @@ const NewVaccination = props => {
 								Icon={() => {
 									return <Chevron size={1.5} color="gray" />;
 								}}
+								doneText="Klar"
 							/>
 							<RNPickerSelect
 								placeholder={{
@@ -209,6 +212,7 @@ const NewVaccination = props => {
 								Icon={() => {
 									return <Chevron size={1.5} color="gray" />;
 								}}
+								doneText="Klar"
 							/>
 							<Text style={!untilNext && {display: "none"}}>{untilNext && `Nästa dos rekommenderas tas om ${untilNext}`}</Text>
 							<RNPickerSelect
@@ -226,9 +230,10 @@ const NewVaccination = props => {
 								Icon={() => {
 									return <Chevron size={1.5} color="gray" />;
 								}}
+								doneText="Klar"
 								/>
 							<Text style={!protectDuration && {display: "none"}}>{protectDuration && `Enligt våra uppgifter skyddar vaccination dig i ${protectDuration}`}</Text>
-							<Text>Datum vaccination togs</Text>
+							<Text style={{ marginTop: 24 }}>När togs vaccinationen?</Text>
 							<TouchableOpacity
 								onPress={() => setIsDateTimePickerVisible(true)}
 								style={{ position: "relative" }}
@@ -368,8 +373,8 @@ const pickerSelectStyles = StyleSheet.create({
 		paddingVertical: 8,
 		paddingHorizontal: 8,
 		marginVertical: 8,
-		borderWidth: 1,
-		borderColor: "gray",
+		borderBottomWidth: 1,
+		borderColor: "lightgray",
 		borderRadius: 4,
 		color: "black",
 		paddingRight: 30, // to ensure the text is never behind the icon
@@ -381,7 +386,7 @@ const pickerSelectStyles = StyleSheet.create({
 		paddingHorizontal: 10,
 		paddingVertical: 8,
 		borderWidth: 0.5,
-		borderColor: "purple",
+		borderColor: "lightgray",
 		borderRadius: 8,
 		color: "black",
 		paddingRight: 30, // to ensure the text is never behind the icon

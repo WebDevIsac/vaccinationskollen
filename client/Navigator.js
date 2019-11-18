@@ -13,7 +13,6 @@ import HomeScreen from "./components/Home";
 import ProfileScreen from "./components/Profile";
 import NewVaccinationScreen from "./components/NewVaccination";
 import VaccinationListScreen from "./components/VaccinationList";
-import UpdateProfileScreen from "./components/UpdateProfile";
 import AddChildScreen from "./components/AddChild";
 
 const SignOutFunction = props => {
@@ -33,14 +32,12 @@ const SignOutFunction = props => {
 };
 
 const HomeStack = createStackNavigator({
-	Home: withApollo(HomeScreen)
+	Home: withApollo(HomeScreen),
+	AddChild: AddChildScreen
 });
 
-const ProfileStack = createStackNavigator({
-	Profile: ProfileScreen,
-	UpdateProfile: UpdateProfileScreen,
+const VaccinationListStack = createStackNavigator({
 	VaccinationList: VaccinationListScreen,
-	AddChild: AddChildScreen
 });
 
 const NewVaccinationStack = createStackNavigator({
@@ -64,19 +61,19 @@ const BottomNavigator = createBottomTabNavigator(
 			screen: HomeStack,
 			navigationOptions: ({ screenProps }) => ({
 				title: "Hem",
-				props: screenProps
+				props: screenProps,
 			})
-		},
-		Profile: {
-			screen: ProfileStack,
-			navigationOptions: {
-				title: "Profil"
-			}
 		},
 		NewVaccination: {
 			screen: NewVaccinationStack,
 			navigationOptions: {
 				title: "Ny Vaccination"
+			}
+		},
+		VaccinationList: {
+			screen: VaccinationListStack,
+			navigationOptions: {
+				title: "Vaccinationer"
 			}
 		},
 		SignOut: {
@@ -99,7 +96,9 @@ const BottomNavigator = createBottomTabNavigator(
 				} else if (routeName === "SignOut") {
 					iconName = "ios-log-out"
 				} else if (routeName === "NewVaccination") {
-					iconName = "ios-add-circle"
+					iconName = "ios-add-circle";
+				} else if (routeName === "VaccinationList") {
+					iconName = "ios-list-box";
 				}
 
 				return <Ionicons name={iconName} size={25} color={tintColor} />;
@@ -113,7 +112,6 @@ const BottomNavigator = createBottomTabNavigator(
 );
 
 const AppContainer = createAppContainer(BottomNavigator);
-// const HomeContainer = createAppContainer(HomeStack);
 const LoginContainer = createAppContainer(LoginStack);
 const RegisterContainer = createAppContainer(RegisterStack);
 

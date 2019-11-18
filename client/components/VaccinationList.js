@@ -57,11 +57,12 @@ const VaccinationList = (props) => {
 				if (err) return console.log(err);
 				if (loading) return <LoadingIndicator />
 
+				console.log("hello");
+
 				refetch();
 
 				setUserVaccinations(sortVaccinations(data.getUserVaccinations, orderBy));
 
-				
 				let children = data.getChild.map(child => {
 					child = {
 						value: child.id,
@@ -115,7 +116,6 @@ const VaccinationList = (props) => {
 						{userVaccinations.length === 0 && (
 							<View style={styles.emptyMessageContainer}>
 								<Text style={styles.emptyMessage}>{childId ? children.find(child => child.value === childId).label : "Du"} har inte lagt till några vaccinationer ännu.</Text>
-								{/* <Ionicons name="ios-arrow-round-down" size={35} colo="gray" /> */}
 							</View>
 						)}
 						<View style={styles.vaccinationListContainer}>
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		width: "100%",
 		height: 60,
-		backgroundColor: "gray",
+		backgroundColor: "lightblue",
 	},
 	filterText: {
 		fontSize: 18,

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, ActivityIndicator, Alert } from "react-native";
 import { Form, Item, Input, Label } from "native-base"
 import { Mutation } from "react-apollo";
 import navStyles from "../styles/navStyles";
@@ -7,6 +7,7 @@ import gql from "graphql-tag";
 import { Appearance } from "react-native-appearance";
 import { Chevron } from "react-native-shapes";
 import DateTimePicker from "react-native-modal-datetime-picker";
+import { Ionicons } from "@expo/vector-icons";
 
 import { translateDate, setCorrectHours } from "../utils/dateUtils";
 
@@ -21,9 +22,7 @@ const ADD_CHILD_MUTATION = gql`
 const colorScheme = Appearance.getColorScheme();
 const isDarkModeEnabled = colorScheme === 'dark';
 
-const AddChild = () => {
-
-	
+const AddChild = (props) => {
 	const [name, setName] = useState();
 	const [bornDate, setBornDate] = useState(translateDate(new Date()));
 	const [isDateTimePickerVisible, setIsDateTimePickerVisible] = useState(false);
@@ -32,13 +31,15 @@ const AddChild = () => {
 		<Mutation
 			mutation={ADD_CHILD_MUTATION}
 			variables={{ name: name, born: setCorrectHours(new Date(bornDate)) }}
-			onError={({ graphQLErrors }) => {
-				Alert.alert(
-					"Could not add child",
-					graphQLErrors[0].message,
-					{ text: "OK" },
-					{ cancelable: false }
-				);
+			onError={({ networkError, graphQLErrors }) => {
+				console.log(setCorrectHours(new Date(bornDate)));
+				graphQLErrors.map(err => {
+					console.log(err);
+				});
+				console.log(networkError);
+			}}
+			onCompleted={() => {
+				props.navigation.navigate("Home");
 			}}
 		>
 			{(mutation, { loading, err, data }) => {
@@ -51,12 +52,14 @@ const AddChild = () => {
 						<View style={styles.inputContainer}>
 							<Item floatingLabel>
 								<Label>Namn</Label>
-								<TextInput 
-									onChange={setName}
+								<Input 
+									onChangeText={text => setName(text)}
 									value={name}
 								/>
 							</Item>
-							<Label>Födelsedatum</Label>
+							<Label style={{ marginTop: "10%" }}>
+								<Ionicons name="ios-calendar" size={25} color="gray" /> Födelsedatum
+							</Label>
 							<TouchableOpacity
 								onPress={() => setIsDateTimePickerVisible(true)}
 								style={{ position: "relative", width: "100%" }}
@@ -83,11 +86,10 @@ const AddChild = () => {
 								isDarkModeEnabled={isDarkModeEnabled}
 							/>
 						</View>
-						<TouchableOpacity style={styles.addButton} onPress={() => {
+						<TouchableOpacity style={[styles.addButton, { backgroundColor: "lightblue" }]} onPress={() => {
 							mutation();
-							props.navigation.navigate("Profile");
 						}}>
-							<Text style={styles.addButtonText}>Lägg till barn</Text>
+							<Text style={styles.addButtonText}>Lägg till familjemedlem</Text>
 						</TouchableOpacity>
 					</View>
 				)
@@ -97,7 +99,7 @@ const AddChild = () => {
 };
 
 AddChild.navigationOptions = {
-	title: "Lägg till barn",
+	title: "Lägg till familjemedlem",
 	...navStyles
 };
 
@@ -107,7 +109,8 @@ const styles = StyleSheet.create({
 		backgroundColor: "#FFF",
 		alignItems: "center",
 		justifyContent: "space-between",
-		width: "100%"
+		width: "100%",
+		marginTop: "10%"
 	},
 	icon: {
 		position: "absolute",
@@ -141,7 +144,7 @@ const pickerSelectStyles = StyleSheet.create({
 		paddingHorizontal: 8,
 		marginVertical: 8,
 		borderBottomWidth: 1,
-		borderColor: "gray",
+		borderColor: "lightgray",
 		borderRadius: 4,
 		color: "black",
 		paddingRight: 30, // to ensure the text is never behind the icon
@@ -153,7 +156,7 @@ const pickerSelectStyles = StyleSheet.create({
 		paddingHorizontal: 10,
 		paddingVertical: 8,
 		borderBottomWidth: 0.5,
-		borderColor: "purple",
+		borderColor: "lightgray",
 		borderRadius: 8,
 		color: "black",
 		paddingRight: 30, // to ensure the text is never behind the icon

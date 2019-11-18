@@ -103,7 +103,6 @@ const Register = ({screenProps}) => {
 										onPress={() => setIsDateTimePickerVisible(true)}
 										style={{ position: "relative" }}
 									>
-										
 										<TextInput
 											value={bornDate.toString()}
 											pointerEvents="none"
@@ -112,7 +111,6 @@ const Register = ({screenProps}) => {
 										<Chevron size={1.5} color="gray" style={styles.chevronIcon} />
 									</TouchableOpacity>
 								</View>
-								<Label>Födelsedatum</Label>
 								<DateTimePicker
 									titleIOS="Välj födelsedatum"
 									cancelTextIOS="Avbryt"
@@ -192,7 +190,7 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 8,
 		marginVertical: 8,
 		borderBottomWidth: 1,
-		borderColor: "gray",
+		borderColor: "lightgray",
 		color: "black",
 		paddingRight: 30, 
 		width: "100%",
@@ -251,7 +249,7 @@ const pickerSelectStyles = StyleSheet.create({
 		paddingHorizontal: 8,
 		marginVertical: 8,
 		borderWidth: 1,
-		borderColor: "gray",
+		borderColor: "lightgray",
 		borderRadius: 4,
 		color: "black",
 		paddingRight: 30, // to ensure the text is never behind the icon
@@ -263,7 +261,7 @@ const pickerSelectStyles = StyleSheet.create({
 		paddingHorizontal: 10,
 		paddingVertical: 8,
 		borderWidth: 0.5,
-		borderColor: "purple",
+		borderColor: "lightgray",
 		borderRadius: 8,
 		color: "black",
 		paddingRight: 30, // to ensure the text is never behind the icon
