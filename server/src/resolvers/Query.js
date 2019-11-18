@@ -20,7 +20,8 @@ const getUserVaccinations = async (parent, args, context, info) => {
 	let child;
 	let orderBy = args.orderBy ? args.orderBy : "createdAt_DESC";
 
-	if (args.childId) {
+	
+	if (args.childId && args.childId != "null") {
 		const childId = args.childId;
 		
 		child = await context.prisma.child({ id: childId });
