@@ -25,6 +25,7 @@ type Mutation {
     login(email: String!, password: String!): AuthPayload
 	addUserVaccination(childId: ID, vaccinationId: ID!, takenAt: String, nextDose: String, protectUntil: String): UserVaccination
 	addChild(name: String!, born: DateTime!): Child
+	deleteUserVaccination(id: ID): UserVaccination
 }
 
 type User {
