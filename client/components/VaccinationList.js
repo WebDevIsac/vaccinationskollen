@@ -8,14 +8,13 @@ import LoadingIndicator from './LoadingIndicator';
 import VaccinationCard from './VaccinationCard';
 import { Ionicons } from "@expo/vector-icons";
 import { sortVaccinations } from "../utils/sortUtils";
-import { GET_VACCINATIONS_AND_CHILD_QUERY, GET_FAMILY_VACCINATIONS_QUERY } from "../utils/Queries";
+import { TEST_QUERY_ALL_VACCINATIONS, GET_FAMILY_VACCINATIONS_QUERY } from "../utils/Queries";
 import { NEW_VACCINATION_SUBSCRIPTION } from "../utils/Subscriptions";
 
 const VaccinationList = (props) => {
 
 	const [orderBy, setOrderBy] = useState(null);
 	const [childId, setChildId] = useState(null);
-	const [userVaccinations, setUserVaccinations] = useState([]);
 
 	const sortingOpts = [
 		{ value: "takenAt_DESC", label: "Senast tagna" },
@@ -28,26 +27,30 @@ const VaccinationList = (props) => {
 		{ value: "protectUntil_DESC", label: "Längst skydd kvar" },
 	];
 
-	const subscribeToNewVaccination = subscribeToMore => {
-		subscribeToMore({
-			document: NEW_VACCINATION_SUBSCRIPTION,
-			updateQuery: (prev, { subscriptionData }) => {
-				const newVaccination = subscriptionData.data.newVaccination;
-			}
-		})
-	}
-	
+	let allVaccinations = [];
+
 	return (
-		<Query query={GET_VACCINATIONS_AND_CHILD_QUERY} variables={{ v: Math.random(), childId: childId }} fetchPolicy='cache-and-network'>
-			{({ loading, err, data, refetch, subscribeToMore }) => {
+		<Query query={TEST_QUERY_ALL_VACCINATIONS} variables={{ v: Math.random() }} fetchPolicy='cache-and-network'>
+			{({ loading, err, data, refetch }) => {
 				if (err) return console.log(err);
 				if (loading) return <LoadingIndicator />
 
-				refetch();
+				allVaccinations = sortVaccinations(data.getFamilyVaccinations, orderBy);
+				
+				allVaccinations = allVaccinations.filter(vaccination => {
+					if (childId) {
+						if (vaccination.child) {
+							if (vaccination.child.id == childId) {
+								return vaccination;
+							}
+						}
+					} else {
+						if (vaccination.child === null) {
+							return vaccination;
+						}
+					}
+				});
 
-				subscribeToNewVaccination(subscribeToMore);
-
-				setUserVaccinations(sortVaccinations(data.getUserVaccinations, orderBy));
 
 				let children = data.getChild.map(child => {
 					child = {
@@ -70,7 +73,7 @@ const VaccinationList = (props) => {
 									}}
 									style={pickerSelectStyles}
 									onValueChange={async (value) => {
-										if (userVaccinations.length > 0) {
+										if (allVaccinations.length > 0) {
 											await setOrderBy(value);
 										}
 									}}
@@ -87,7 +90,6 @@ const VaccinationList = (props) => {
 								style={pickerSelectStylesColor}
 								onValueChange={async (value) => {
 									await setChildId(value);
-									await refetch();
 								}}
 								value={childId ? childId : null}
 								items={children}
@@ -96,15 +98,15 @@ const VaccinationList = (props) => {
 								}}
 							/>
 						</View>
-						{userVaccinations.length === 0 && (
+						{allVaccinations.length === 0 && (
 							<View style={styles.emptyMessageContainer}>
 								<Text style={styles.emptyMessage}>{childId ? children.find(child => child.value === childId).label : "Du"} har inte lagt till några vaccinationer ännu.</Text>
 							</View>
 						)}
 						<View style={styles.vaccinationListContainer}>
-							{userVaccinations.map((vaccination, index) => {
+							{allVaccinations.map((vaccination, index) => {
 								return (
-									<VaccinationCard update={userVaccinations[index]} key={vaccination.id} vaccination={vaccination} refetch={refetch} queryToRefetch={GET_FAMILY_VACCINATIONS_QUERY} />
+									<VaccinationCard update={allVaccinations[index]} key={vaccination.id} vaccination={vaccination} refetch={refetch} queryToRefetch={GET_FAMILY_VACCINATIONS_QUERY} />
 								)
 							})}
 						</View>

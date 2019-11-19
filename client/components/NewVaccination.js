@@ -18,7 +18,7 @@ import navStyles from "../styles/navStyles";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { Appearance } from "react-native-appearance";
 import { translateDate, setCorrectHours, setDateFromTime } from "../utils/dateUtils";
-import { GET_CHILDREN_AND_VACCINATIONS_QUERY, GET_FAMILY_VACCINATIONS_QUERY, GET_VACCINATIONS_AND_CHILD_QUERY } from "../utils/Queries";
+import { GET_CHILDREN_AND_VACCINATIONS_QUERY, GET_FAMILY_VACCINATIONS_QUERY, TEST_QUERY_ALL_VACCINATIONS } from "../utils/Queries";
 import { ADD_USER_VACCINATION } from "../utils/Mutations";
 
 const colorScheme = Appearance.getColorScheme();
@@ -312,7 +312,7 @@ const NewVaccination = props => {
 					})
 					console.log("network error: " + networkError);
 				}}
-				refetchQueries={[{query: GET_VACCINATIONS_AND_CHILD_QUERY}, {query: GET_FAMILY_VACCINATIONS_QUERY}]}
+				refetchQueries={[{query: TEST_QUERY_ALL_VACCINATIONS}, {query: GET_FAMILY_VACCINATIONS_QUERY}]}
 			>
 				{(mutation, { loading, err, data }) => {
 					if (isLoading) return null;

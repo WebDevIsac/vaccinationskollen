@@ -12,30 +12,17 @@ import { NEW_VACCINATION_SUBSCRIPTION } from "../utils/Subscriptions";
 const Home = (props) => {
 	const { firstTime } = props.screenProps;
 
-	let allVaccinations;
+	let allVaccinations = [];
 	let welcomeMessage;
 	let sortNextDose;
 	let sortProtectUntil;
 	let sortTakenAt;
 
-	const subscribeToNewVaccination = subscribeToMore => {
-		subscribeToMore({
-			document: NEW_VACCINATION_SUBSCRIPTION,
-			updateQuery: (prev, { subscriptionData }) => {
-				const newVaccination = subscriptionData.data.newVaccination;
-			}
-		})
-	}
-
 	return (
 		<Query query={GET_FAMILY_VACCINATIONS_QUERY} variables={{ v: Math.random()}} fetchPolicy='cache-and-network'>
-			{({ loading, err, data, refetch, subscribeToMore }) => {
+			{({ loading, err, data, refetch }) => {
 				if (err) {console.log(err); return null}
 				if (loading) return <LoadingIndicator />
-
-				subscribeToNewVaccination(subscribeToMore);
-
-				refetch();
 
 				allVaccinations = data.getFamilyVaccinations;
 				welcomeMessage = `Välkommen ${firstTime ? "" : "tillbaka"}, ${data.getUser.name}`;

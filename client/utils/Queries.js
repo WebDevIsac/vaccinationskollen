@@ -26,6 +26,33 @@ export const GET_FAMILY_VACCINATIONS_QUERY = gql`
 	}
 `;
 
+export const TEST_QUERY_ALL_VACCINATIONS = gql`
+	query testQueryAllVaccinations {
+		getFamilyVaccinations {
+			id
+			user {
+				name
+			}
+			child {
+				id
+				name
+			}
+			type {
+				name
+				dose
+			}
+			takenAt
+			createdAt
+			nextDose
+			protectUntil
+		}
+		getChild {
+			id
+			name
+		}
+	}
+`;
+
 export const GET_VACCINATIONS_AND_CHILD_QUERY = gql`
 	query getVaccinationsAndChildQuery($childId: String) {
 		getUserVaccinations(childId: $childId) {
