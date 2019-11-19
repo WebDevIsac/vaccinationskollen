@@ -11,16 +11,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { Appearance } from "react-native-appearance";
 import { Chevron } from "react-native-shapes";
 import DateTimePicker from "react-native-modal-datetime-picker";
+import { SIGNUP_MUTATION } from "../utils/Mutations";
 
 import { translateDate, setCorrectHours } from "../utils/dateUtils";
-
-const SIGNUP_MUTATION = gql`
-	mutation SignupMutation($name: String!, $email: String!, $password: String!, $born: DateTime!) {
-		signup(name: $name, email: $email, password: $password, born: $born) {
-			token
-		}
-	}
-`;
 
 const colorScheme = Appearance.getColorScheme();
 const isDarkModeEnabled = colorScheme === 'dark';

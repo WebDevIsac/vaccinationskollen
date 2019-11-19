@@ -5,6 +5,7 @@ import { Chevron } from "react-native-shapes";
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 import navStyles from "../styles/navStyles";
+import { LOGIN_MUTATION } from "../utils/Mutations";
 
 import { signIn } from "../utils/loginUtils";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,14 +17,6 @@ const Login = (props) => {
 	const [password, setPassword] = useState("password");
 	const [emailError, setEmailError] = useState("");
 	const [passwordError, setPasswordError] = useState("");
-
-	const LOGIN_MUTATION = gql`
-		mutation LoginMutation($email: String!, $password: String!) {
-			login(email: $email, password: $password) {
-				token
-			}
-		}
-	`;
 
 	const confirm = async (data) => {
 		const { token } = data.login;

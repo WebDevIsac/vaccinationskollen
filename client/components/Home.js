@@ -6,8 +6,7 @@ import LoadingIndicator from "./LoadingIndicator";
 import { Query } from "react-apollo";
 import VaccinationCard from "./VaccinationCard";
 import { Ionicons } from "@expo/vector-icons";
-import { GET_FAMILY_VACCINATIONS_QUERY, GET_VACCINATIONS_AND_CHILD_QUERY } from "../utils/Queries";
-import { NEW_VACCINATION_SUBSCRIPTION } from "../utils/Subscriptions";
+import { GET_FAMILY_VACCINATIONS_QUERY, TEST_QUERY_ALL_VACCINATIONS } from "../utils/Queries";
 
 const Home = (props) => {
 	const { firstTime } = props.screenProps;
@@ -49,7 +48,7 @@ const Home = (props) => {
 									{allVaccinations && <Text style={styles.sortTypeText}>Vaccinationer som snart ska tas igen</Text>}
 									{sortNextDose.map(vaccination => {
 										return (
-											<VaccinationCard key={vaccination.id} vaccination={vaccination} refetch={refetch} queryToRefetch={GET_VACCINATIONS_AND_CHILD_QUERY}/>
+											<VaccinationCard key={vaccination.id} vaccination={vaccination} refetch={refetch} queryToRefetch={TEST_QUERY_ALL_VACCINATIONS}/>
 										)
 									})}
 								</View>
@@ -57,7 +56,7 @@ const Home = (props) => {
 									{allVaccinations && <Text style={styles.sortTypeText}>Dessa vaccinationsskydd går ut snart</Text>}
 									{sortProtectUntil.map(vaccination => {
 										return (
-											<VaccinationCard key={vaccination.id} vaccination={vaccination} refetch={refetch} queryToRefetch={GET_VACCINATIONS_AND_CHILD_QUERY}/>
+											<VaccinationCard key={vaccination.id} vaccination={vaccination} refetch={refetch} queryToRefetch={TEST_QUERY_ALL_VACCINATIONS}/>
 										)
 									})}
 								</View>
@@ -65,7 +64,7 @@ const Home = (props) => {
 									{allVaccinations && <Text style={styles.sortTypeText}>Nyligen tagna vaccinationer</Text>}
 									{sortTakenAt.map(vaccination => {
 										return (
-											<VaccinationCard key={vaccination.id} vaccination={vaccination} refetch={refetch} queryToRefetch={GET_VACCINATIONS_AND_CHILD_QUERY}/>
+											<VaccinationCard key={vaccination.id} vaccination={vaccination} refetch={refetch} queryToRefetch={TEST_QUERY_ALL_VACCINATIONS}/>
 										)
 									})}
 								</View>

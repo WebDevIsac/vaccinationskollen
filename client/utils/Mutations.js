@@ -1,5 +1,21 @@
 import gql from "graphql-tag";
 
+export const LOGIN_MUTATION = gql`
+mutation LoginMutation($email: String!, $password: String!) {
+	login(email: $email, password: $password) {
+			token
+		}
+	}
+`;
+
+export const SIGNUP_MUTATION = gql`
+	mutation SignupMutation($name: String!, $email: String!, $password: String!, $born: DateTime!) {
+		signup(name: $name, email: $email, password: $password, born: $born) {
+			token
+		}
+	}
+`;
+
 export const DELETE_USER_VACCINATION_MUTATION = gql`
 	mutation DeleteUserVaccinationMutation($id: ID!) {
 		deleteUserVaccination(id: $id) {
@@ -31,9 +47,9 @@ export const ADD_USER_VACCINATION = gql`
 `;
 
 export const ADD_CHILD_MUTATION = gql`
-mutation AddChildMutation($name: String!, $born: DateTime!) {
-	addChild(name: $name, born: $born) {
-		id
+	mutation AddChildMutation($name: String!, $born: DateTime!) {
+		addChild(name: $name, born: $born) {
+			id
+		}
 	}
-}
 `;
