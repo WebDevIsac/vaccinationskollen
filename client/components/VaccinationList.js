@@ -3,36 +3,13 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity, TextInput } from 
 import { Chevron } from "react-native-shapes";
 import navStyles from "../styles/navStyles";
 import { Query } from "react-apollo";
-import gql from "graphql-tag";
 import RNPickerSelect from "react-native-picker-select";
 import LoadingIndicator from './LoadingIndicator';
 import VaccinationCard from './VaccinationCard';
 import { Ionicons } from "@expo/vector-icons";
 import { sortVaccinations } from "../utils/sortUtils";
-
-const GET_VACCINATIONS_AND_CHILD_QUERY = gql`
-	query getVaccinationsAndChildQuery($childId: String) {
-		getUserVaccinations(childId: $childId) {
-			id
-			takenAt
-			createdAt
-			nextDose
-			protectUntil
-			type {
-				name
-				dose
-			}
-			child {
-				id
-				name
-			}
-		}
-		getChild {
-			id
-			name
-		}
-	}
-`;
+import { GET_VACCINATIONS_AND_CHILD_QUERY, GET_FAMILY_VACCINATIONS_QUERY } from "../utils/Queries";
+import { NEW_VACCINATION_SUBSCRIPTION } from "../utils/Subscriptions";
 
 const VaccinationList = (props) => {
 
@@ -51,15 +28,24 @@ const VaccinationList = (props) => {
 		{ value: "protectUntil_DESC", label: "Längst skydd kvar" },
 	];
 
+	const subscribeToNewVaccination = subscribeToMore => {
+		subscribeToMore({
+			document: NEW_VACCINATION_SUBSCRIPTION,
+			updateQuery: (prev, { subscriptionData }) => {
+				// console.log(prev);
+				const newVaccination = subscriptionData.data.newVaccination;
+				console.log(newVaccination);
+			}
+		})
+	}
+	
 	return (
-		<Query query={GET_VACCINATIONS_AND_CHILD_QUERY} variables={{ childId: childId }}>
-			{({ loading, err, data, refetch }) => {
+		<Query query={GET_VACCINATIONS_AND_CHILD_QUERY} variables={{ v: Math.random() }} fetchPolicy='cache-and-network'>
+			{({ loading, err, data, refetch, subscribeToMore }) => {
 				if (err) return console.log(err);
 				if (loading) return <LoadingIndicator />
 
-				console.log("hello");
-
-				refetch();
+				subscribeToNewVaccination(subscribeToMore);
 
 				setUserVaccinations(sortVaccinations(data.getUserVaccinations, orderBy));
 
@@ -121,7 +107,7 @@ const VaccinationList = (props) => {
 						<View style={styles.vaccinationListContainer}>
 							{userVaccinations.map((vaccination, index) => {
 								return (
-									<VaccinationCard update={userVaccinations[index]} key={vaccination.id} vaccination={vaccination} refetch={refetch} />
+									<VaccinationCard update={userVaccinations[index]} key={vaccination.id} vaccination={vaccination} refetch={refetch} queryToRefetch={GET_FAMILY_VACCINATIONS_QUERY} />
 								)
 							})}
 						</View>

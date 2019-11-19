@@ -13,36 +13,13 @@ import {
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { Query, Mutation } from "react-apollo";
-import gql from "graphql-tag";
 import { Chevron } from "react-native-shapes";
 import navStyles from "../styles/navStyles";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { Appearance } from "react-native-appearance";
 import { translateDate, setCorrectHours, setDateFromTime } from "../utils/dateUtils";
-
-const GET_CHILDREN_AND_VACCINATIONS_QUERY = gql`
-	query GetChildrenAndVaccinationsQuery {
-		getVaccinations {
-			id
-			name
-			dose
-			untilNext
-			protectDuration
-		}
-		getChild {
-			id
-			name
-		}
-	}
-`;
-
-const ADD_USER_VACCINATION = gql`
-	mutation AddUserVaccination($childId: ID, $vaccinationId: ID!, $takenAt: String, $nextDose: String, $protectUntil: String) {
-		addUserVaccination(childId: $childId, vaccinationId: $vaccinationId, takenAt: $takenAt, nextDose: $nextDose, protectUntil: $protectUntil) {
-			id
-		}
-	}
-`;
+import { GET_CHILDREN_AND_VACCINATIONS_QUERY, GET_FAMILY_VACCINATIONS_QUERY, GET_VACCINATIONS_AND_CHILD_QUERY } from "../utils/Queries";
+import { ADD_USER_VACCINATION } from "../utils/Mutations";
 
 const colorScheme = Appearance.getColorScheme();
 const isDarkModeEnabled = colorScheme === "dark";
@@ -60,10 +37,7 @@ const NewVaccination = props => {
 	const [protectUntilDate, setProtectUntilDate] = useState();
 	const [protectDuration, setProtectDuration] = useState();
 	const [isLoading, setIsLoading] = useState(true);
-	const [isDateTimePickerVisible, setIsDateTimePickerVisible] = useState(
-		false
-	);
-	const [children, setChildren] = useState();
+	const [isDateTimePickerVisible, setIsDateTimePickerVisible] = useState(false);
 	const [taker, setTaker] = useState();
 
 	let time = [];
@@ -297,7 +271,7 @@ const NewVaccination = props => {
 					})
 					console.log("network error: " + networkError);
 				}}
-				refetchQueries={["GET_USER_VACCINATIONS_QUERY"]}
+				refetchQueries={[{query: GET_VACCINATIONS_AND_CHILD_QUERY}, {query: GET_FAMILY_VACCINATIONS_QUERY}]}
 			>
 				{(mutation, { loading, err, data }) => {
 					if (isLoading) return null;

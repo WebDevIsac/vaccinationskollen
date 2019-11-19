@@ -33,11 +33,14 @@ const login = async (parent, args, context, info) => {
 	};
 };
 
-const addUserVaccination = (parent, args, context, info) => {
+const addUserVaccination = async (parent, args, context, info) => {
 	const userId = getUserId(context);
+	let userVaccination;
+	let child;
 
 	if (args.childId != null && args.childId != "null") {
-		return context.prisma.createUserVaccination({
+		child = await context.prisma.child({ id: args.childId })
+		userVaccination = await context.prisma.createUserVaccination({
 			user: { connect: { id: userId } },
 			child: { connect: { id: args.childId } },
 			type: { connect: { id: args.vaccinationId } },
@@ -46,15 +49,23 @@ const addUserVaccination = (parent, args, context, info) => {
 			protectUntil: args.protectUntil
 		})
 	} else {
-		return context.prisma.createUserVaccination({
+		userVaccination = await context.prisma.createUserVaccination({
 			user: { connect: { id: userId } },
 			type: { connect: { id: args.vaccinationId } },
 			takenAt: args.takenAt,
 			nextDose: args.nextDose,
 			protectUntil: args.protectUntil
 		})
-
 	}
+
+	const vaccination = await context.prisma.vaccination({ id: args.vaccinationId });
+	const user = await context.prisma.user({ id: userId });
+
+	userVaccination.type = vaccination;
+	userVaccination.user = user;
+	userVaccination.child = child;
+
+	return userVaccination;
 }
 
 const addChild = async (parent, args, context, info) => {
