@@ -39,6 +39,15 @@ const NewVaccination = props => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [isDateTimePickerVisible, setIsDateTimePickerVisible] = useState(false);
 	const [taker, setTaker] = useState();
+	
+	let inputRefs = {
+		taker: undefined,
+		vaccination: undefined,
+		dose: undefined,
+		nextDose: undefined,
+		protectUntil: undefined,
+		date: undefined
+	}
 
 	let time = [];
 	for (let i = 0; i < 4; i++) {
@@ -142,6 +151,10 @@ const NewVaccination = props => {
 									return <Chevron size={1.5} color="gray" />;
 								}}
 								doneText="Klar"
+								ref={el => inputRefs.taker = el}
+								onDownArrow={() => {
+									inputRefs.vaccination.togglePicker();
+								}}
 							/>
 							<RNPickerSelect
 								placeholder={{
@@ -156,6 +169,13 @@ const NewVaccination = props => {
 									return <Chevron size={1.5} color="gray" />;
 								}}
 								doneText="Klar"
+								ref={el => inputRefs.vaccination = el}
+								onUpArrow={() => {
+									inputRefs.taker.togglePicker();
+								}}
+								onDownArrow={() => {
+									inputRefs.dose.togglePicker();
+								}}
 							/>
 							<RNPickerSelect
 								placeholder={{
@@ -170,6 +190,13 @@ const NewVaccination = props => {
 									return <Chevron size={1.5} color="gray" />;
 								}}
 								doneText="Klar"
+								ref={el => inputRefs.dose = el}
+								onUpArrow={() => {
+									inputRefs.vaccination.togglePicker();
+								}}
+								onDownArrow={() => {
+									inputRefs.nextDose.togglePicker();
+								}}
 							/>
 							<RNPickerSelect
 								placeholder={{
@@ -187,6 +214,13 @@ const NewVaccination = props => {
 									return <Chevron size={1.5} color="gray" />;
 								}}
 								doneText="Klar"
+								ref={el => inputRefs.nextDose = el}
+								onUpArrow={() => {
+									inputRefs.dose.togglePicker();
+								}}
+								onDownArrow={() => {
+									inputRefs.protectUntil.togglePicker();
+								}}
 							/>
 							<Text style={!untilNext && {display: "none"}}>{untilNext && `Nästa dos rekommenderas tas om ${untilNext}`}</Text>
 							<RNPickerSelect
@@ -205,6 +239,13 @@ const NewVaccination = props => {
 									return <Chevron size={1.5} color="gray" />;
 								}}
 								doneText="Klar"
+								ref={el => inputRefs.protectUntil = el}
+								onUpArrow={() => {
+									inputRefs.nextDose.togglePicker();
+								}}
+								onDownArrow={() => {
+									setIsDateTimePickerVisible(true);
+								}}
 								/>
 							<Text style={!protectDuration && {display: "none"}}>{protectDuration && `Enligt våra uppgifter skyddar vaccination dig i ${protectDuration}`}</Text>
 							<Text style={{ marginTop: 24 }}>När togs vaccinationen?</Text>

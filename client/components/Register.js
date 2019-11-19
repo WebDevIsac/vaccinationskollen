@@ -41,6 +41,12 @@ const Register = ({screenProps}) => {
 		screenProps.updateToken();
 		screenProps.setFirstTime(true);
 	};
+
+	let inputRefs = {
+		name: undefined,
+		email: undefined,
+		password: undefined
+	}
 	
 
 	return (
@@ -67,6 +73,9 @@ const Register = ({screenProps}) => {
 										<Ionicons name="ios-person" size={25} color="gray" style={styles.inputIcon} /> Namn
 									</Label>
 									<Input
+										getRef={input => inputRefs.name = input}
+										returnKeyType="next"
+										onSubmitEditing={() => inputRefs.email._root.focus()}
 										textContentType="name"
 										onChangeText={text => setName(text)}
 										value={name}
@@ -77,6 +86,9 @@ const Register = ({screenProps}) => {
 										<Ionicons name="ios-mail" size={25} color="gray" style={styles.inputIcon} /> Email
 									</Label>
 									<Input
+										getRef={input => inputRefs.email = input}
+										returnKeyType="next"
+										onSubmitEditing={() => inputRefs.password._root.focus()}
 										keyboardType="email-address"
 										textContentType="emailAddress"
 										onChangeText={text => setEmail(text)}
@@ -89,6 +101,9 @@ const Register = ({screenProps}) => {
 										<Ionicons name="ios-lock" size={25} color="gray" style={styles.inputIcon} /> Lösenord
 									</Label>
 									<Input
+										getRef={input => inputRefs.password = input}
+										returnKeyType="next"
+										onSubmitEditing={() => setIsDateTimePickerVisible(true)}
 										secureTextEntry={true}
 										textContentType="password"
 										onChangeText={text => setPassword(text)}

@@ -16,7 +16,6 @@ const Login = (props) => {
 	const [password, setPassword] = useState("password");
 	const [emailError, setEmailError] = useState("");
 	const [passwordError, setPasswordError] = useState("");
-	const [inputs, setInputs] = useState([]);
 
 	const LOGIN_MUTATION = gql`
 		mutation LoginMutation($email: String!, $password: String!) {
@@ -32,7 +31,11 @@ const Login = (props) => {
 		screenProps.updateToken();
 		screenProps.setFirstTime(false);
 	};
-	console.log(inputs);
+
+	let inputRefs = {
+		email: undefined,
+		password: undefined
+	}
 
 	return (
 		<View style={styles.container}>
@@ -62,9 +65,9 @@ const Login = (props) => {
 										<Ionicons name="ios-mail" size={25} color="gray" style={styles.inputIcon} /> Email
 									</Label>
 									<Input
-										ref={input => console.log(input)}
-										returnKeyLabel="Nästa"
-										returnKeyType={"next"}
+										getRef={input => inputRefs.email = input}
+										returnKeyType="next"
+										onSubmitEditing={() => inputRefs.password._root.focus()}
 										keyboardType="email-address"
 										textContentType="emailAddress"
 										onChangeText={text => setEmail(text)}
@@ -77,10 +80,13 @@ const Login = (props) => {
 										<Ionicons name="ios-lock" size={25} color="gray" style={styles.inputIcon} /> Lösenord
 									</Label>
 									<Input
+										getRef={input => inputRefs.password = input}
+										returnKeyType="go"
 										secureTextEntry={true}
 										textContentType="password"
 										onChangeText={text => setPassword(text)}
 										value={password}
+										selectTextOnFocus={true}
 									/>
 								</Item>
 								<Text style={passwordError ? styles.errorMessage : styles.hideMessage}>{passwordError}</Text>

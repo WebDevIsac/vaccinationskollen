@@ -35,6 +35,8 @@ const Home = (props) => {
 
 				subscribeToNewVaccination(subscribeToMore);
 
+				refetch();
+
 				allVaccinations = data.getFamilyVaccinations;
 				welcomeMessage = `Välkommen ${firstTime ? "" : "tillbaka"}, ${data.getUser.name}`;
 				sortNextDose = sortVaccinations(allVaccinations, "nextDose_ASC", 3);

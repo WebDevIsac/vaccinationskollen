@@ -43,7 +43,7 @@ const VaccinationList = (props) => {
 				if (err) return console.log(err);
 				if (loading) return <LoadingIndicator />
 
-				console.log(data);
+				refetch();
 
 				subscribeToNewVaccination(subscribeToMore);
 
