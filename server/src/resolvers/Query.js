@@ -55,7 +55,10 @@ const getUserVaccinations = async (parent, args, context, info) => {
 	} else {
 		userVaccinations = await context.prisma.userVaccinations({
 			where: {
-				user: { id: userId },
+				AND: [
+					{user: { id: userId }},
+					{child: null }
+				],
 				OR: [
 					{type: {dose: parseInt(args.filter)}},
 					{type: {name_contains: args.filter}}
