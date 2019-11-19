@@ -4,10 +4,36 @@ import navStyles from "../styles/navStyles";
 import { sortVaccinations } from "../utils/sortUtils";
 import LoadingIndicator from "./LoadingIndicator";
 import { Query } from "react-apollo";
+import gql from "graphql-tag";
 import VaccinationCard from "./VaccinationCard";
 import { Ionicons } from "@expo/vector-icons";
-import { GET_FAMILY_VACCINATIONS_QUERY, GET_VACCINATIONS_AND_CHILD_QUERY } from "../utils/Queries";
-import { NEW_VACCINATION_SUBSCRIPTION } from "../utils/Subscriptions";
+
+const GET_FAMILY_VACCINATIONS_QUERY = gql`
+	query GetFamilyVaccinationsQuery {
+		getFamilyVaccinations {
+			id
+			user {
+				name
+			}
+			child {
+				name
+			}
+			type {
+				name
+				dose
+			}
+			takenAt
+			createdAt
+			nextDose
+			protectUntil
+		}
+		getUser {
+			id
+			name
+		}
+	}
+`;
+
 
 const Home = (props) => {
 	const { firstTime } = props.screenProps;
@@ -18,24 +44,13 @@ const Home = (props) => {
 	let sortProtectUntil;
 	let sortTakenAt;
 
-	const subscribeToNewVaccination = subscribeToMore => {
-		subscribeToMore({
-			document: NEW_VACCINATION_SUBSCRIPTION,
-			updateQuery: (prev, { subscriptionData }) => {
-				// console.log(prev);
-				const newVaccination = subscriptionData.data.newVaccination;
-				// console.log(newVaccination);
-			}
-		})
-	}
-
 	return (
-		<Query query={GET_FAMILY_VACCINATIONS_QUERY} variables={{ v: Math.random()}} fetchPolicy='cache-and-network'>
-			{({ loading, err, data, refetch, subscribeToMore }) => {
+		<Query query={GET_FAMILY_VACCINATIONS_QUERY}>
+			{({ loading, err, data, refetch }) => {
 				if (err) {console.log(err); return null}
 				if (loading) return <LoadingIndicator />
 
-				subscribeToNewVaccination(subscribeToMore);
+				refetch();
 
 				allVaccinations = data.getFamilyVaccinations;
 				welcomeMessage = `Välkommen ${firstTime ? "" : "tillbaka"}, ${data.getUser.name}`;
@@ -62,7 +77,7 @@ const Home = (props) => {
 									{allVaccinations && <Text style={styles.sortTypeText}>Vaccinationer som snart ska tas igen</Text>}
 									{sortNextDose.map(vaccination => {
 										return (
-											<VaccinationCard key={vaccination.id} vaccination={vaccination} refetch={refetch} queryToRefetch={GET_VACCINATIONS_AND_CHILD_QUERY}/>
+											<VaccinationCard key={vaccination.id} vaccination={vaccination} refetch={refetch}/>
 										)
 									})}
 								</View>
@@ -70,7 +85,7 @@ const Home = (props) => {
 									{allVaccinations && <Text style={styles.sortTypeText}>Dessa vaccinationsskydd går ut snart</Text>}
 									{sortProtectUntil.map(vaccination => {
 										return (
-											<VaccinationCard key={vaccination.id} vaccination={vaccination} refetch={refetch} queryToRefetch={GET_VACCINATIONS_AND_CHILD_QUERY}/>
+											<VaccinationCard key={vaccination.id} vaccination={vaccination} refetch={refetch}/>
 										)
 									})}
 								</View>
@@ -78,7 +93,7 @@ const Home = (props) => {
 									{allVaccinations && <Text style={styles.sortTypeText}>Nyligen tagna vaccinationer</Text>}
 									{sortTakenAt.map(vaccination => {
 										return (
-											<VaccinationCard key={vaccination.id} vaccination={vaccination} refetch={refetch} queryToRefetch={GET_VACCINATIONS_AND_CHILD_QUERY}/>
+											<VaccinationCard key={vaccination.id} vaccination={vaccination} refetch={refetch}/>
 										)
 									})}
 								</View>
