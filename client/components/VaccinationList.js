@@ -62,8 +62,6 @@ const VaccinationList = (props) => {
 					<ScrollView contentContainerStyle={styles.container}>
 						<View style={styles.topContainer}>
 							<View style={styles.filterView}>
-								<TextInput style={styles.filterText} placeholder="Sök" placeholderTextColor="#FFF" />
-								<View style={styles.filterLine}></View>
 								<RNPickerSelect
 									placeholderTextColor="#FFF"
 									placeholder={{
@@ -72,13 +70,12 @@ const VaccinationList = (props) => {
 									}}
 									style={pickerSelectStyles}
 									onValueChange={async (value) => {
-										await setOrderBy(value);
+										if (userVaccinations.length > 0) {
+											await setOrderBy(value);
+										}
 									}}
 									value={orderBy ? orderBy : null}
 									items={sortingOpts}
-									Icon={() => {
-										return <Chevron size={1.5} color="gray" />;
-									}}
 								/>
 							</View>
 							<RNPickerSelect 
@@ -141,29 +138,16 @@ const styles = StyleSheet.create({
 	},
 	filterView: {
 		position: "relative",
-		flexDirection: "row",
 		alignItems: "center",
-		justifyContent: "space-between",
+		justifyContent: "center",
 		width: "100%",
 		height: 60,
 		backgroundColor: "lightblue",
 	},
-	filterText: {
-		fontSize: 18,
-		paddingHorizontal: 10,
-		width: "45%",
-		color: "#FFF"
-	},
-	filterLine: {
-		width: 1, 
-		height: "100%", 
-		backgroundColor: "black",
-		position: "absolute",
-		top: 0,
-		left: "50%",
-	},
 	emptyMessageContainer: {
+		flex: 1,
 		width: "80%",
+		justifyContent: "flex-end",
 		alignItems: "center"
 	},
 	emptyMessage: {
@@ -199,29 +183,27 @@ const pickerSelectStyles = StyleSheet.create({
 		paddingVertical: 8,
 		paddingHorizontal: 8,
 		marginVertical: 8,
-		borderWidth: 1,
-		borderColor: "gray",
-		borderRadius: 4,
+		borderWidth: 0,
 		color: "#FFF",
 		paddingRight: 30,
-		width: "100%",
-		height: 40
+		width: "80%",
+		height: 40,
+		alignSelf: "center",
 	},
 	inputAndroid: {
 		fontSize: 16,
 		paddingHorizontal: 10,
 		paddingVertical: 8,
-		borderWidth: 0.5,
-		borderColor: "purple",
-		borderRadius: 8,
+		borderWidth: 0,
 		color: "#FFF",
 		paddingRight: 30,
-		width: "100%",
-		height: 40
+		width: "80%",
+		height: 40,
+		alignSelf: "center"
 	},
 	iconContainer: {
 		top: 24,
-		right: 12
+		right: "20%"
 	},
 });
 
@@ -230,7 +212,7 @@ const pickerSelectStylesColor = StyleSheet.create({
 		fontSize: 16,
 		paddingVertical: 8,
 		paddingHorizontal: 8,
-		marginVertical: 8,
+		marginVertical: 16,
 		borderWidth: 1,
 		borderColor: "gray",
 		borderRadius: 4,
@@ -254,7 +236,7 @@ const pickerSelectStylesColor = StyleSheet.create({
 		alignSelf: "center"
 	},
 	iconContainer: {
-		top: 24,
+		top: 32,
 		right: "15%"
 	},
 });
