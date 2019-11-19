@@ -3,18 +3,10 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native'
 import { translateDate } from '../utils/dateUtils';
 import { Ionicons } from "@expo/vector-icons";
 import { Mutation } from 'react-apollo';
-import gql from "graphql-tag";
 import LoadingIndicator from './LoadingIndicator';
+import { DELETE_USER_VACCINATION_MUTATION } from "../utils/Mutations";
 
-const DELETE_USER_VACCINATION_MUTATION = gql`
-	mutation DeleteUserVaccinationMutation($id: ID!) {
-		deleteUserVaccination(id: $id) {
-			id
-		}
-	}
-`;
-
-const VaccinationCard = ({vaccination, refetch}) => {
+const VaccinationCard = ({vaccination, refetch, queryToRefetch}) => {
 
 	let { id, type, takenAt, createdAt, nextDose, protectUntil, child } = vaccination;
 
@@ -32,6 +24,7 @@ const VaccinationCard = ({vaccination, refetch}) => {
 					console.log(err);
 				})
 			}}
+			refetchQueries={[{query: queryToRefetch}]}
 			onCompleted={() => refetch()}
 		>
 			{( mutation, { loading, err, data }) => {
