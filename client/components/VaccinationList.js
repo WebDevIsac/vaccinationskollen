@@ -32,18 +32,18 @@ const VaccinationList = (props) => {
 		subscribeToMore({
 			document: NEW_VACCINATION_SUBSCRIPTION,
 			updateQuery: (prev, { subscriptionData }) => {
-				// console.log(prev);
 				const newVaccination = subscriptionData.data.newVaccination;
-				console.log(newVaccination);
 			}
 		})
 	}
 	
 	return (
-		<Query query={GET_VACCINATIONS_AND_CHILD_QUERY} variables={{ v: Math.random() }} fetchPolicy='cache-and-network'>
+		<Query query={GET_VACCINATIONS_AND_CHILD_QUERY} variables={{ v: Math.random(), childId: childId }} fetchPolicy='cache-and-network'>
 			{({ loading, err, data, refetch, subscribeToMore }) => {
 				if (err) return console.log(err);
 				if (loading) return <LoadingIndicator />
+
+				console.log(data);
 
 				subscribeToNewVaccination(subscribeToMore);
 
@@ -213,8 +213,8 @@ const pickerSelectStylesColor = StyleSheet.create({
 		paddingVertical: 8,
 		paddingHorizontal: 8,
 		marginVertical: 16,
-		borderWidth: 1,
-		borderColor: "gray",
+		borderBottomWidth: 1,
+		borderColor: "lightgray",
 		borderRadius: 4,
 		color: "#000",
 		paddingRight: 30,
@@ -226,8 +226,8 @@ const pickerSelectStylesColor = StyleSheet.create({
 		fontSize: 16,
 		paddingHorizontal: 10,
 		paddingVertical: 8,
-		borderWidth: 0.5,
-		borderColor: "purple",
+		borderBottomWidth: 0.5,
+		borderColor: "lightgray",
 		borderRadius: 8,
 		color: "#000",
 		paddingRight: 30,

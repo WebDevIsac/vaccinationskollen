@@ -8,16 +8,9 @@ import { Appearance } from "react-native-appearance";
 import { Chevron } from "react-native-shapes";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { Ionicons } from "@expo/vector-icons";
-
+import { ADD_CHILD_MUTATION } from "../utils/Mutations";
+import { GET_CHILDREN_AND_VACCINATIONS_QUERY, GET_VACCINATIONS_AND_CHILD_QUERY } from "../utils/Queries";
 import { translateDate, setCorrectHours } from "../utils/dateUtils";
-
-const ADD_CHILD_MUTATION = gql`
-	mutation AddChildMutation($name: String!, $born: DateTime!) {
-		addChild(name: $name, born: $born) {
-			id
-		}
-	}
-`;
 
 const colorScheme = Appearance.getColorScheme();
 const isDarkModeEnabled = colorScheme === 'dark';
@@ -38,6 +31,7 @@ const AddChild = (props) => {
 				});
 				console.log(networkError);
 			}}
+			refetchQueries={[{ query: GET_VACCINATIONS_AND_CHILD_QUERY }, { query: GET_CHILDREN_AND_VACCINATIONS_QUERY }]}
 			onCompleted={() => {
 				props.navigation.navigate("Home");
 			}}

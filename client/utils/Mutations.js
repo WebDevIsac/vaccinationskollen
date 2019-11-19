@@ -29,3 +29,11 @@ export const ADD_USER_VACCINATION = gql`
 		}
 	}
 `;
+
+export const ADD_CHILD_MUTATION = gql`
+mutation AddChildMutation($name: String!, $born: DateTime!) {
+	addChild(name: $name, born: $born) {
+		id
+	}
+}
+`;

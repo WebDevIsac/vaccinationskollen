@@ -22,9 +22,7 @@ const Home = (props) => {
 		subscribeToMore({
 			document: NEW_VACCINATION_SUBSCRIPTION,
 			updateQuery: (prev, { subscriptionData }) => {
-				// console.log(prev);
 				const newVaccination = subscriptionData.data.newVaccination;
-				// console.log(newVaccination);
 			}
 		})
 	}
