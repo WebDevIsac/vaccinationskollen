@@ -66,7 +66,7 @@ const VaccinationList = (props) => {
 						<View style={styles.topContainer}>
 							<View style={styles.filterView}>
 								<RNPickerSelect
-									placeholderTextColor="#FFF"
+									placeholderTextColor="gray"
 									placeholder={{
 										label: "Sortera efter...",
 										value: null
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		width: "100%",
 		height: 60,
-		backgroundColor: "lightblue",
+		backgroundColor: "#FEE0E0",
 	},
 	emptyMessageContainer: {
 		flex: 1,
@@ -186,7 +186,7 @@ const pickerSelectStyles = StyleSheet.create({
 		paddingHorizontal: 8,
 		marginVertical: 8,
 		borderWidth: 0,
-		color: "#FFF",
+		color: "#000",
 		paddingRight: 30,
 		width: "80%",
 		height: 40,
@@ -197,7 +197,7 @@ const pickerSelectStyles = StyleSheet.create({
 		paddingHorizontal: 10,
 		paddingVertical: 8,
 		borderWidth: 0,
-		color: "#FFF",
+		color: "#000",
 		paddingRight: 30,
 		width: "80%",
 		height: 40,

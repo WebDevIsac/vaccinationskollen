@@ -206,7 +206,6 @@ const NewVaccination = props => {
 								style={pickerSelectStyles}
 								onValueChange={value => {
 									setNextDose(value);
-									setNextDoseDate(setDateFromTime(value, setCorrectHours(new Date(date))));
 								}}
 								value={nextDose ? nextDose : null}
 								items={time}
@@ -231,7 +230,6 @@ const NewVaccination = props => {
 								style={pickerSelectStyles}
 								onValueChange={value => {
 									setProtectUntil(value);
-									setProtectUntilDate(setDateFromTime(value, setCorrectHours(new Date(date))));
 								}}
 								value={protectUntil ? protectUntil : null}
 								items={time}
@@ -274,6 +272,8 @@ const NewVaccination = props => {
 									let translatedDate = translateDate(data);
 									setDate(translatedDate);
 									setIsDateTimePickerVisible(false);
+									setNextDoseDate(setDateFromTime(nextDose, setCorrectHours(new Date(translatedDate))));
+									setProtectUntilDate(setDateFromTime(protectUntil, setCorrectHours(new Date(translatedDate))));
 								}}
 								onCancel={() =>
 									setIsDateTimePickerVisible(false)
